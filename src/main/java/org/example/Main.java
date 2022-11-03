@@ -22,6 +22,8 @@ public class Main {
     public static String dsrid;
     public static String requestId;
     public static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    public static String applicantNumber = "1";
+    public static String familyStatus = "2";
 
     public static void main(String[] args) throws IOException, InterruptedException {
         requestId = getRequestId();
@@ -29,7 +31,21 @@ public class Main {
         fillTheForm();
     }
 
-    public static WebElement getElement(String elementName, WebDriver driver) throws InterruptedException {
+    public static void fillTheForm() throws InterruptedException {
+        while(true){
+            WebDriver driver = getServiceSelectionTab();
+            setCitizenshipValue(driver);
+            setApplicantsNumber(driver, applicantNumber);
+            setFamilyStatus(driver, familyStatus);
+            clickToServiceType(driver);
+            clickToVisaGroup(driver);
+            clickToVisaBlueCard(driver);
+            driver.quit();
+        }
+
+    }
+
+    public static WebElement getElementByName(String elementName, WebDriver driver) throws InterruptedException {
         while (true) {
             try {
                 LOGGER.info("Looking for the element: {}", elementName);
@@ -42,22 +58,95 @@ public class Main {
         }
     }
 
+    public static WebElement getElementByXPath(String xpath, WebDriver driver) throws InterruptedException {
+        while (true) {
+            try {
+                LOGGER.info("Looking for the elementXPath: {}", xpath);
+                return driver.findElement(By.xpath(xpath));
+            } catch (Exception e) {
+                LOGGER.warn(e.getLocalizedMessage());
+            }
+
+            Thread.sleep(1000);
+        }
+    }
+
     private static void setCitizenshipValue(WebDriver driver) throws InterruptedException {
-        WebElement element = getElement("sel_staat", driver);
+        String elementName = "sel_staat";
+        WebElement element = getElementByName(elementName, driver);
+        boolean isElementDisplayed = element.isDisplayed();
+        boolean isElementEnabled = element.isEnabled();
+        boolean isElementSelected = element.isSelected();
+        LOGGER.info("Is ElementName:{} enabled: {}", elementName, isElementEnabled);
+        LOGGER.info("Is ElementName:{} displayed: {}", elementName, isElementDisplayed);
+        LOGGER.info("Is ElementName:{} selected: {}", elementName, isElementSelected);
         if (element.isEnabled()) {
             LOGGER.info("Element is enabled");
             Select asd = new Select(element);
-            asd.selectByValue("163");
+            while (true) {
+                try {
+                    asd.selectByValue("163");
+                    break;
+                } catch (Exception e) {
+                    LOGGER.warn("ElementName: {} is not interactable yet", elementName);
+                }
+            }
+
         } else {
             LOGGER.warn("Element is not enabled");
         }
     }
 
-    public static void fillTheForm() throws InterruptedException {
-
-        WebDriver driver = getServiceSelectionTab();
-        setCitizenshipValue(driver);
+    private static void setApplicantsNumber(WebDriver driver, String applicantNumber) throws InterruptedException {
+        String elementName = "personenAnzahl_normal";
+        String elementValue = applicantNumber;
+        WebElement element = getElementByName(elementName, driver);
+        if (element.isEnabled()) {
+            LOGGER.info("Element is enabled");
+            Select select = new Select(element);
+            select.selectByValue(elementValue);
+        } else {
+            LOGGER.warn("Element is not enabled");
+        }
     }
+
+    private static void setFamilyStatus(WebDriver driver, String familyStatus) throws InterruptedException {
+        String elementName = "lebnBrMitFmly";
+        String elementValue = familyStatus;
+        WebElement element = getElementByName(elementName, driver);
+        while (isElementInteractable(element, elementName)) {
+            LOGGER.info("Element is not yet intractable");
+        }
+        LOGGER.info("ElementName: {} is intractable", elementName);
+
+        LOGGER.info("ElementName:{} is enabled", elementName);
+        Select select = new Select(element);
+        select.selectByValue(elementValue);
+
+    }
+
+    private static void clickToServiceType(WebDriver driver) throws InterruptedException {
+        String elementName = "service type";
+        String elementXPath = "//*[@id=\"xi-div-30\"]/div[1]/label/p";
+        WebElement element = getElementByXPath(elementXPath, driver);
+        clickToElement(element, elementName);
+    }
+
+    private static void clickToVisaBlueCard(WebDriver driver) throws InterruptedException {
+        String elementName = "click blue card";
+        String elementXpath = "//*[@id=\"inner-163-0-1\"]/div/div[4]/div/div[11]/label";
+        WebElement element = getElementByXPath(elementXpath, driver);
+        clickToElement(element, elementName);
+    }
+
+    private static void clickToVisaGroup(WebDriver driver) throws InterruptedException {
+        String elementName = "set visa  group";
+        String elementXpath = "//*[@id=\"inner-163-0-1\"]/div/div[3]/label";
+        WebElement element = getElementByXPath(elementXpath, driver);
+        clickToElement(element, elementName);
+    }
+
+
 
     private static void activateRequestId(String requestId) throws IOException {
 
@@ -95,7 +184,7 @@ public class Main {
         String hostUrl = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
         String targetUrl = hostUrl + "/" + requestId + "?dswid=" + dswid + "&dsrid=" + dsrid;
         ChromeOptions options = new ChromeOptions();
-        //options.addArguments("--headless");
+        options.addArguments("--headless");
         WebDriver driver = new ChromeDriver(options);
         LOGGER.info("Getting the URL: {}", targetUrl);
         driver.get(targetUrl);
@@ -158,6 +247,26 @@ public class Main {
         //LOGGER.info("RequestId: {}, v: {}", dswid, dsrid);
         return requestId;
 
+    }
+
+    private static void clickToElement(WebElement element, String elementName) {
+        while (isElementInteractable(element, elementName)) {
+            LOGGER.info("Element is not yet intractable");
+        }
+        LOGGER.info("ElementName: {} is intractable", elementName);
+        element.click();
+    }
+
+    private static boolean isElementInteractable(WebElement element, String elementName) {
+        boolean isElementDisplayed = element.isDisplayed();
+        boolean isElementEnabled = element.isEnabled();
+        boolean isElementSelected = element.isSelected();
+
+        LOGGER.info("Is ElementName:{} enabled: {}", elementName, isElementEnabled);
+        LOGGER.info("Is ElementName:{} displayed: {}", elementName, isElementDisplayed);
+        LOGGER.info("Is ElementName:{} selected: {}", elementName, isElementSelected);
+
+        return !(isElementDisplayed & isElementEnabled);
     }
 
 
