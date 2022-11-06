@@ -1,12 +1,9 @@
 package org.example;
 
 import okhttp3.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,134 +18,16 @@ public class Main {
     public static String dswid;
     public static String dsrid;
     public static String requestId;
-    public static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
-    public static String applicantNumber = "1";
-    public static String familyStatus = "2";
+    public static final Logger logger = LoggerFactory.getLogger(Main.class);
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
         requestId = getRequestId();
         activateRequestId(requestId);
-        fillTheForm();
+        FormFiller formFiller = new FormFiller(requestId, dswid, dsrid);
+        formFiller.fillTheForm();
     }
 
-    public static void fillTheForm() throws InterruptedException {
-        while(true){
-            WebDriver driver = getServiceSelectionTab();
-            setCitizenshipValue(driver);
-            setApplicantsNumber(driver, applicantNumber);
-            setFamilyStatus(driver, familyStatus);
-            clickToServiceType(driver);
-            clickToVisaGroup(driver);
-            clickToVisaBlueCard(driver);
-            driver.quit();
-        }
-
-    }
-
-    public static WebElement getElementByName(String elementName, WebDriver driver) throws InterruptedException {
-        while (true) {
-            try {
-                LOGGER.info("Looking for the element: {}", elementName);
-                return driver.findElement(By.name(elementName));
-            } catch (Exception e) {
-                LOGGER.warn(e.getLocalizedMessage());
-            }
-
-            Thread.sleep(1000);
-        }
-    }
-
-    public static WebElement getElementByXPath(String xpath, WebDriver driver) throws InterruptedException {
-        while (true) {
-            try {
-                LOGGER.info("Looking for the elementXPath: {}", xpath);
-                return driver.findElement(By.xpath(xpath));
-            } catch (Exception e) {
-                LOGGER.warn(e.getLocalizedMessage());
-            }
-
-            Thread.sleep(1000);
-        }
-    }
-
-    private static void setCitizenshipValue(WebDriver driver) throws InterruptedException {
-        String elementName = "sel_staat";
-        WebElement element = getElementByName(elementName, driver);
-        boolean isElementDisplayed = element.isDisplayed();
-        boolean isElementEnabled = element.isEnabled();
-        boolean isElementSelected = element.isSelected();
-        LOGGER.info("Is ElementName:{} enabled: {}", elementName, isElementEnabled);
-        LOGGER.info("Is ElementName:{} displayed: {}", elementName, isElementDisplayed);
-        LOGGER.info("Is ElementName:{} selected: {}", elementName, isElementSelected);
-        if (element.isEnabled()) {
-            LOGGER.info("Element is enabled");
-            Select asd = new Select(element);
-            while (true) {
-                try {
-                    asd.selectByValue("163");
-                    break;
-                } catch (Exception e) {
-                    LOGGER.warn("ElementName: {} is not interactable yet", elementName);
-                }
-            }
-
-        } else {
-            LOGGER.warn("Element is not enabled");
-        }
-    }
-
-    private static void setApplicantsNumber(WebDriver driver, String applicantNumber) throws InterruptedException {
-        String elementName = "personenAnzahl_normal";
-        String elementValue = applicantNumber;
-        WebElement element = getElementByName(elementName, driver);
-        if (element.isEnabled()) {
-            LOGGER.info("Element is enabled");
-            Select select = new Select(element);
-            select.selectByValue(elementValue);
-        } else {
-            LOGGER.warn("Element is not enabled");
-        }
-    }
-
-    private static void setFamilyStatus(WebDriver driver, String familyStatus) throws InterruptedException {
-        String elementName = "lebnBrMitFmly";
-        String elementValue = familyStatus;
-        WebElement element = getElementByName(elementName, driver);
-        while (isElementInteractable(element, elementName)) {
-            LOGGER.info("Element is not yet intractable");
-        }
-        LOGGER.info("ElementName: {} is intractable", elementName);
-
-        LOGGER.info("ElementName:{} is enabled", elementName);
-        Select select = new Select(element);
-        select.selectByValue(elementValue);
-
-    }
-
-    private static void clickToServiceType(WebDriver driver) throws InterruptedException {
-        String elementName = "service type";
-        String elementXPath = "//*[@id=\"xi-div-30\"]/div[1]/label/p";
-        WebElement element = getElementByXPath(elementXPath, driver);
-        clickToElement(element, elementName);
-    }
-
-    private static void clickToVisaBlueCard(WebDriver driver) throws InterruptedException {
-        String elementName = "click blue card";
-        String elementXpath = "//*[@id=\"inner-163-0-1\"]/div/div[4]/div/div[11]/label";
-        WebElement element = getElementByXPath(elementXpath, driver);
-        clickToElement(element, elementName);
-    }
-
-    private static void clickToVisaGroup(WebDriver driver) throws InterruptedException {
-        String elementName = "set visa  group";
-        String elementXpath = "//*[@id=\"inner-163-0-1\"]/div/div[3]/label";
-        WebElement element = getElementByXPath(elementXpath, driver);
-        clickToElement(element, elementName);
-    }
-
-
-
-    private static void activateRequestId(String requestId) throws IOException {
+    public static void activateRequestId(String requestId) {
 
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
@@ -176,19 +55,14 @@ public class Main {
                 .addHeader("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8")
                 .addHeader("Cookie", "JSESSIONID=8hu7CQ-45MZ4J3r-bIy1C0kVP2XOiYpj5dmicNoj.frontend-1; SERVERID=frontend-1; otv_neu=d0f9ce66047a3e3090d61c1db32e6579; TS018ca6c6=01d33437f9990c606221e82381112ef6d9472f5c5d59e7c2734d1818a96e189e120a7f0ac3ddbf63c5b61cdbb389246d6cabefc544; JSESSIONID=pEgF7e2XT7kaIpl7yHrZAndVWYt1dIzIwpgFdw62.frontend-1; SERVERID=frontend-2; TS018ca6c6=01d33437f9832280903ece3a5244806bacae79dae315b0c3012bf2c5c185ecce30ff0fd9c7a44fc5ba29bf6e8b2e41c30f468e49ef; otv_neu=d0f9ce66047a3e3090d61c1db32e6579; JSESSIONID=yT4lc5LxUWUzmqMwiYUXJqv7G6sypQaWyLnrke6d.frontend-1; TS018ca6c6=01d33437f99f6cf591632be481b881df35db07d620fe6cdf8ad9f23c8cb9224c2de7c285120642136301818243edb836a1f6b3bf0b")
                 .build();
-        Response response = client.newCall(request).execute();
+        Response response = null;
+        try {
+            response = client.newCall(request).execute();
+        } catch (IOException e) {
+            logger.error("Executign secuting request failed");
+            throw new RuntimeException(e);
+        }
         System.out.println("RresponseCode; " + response.code());
-    }
-
-    public static WebDriver getServiceSelectionTab() {
-        String hostUrl = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
-        String targetUrl = hostUrl + "/" + requestId + "?dswid=" + dswid + "&dsrid=" + dsrid;
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
-        WebDriver driver = new ChromeDriver(options);
-        LOGGER.info("Getting the URL: {}", targetUrl);
-        driver.get(targetUrl);
-        return driver;
     }
 
     public static String getRequestId() {
@@ -199,18 +73,18 @@ public class Main {
 
         String requestId;
         String initialUrl = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
-        LOGGER.info("Getting the URL: {}", initialUrl);
+        logger.info("Getting the URL: {}", initialUrl);
 
         driver.get(initialUrl);
         while (true) {
             String urlAfterRedirect = driver.getCurrentUrl();
-            LOGGER.info("CurrentURL: " + urlAfterRedirect);
+            logger.debug("CurrentURL: " + urlAfterRedirect);
             try {
                 URL url = new URL(urlAfterRedirect);
                 String queryStr = url.getQuery();
                 if (dsrid == null && dswid == null) {
-                    LOGGER.info("QueryString: {}", queryStr);
-                    setDs(queryStr);
+                    logger.info("QueryString: {}", queryStr);
+                    extractDswidAndDsrid(queryStr);
                 }
 
                 if (urlAfterRedirect.contains("?v")) {
@@ -219,20 +93,19 @@ public class Main {
                     break;
                 }
 
-
             } catch (MalformedURLException e) {
-                LOGGER.error("URL is malformed exception occurred", e);
+                logger.error("URL is malformed exception occurred", e);
             }
         }
 
         return requestId;
     }
 
-    public static void setDs(String queryStr) {
+    public static void extractDswidAndDsrid(String queryStr) {
         List<String> queryStrings = List.of(queryStr.split("&"));
         dsrid = Arrays.stream(queryStrings.get(0).split("=")).toList().get(1);
         dswid = Arrays.stream(queryStrings.get(1).split("=")).toList().get(1);
-        LOGGER.info("dswid: {}, dsrid: {}", dswid, dsrid);
+        logger.info("dswid: {}, dsrid: {}", dswid, dsrid);
     }
 
     public static String extractRequestId(String url) {
@@ -243,30 +116,10 @@ public class Main {
 
         //dsrid = Arrays.stream(queryStrings.get(0).split("=")).toList().get(1);
         //dswid = Arrays.stream(queryStrings.get(1).split("=")).toList().get(1);
-        LOGGER.info("RequestID: {}", requestId);
+        logger.info("RequestID: {}", requestId);
         //LOGGER.info("RequestId: {}, v: {}", dswid, dsrid);
         return requestId;
 
-    }
-
-    private static void clickToElement(WebElement element, String elementName) {
-        while (isElementInteractable(element, elementName)) {
-            LOGGER.info("Element is not yet intractable");
-        }
-        LOGGER.info("ElementName: {} is intractable", elementName);
-        element.click();
-    }
-
-    private static boolean isElementInteractable(WebElement element, String elementName) {
-        boolean isElementDisplayed = element.isDisplayed();
-        boolean isElementEnabled = element.isEnabled();
-        boolean isElementSelected = element.isSelected();
-
-        LOGGER.info("Is ElementName:{} enabled: {}", elementName, isElementEnabled);
-        LOGGER.info("Is ElementName:{} displayed: {}", elementName, isElementDisplayed);
-        LOGGER.info("Is ElementName:{} selected: {}", elementName, isElementSelected);
-
-        return !(isElementDisplayed & isElementEnabled);
     }
 
 
