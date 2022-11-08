@@ -14,6 +14,8 @@ repositories {
 dependencies {
 // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+// https://mvnrepository.com/artifact/com.twilio.sdk/twilio
+    implementation 'com.twilio.sdk:twilio:9.1.0'
 
     implementation 'org.seleniumhq.selenium:selenium-java:4.4.0'
     implementation 'org.slf4j:slf4j-api:1.6.1'
