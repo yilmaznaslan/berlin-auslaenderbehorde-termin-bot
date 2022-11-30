@@ -4,12 +4,16 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static org.example.auslanderbehorde.FormFillerUtils.SLEEP_DURATION_IN_MILISECONDS;
+import static org.example.auslanderbehorde.FormFillerUtils.TIMEOUT_FOR_INTERACTING_IN_SECONDS;
 import static org.example.notifications.Twilio.makeCall;
 import static org.example.notifications.Twilio.sendSMS;
 
@@ -28,11 +32,11 @@ public class FormFiller extends TimerTask {
     private String dsrid;
     private int searchCount = 0;
 
-    private final WebDriver driver;
+    private WebDriver driver;
     private Timer timer = new Timer(true);
 
 
-    public void startScanning(){
+    public void startScanning() {
         timer.scheduleAtFixedRate(this, 0, FORM_REFRESH_PERIOD_MILISECONDS);
     }
 
@@ -63,7 +67,6 @@ public class FormFiller extends TimerTask {
                 this.dsrid = sessionFinder.getDsrid();
             }
 
-
             selectCitizenshipValue();
             selectApplicantsNumber();
             selectFamilyStatus();
@@ -86,11 +89,14 @@ public class FormFiller extends TimerTask {
                 clickWeiterButton();
                 //timer.cancel();
             }
+
             this.searchCount = this.searchCount + 1;
             logger.info("Completed search count: {}", searchCount);
 
         } catch (Exception e) {
-            logger.warn("Some error occured. Reason ", e.getCause());
+            logger.warn("Some error occurred. Reason ", e);
+            this.driver.quit();
+            this.driver = initDriverHeadless();
         }
 
     }
@@ -105,83 +111,91 @@ public class FormFiller extends TimerTask {
     private WebDriver initDriverHeadless() {
         logger.info("Initializing driver");
         ChromeOptions options = new ChromeOptions();
+        //FirefoxOptions options = new FirefoxOptions();
+
         options.addArguments("--disable-logging");
         options.addArguments("--headless");
+        //return new FirefoxDriver();
         return new ChromeDriver(options);
     }
 
     private WebDriver initDriverWithHead() {
         logger.info("Initializing driver");
         ChromeOptions options = new ChromeOptions();
+//        FirefoxOptions options = new FirefoxOptions();
+
         options.addArguments("--disable-logging");
-        return new ChromeDriver(options);
+  //      return new FirefoxDriver();
+
+      return new ChromeDriver(options);
     }
 
-    private void selectCitizenshipValue() throws InterruptedException {
+    private void selectCitizenshipValue() throws InterruptedException, ElementNotFoundException {
         String elementName = "sel_staat";
         String elementDescription = "Citizenship".toUpperCase();
         WebElement element = FormFillerUtils.getElementByName(elementName, elementDescription, driver);
-        FormFillerUtils.selectOption(element, "citizenship", citizenshipValue);
+        FormFillerUtils.selectOption(element, elementDescription, citizenshipValue);
     }
 
-    private void selectApplicantsNumber() throws InterruptedException {
+    private void selectApplicantsNumber() throws InterruptedException, ElementNotFoundException {
         String elementName = "personenAnzahl_normal";
         String elementDescription = "appliacntsNumber".toUpperCase();
         WebElement element = FormFillerUtils.getElementByName(elementName, elementDescription, driver);
-        FormFillerUtils.selectOption(element, applicantNumber, applicantNumber);
+        FormFillerUtils.selectOption(element, elementDescription, applicantNumber);
     }
 
-    private void selectFamilyStatus() throws InterruptedException {
+    private void selectFamilyStatus() throws InterruptedException, ElementNotFoundException {
         String elementName = "lebnBrMitFmly";
         String elementDescription = "FamilyStatus".toUpperCase();
         WebElement element = FormFillerUtils.getElementByName(elementName, elementDescription, driver);
         FormFillerUtils.selectOption(element, elementDescription, familyStatus);
     }
 
-    private void clickServiceType() throws InterruptedException {
+    private void clickServiceType() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
         String elementXPath = "//*[@id=\"xi-div-30\"]/div[1]/label/p";
         String elementDescription = "serviceType".toUpperCase();
         WebElement element = FormFillerUtils.getElementByXPath(elementXPath, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
     }
 
-    private void clickVisaGroup() throws InterruptedException {
+    private void clickVisaGroup() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
         String elementXpath = "//*[@id=\"inner-163-0-1\"]/div/div[3]/label";
         String elementDescription = "visaGroup".toUpperCase();
         WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
     }
 
-    private void clickVisaBlueCard() throws InterruptedException {
+    private void clickVisaBlueCard() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
         String elementXpath = "//*[@id=\"inner-163-0-1\"]/div/div[4]/div/div[11]/label";
         String elementDescription = "blueCardVisa".toUpperCase();
-        WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription , driver);
-        FormFillerUtils.clickToElement(element, elementDescription);
-    }
-
-    private void clickNextButton() throws InterruptedException {
-        String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
-        String elementDescription = "clickButton".toUpperCase();
-        WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription , driver);
-        FormFillerUtils.clickToElement(element, elementDescription);
-        Thread.sleep(5000);
-    }
-
-    private void clickToActiveDate() throws InterruptedException {
-        String elementDescription = "DateSelection".toUpperCase();
-        String elementXpath = "//*[@id=\"xi-div-2\"]/div/div[1]/table/tbody/tr[5]/td[1]/a";
         WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
     }
 
-    private void selectTime() throws InterruptedException {
+    private void clickNextButton() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
+        String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
+        String elementDescription = "clickButton".toUpperCase();
+        WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
+        FormFillerUtils.clickToElement(element, elementDescription);
+    }
+
+    private void clickToActiveDate() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
+        String elementDescription = "DateSelection".toUpperCase();
+        String elementXpath = "//*[@id=\"xi-div-2\"]/div/div[1]/table/tbody/tr[5]/td[1]/a";
+        WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
+        System.out.println("Clicking ot Element"+ element.getTagName());
+        System.out.println(element.getText());
+        FormFillerUtils.clickToElement(element, elementDescription);
+    }
+
+    private void selectTime() throws InterruptedException, ElementNotFoundException {
         String elementName = "dd_zeiten";
         String elementDescription = "Select time".toUpperCase();
         WebElement element = FormFillerUtils.getElementByName(elementName, elementDescription, driver);
         FormFillerUtils.selectOptionByIndex(element, elementDescription);
     }
 
-    private void clickWeiterButton() throws InterruptedException {
+    private void clickWeiterButton() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
         String elementDescription = "weiter button".toUpperCase();
         WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
@@ -190,24 +204,43 @@ public class FormFiller extends TimerTask {
 
     private boolean isResultSuccessful() throws InterruptedException {
         String stageXPath = ".//ul/li[2]/span";
-        WebElement element = FormFillerUtils.getElementByXPath(stageXPath, "activeSectionTab", driver);
-
-        String stageText = element.getText();
+        String elementDescription = "activeSectionTab".toUpperCase();
+        String stageText = "";
+        int i = 0;
+        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+            try {
+                WebElement element = FormFillerUtils.getElementByXPath(stageXPath, elementDescription, driver);
+                stageText = element.getText();
+                logger.info("Element: {}. Process: Getting Text. Status: Successfully. Value: {}", elementDescription, stageText);
+                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+                break;
+            } catch (Exception e) {
+                logger.info("Element: {}. Process: Getting Text. Status: Failed", elementDescription);
+            }
+            i++;
+        }
+        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+            logger.warn("Element: {}. Process: reading text, Result: Failed Reason: Couldn't select within timeout", elementDescription);
+        }
         return stageText.contains("Terminauswahl");
-
     }
 
-    private double getRemainingTime() throws InterruptedException {
+    private double getRemainingTime() throws InterruptedException, ElementNotFoundException {
         String elementXpath = "//*[@id=\"progressBar\"]/div";
-        WebElement timeBar = FormFillerUtils.getElementByXPath(elementXpath, "remainingTime", driver);
-        String timeStr = timeBar.getText();
-        int remainingMinute;
-        if (timeStr != null){
-            remainingMinute = Integer.parseInt(timeStr.split(":")[0]);
-        } else{
-            remainingMinute = 0;
+        String elementDescription = "remainingTime".toUpperCase();
+        WebElement timeBar = FormFillerUtils.getElementByXPath(elementXpath, elementDescription , driver);
+        int remainingMinute = 0;
+        try{
+            String timeStr = timeBar.getText();
+            if (timeStr != null) {
+                remainingMinute = Integer.parseInt(timeStr.split(":")[0]);
+            } else {
+                remainingMinute = 0;
+            }
+            logger.info("Element: {}. Process: Getting time. Status: Successfully. Value: {}", elementDescription, timeStr);
+        } catch (Exception e){
+            logger.info("Element: {}. Process: Getting time. Status: Failed");
         }
-        logger.info("Remaining time: {}", timeStr);
         return remainingMinute;
     }
 

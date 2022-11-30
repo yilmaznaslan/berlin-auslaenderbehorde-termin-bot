@@ -14,16 +14,16 @@ import java.util.List;
 
 public class FormFillerUtils {
     private static final Logger logger = LoggerFactory.getLogger(FormFiller.class);
-    private static final int TIMEOUT_FOR_INTERACTING_IN_SECONDS = 10;
-    private static final int SLEEP_DURATION_IN_MILISECONDS = 500;
+    static final int TIMEOUT_FOR_INTERACTING_IN_SECONDS = 10;
+    static final int SLEEP_DURATION_IN_MILISECONDS = 1500;
 
-    public static WebElement getElementByName(String elementName, String elementDescription, WebDriver driver) throws InterruptedException {
+    public static WebElement getElementByName(String elementName, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundException {
         WebElement element = null;
         int i = 1;
         while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             try {
                 element = driver.findElement(By.name(elementName));
-                logger.info("Element: {}. Process: Getting by elementName. Result: Successfully", elementDescription);
+                logger.info("Element: {}. Process: Getting by elementName. Result: Successful", elementDescription);
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
@@ -33,51 +33,64 @@ public class FormFillerUtils {
             i++;
         }
         if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
-            logger.warn("Element: {}. Process: Getting by elementNAme. Result: Failed. Reason: Couldn't click within timeout", elementDescription);
+            logger.warn("Element: {}. Process: Getting by elementName. Result: Failed. Reason: Couldn't get elementByName within timeout", elementDescription);
+            throw new ElementNotFoundException(elementDescription);
+
         }
         return element;
     }
 
-    public static WebElement getElementByXPath(String xpath, String elementDescription, WebDriver driver) throws InterruptedException {
+    public static WebElement getElementByXPath(String xpath, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundException {
         WebElement element = null;
         int i = 0;
         while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             try {
                 element = driver.findElement(By.xpath(xpath));
-                logger.info("Element: {}. Process: Getting by elementXPath. Result: Successfully", elementDescription);
+                logger.info("Element: {}. Process: Getting by elementXPath. Result: Successful", elementDescription);
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
-                logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed. Reason:{}", elementDescription, e.getMessage());
+                logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed", elementDescription);
             }
             Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
             i++;
         }
         if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed. Reason: Couldn't click within timeout", elementDescription);
+            throw new ElementNotFoundException(elementDescription);
+
         }
         return element;
     }
 
-    public static void clickToElement(WebElement element, String elementDescription) {
+    public static void clickToElement(WebElement element, String elementDescription) throws InteractionFailedException {
+        if (element == null){
+            logger.warn("Element:{} is null, Process: Click can not be continued", elementDescription);
+            return;
+        }
         int i = 0;
         while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             try {
                 element.click();
-                logger.info("Element: {}. Process: Click, Result: Successfully ", elementDescription);
+                logger.info("Element: {}. Process: Click, Result: Successful ", elementDescription);
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
-                logger.warn("Element: {}. Process: Click, Result: Failed Reason:{}", elementDescription, e.getMessage());
+                logger.warn("Element: {}. Process: Click, Result: Failed. Exception: ", elementDescription, e);
             }
             i++;
         }
         if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             logger.warn("Element: {}. Process: Click, Result: Failed Reason: Couldn't click within timeout", elementDescription);
+            throw new InteractionFailedException("");
         }
     }
 
     public static void selectOption(WebElement element, String elementDescription, String optionValue) {
+        if (element == null){
+            logger.warn("Element:{} is null, Process: Select can not be continued");
+            return;
+        }
         int i = 0;
         while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             try {
@@ -85,7 +98,7 @@ public class FormFillerUtils {
                 select.selectByValue(optionValue);
                 WebElement option = select.getFirstSelectedOption();
                 String selectValue = option.getText();
-                logger.debug("Selected the value: {}", selectValue);
+                logger.info("Element: {}, Process: Select, Result: Successful, Value:{}", elementDescription, selectValue);
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
@@ -99,6 +112,10 @@ public class FormFillerUtils {
     }
 
     public static void selectOptionByIndex(WebElement element, String elementDescription) {
+        if (element == null){
+            logger.warn("Element:{} is null, process can not be continued");
+            return;
+        }
         int i = 0;
         while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             try {
@@ -110,6 +127,7 @@ public class FormFillerUtils {
                 select.selectByIndex(targetHour);
                 String selectValue = availableHours.get(targetHour).getText();
                 logger.info("Selected the value: {}.Select: {}", selectValue, select);
+                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
                 logger.warn("Element: {}. Process: Select, Result: Failed Reason:{}", elementDescription, e.getMessage());
@@ -120,16 +138,6 @@ public class FormFillerUtils {
             logger.warn("Element: {}. Process: Select, Result: Failed Reason: Couldn't select within timeout", elementDescription);
         }
 
-    }
-
-    private static boolean isElementInteractable(WebElement element, String elementName) {
-        boolean isElementDisplayed = element.isDisplayed();
-        boolean isElementEnabled = element.isEnabled();
-
-        logger.debug("Element: {} is enabled: {}", elementName, isElementEnabled);
-        logger.debug("Element: {} displayed: {}", elementName, isElementDisplayed);
-
-        return !(isElementDisplayed & isElementEnabled);
     }
 
     public static void writeSourceCodeToFile(String content) {

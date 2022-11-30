@@ -27,8 +27,8 @@ public class Main {
 
 
         while (true) {
-            logger.debug("Number of threads " + Thread.activeCount());
-            //Thread.sleep(10000);
+            //logger.debug("Number of threads " + Thread.activeCount());
+            Thread.sleep(1000);
         }
 
     }
