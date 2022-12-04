@@ -22,6 +22,8 @@ dependencies {
     //implementation 'org.slf4j:slf4j-simple:1.6.1'
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12
     implementation 'org.slf4j:slf4j-log4j12:2.0.0'
+// https://mvnrepository.com/artifact/log4j/apache-log4j-extras
+    implementation 'log4j:apache-log4j-extras:1.2.17'
 
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'

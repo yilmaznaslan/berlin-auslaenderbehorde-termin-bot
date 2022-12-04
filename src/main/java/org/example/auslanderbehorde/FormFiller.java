@@ -1,14 +1,16 @@
 package org.example.auslanderbehorde;
 
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -74,9 +76,13 @@ public class FormFiller extends TimerTask {
             clickVisaGroup();
             clickVisaBlueCard();
             clickNextButton();
+
             if (isResultSuccessful()) {
                 logger.info("Found a place !");
                 String url = driver.getCurrentUrl();
+                File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+                FileUtils.copyFile(scrFile1, new File("/Users/yilmaznaci.aslan/repositories/berlinTerminFinder/screenshot11.png"));
+
                 logger.info("URL: {}", url);
                 initDriverWithHead().get(url);
                 String pageSource = driver.getPageSource();
@@ -125,9 +131,9 @@ public class FormFiller extends TimerTask {
 //        FirefoxOptions options = new FirefoxOptions();
 
         options.addArguments("--disable-logging");
-  //      return new FirefoxDriver();
+        //      return new FirefoxDriver();
 
-      return new ChromeDriver(options);
+        return new ChromeDriver(options);
     }
 
     private void selectCitizenshipValue() throws InterruptedException, ElementNotFoundException {
@@ -183,7 +189,7 @@ public class FormFiller extends TimerTask {
         String elementDescription = "DateSelection".toUpperCase();
         String elementXpath = "//*[@id=\"xi-div-2\"]/div/div[1]/table/tbody/tr[5]/td[1]/a";
         WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
-        System.out.println("Clicking ot Element"+ element.getTagName());
+        System.out.println("Clicking ot Element" + element.getTagName());
         System.out.println(element.getText());
         FormFillerUtils.clickToElement(element, elementDescription);
     }
@@ -228,9 +234,9 @@ public class FormFiller extends TimerTask {
     private double getRemainingTime() throws InterruptedException, ElementNotFoundException {
         String elementXpath = "//*[@id=\"progressBar\"]/div";
         String elementDescription = "remainingTime".toUpperCase();
-        WebElement timeBar = FormFillerUtils.getElementByXPath(elementXpath, elementDescription , driver);
+        WebElement timeBar = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
         int remainingMinute = 0;
-        try{
+        try {
             String timeStr = timeBar.getText();
             if (timeStr != null) {
                 remainingMinute = Integer.parseInt(timeStr.split(":")[0]);
@@ -238,7 +244,7 @@ public class FormFiller extends TimerTask {
                 remainingMinute = 0;
             }
             logger.info("Element: {}. Process: Getting time. Status: Successfully. Value: {}", elementDescription, timeStr);
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.info("Element: {}. Process: Getting time. Status: Failed");
         }
         return remainingMinute;
