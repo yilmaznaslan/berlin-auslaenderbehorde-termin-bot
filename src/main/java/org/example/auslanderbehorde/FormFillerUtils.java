@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FormFillerUtils {
@@ -64,29 +63,27 @@ public class FormFillerUtils {
         return element;
     }
 
-    public static List<WebElement> getElementsByTagName(String tagName, WebDriver driver) throws InterruptedException, ElementNotFoundException {
-        List<WebElement> webElements = new ArrayList<WebElement>();
-
+    public static WebElement getElementByCssSelector(String cssSelector, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundException {
+        WebElement element = null;
         int i = 0;
         while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             try {
-                webElements = driver.findElements(By.tagName(tagName));
-                logger.info("Element: {}. Process: Getting by elementXPath. Result: Successful", tagName);
+                element = driver.findElement(By.cssSelector(cssSelector));
+                logger.info("Element: {}. Process: Getting by elementCssSelector. Result: Successful", elementDescription);
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
-                logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed", tagName);
+                logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed", elementDescription);
             }
             Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
             i++;
         }
         if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
-            logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed. Reason: Couldn't click within timeout", tagName);
-            throw new ElementNotFoundException(tagName);
+            logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed. Reason: Couldn't click within timeout", elementDescription);
+            throw new ElementNotFoundException(cssSelector);
 
         }
-
-        return webElements;
+        return element;
     }
 
     public static void clickToElement(WebElement element, String elementDescription) throws InteractionFailedException {

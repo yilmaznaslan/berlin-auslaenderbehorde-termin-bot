@@ -43,11 +43,11 @@ public class FormFiller extends TimerTask {
         timer.scheduleAtFixedRate(this, 0, FORM_REFRESH_PERIOD_MILISECONDS);
     }
 
-    public FormFiller(String requestId, String dswid, String dsrid, FormInputs formInputs) {
+    public FormFiller(String requestId, String dswid, String dsrid, FormInputs formInputs, WebDriver webDriver) {
         this.requestId = requestId;
         this.dswid = dswid;
         this.dsrid = dsrid;
-        this.driver = initDriverHeadless();
+        this.driver = webDriver;
 
         this.citizenshipValue = formInputs.getCitizenshipValue();
         this.applicantNumber = formInputs.getApplicationsNumber();
@@ -91,8 +91,8 @@ public class FormFiller extends TimerTask {
                 String myPhoneNumber = System.getenv("myPhoneNumber");
                 makeCall(myPhoneNumber);
                 sendSMS(myPhoneNumber, url);
-                clickToActiveDate();
-                selectTime();
+                clickToFirstAvailableDate();
+                //selectTime();
                 clickWeiterButton();
                 //timer.cancel();
             }
@@ -115,7 +115,7 @@ public class FormFiller extends TimerTask {
         driver.get(targetUrl);
     }
 
-    private WebDriver initDriverHeadless() {
+    public WebDriver initDriverHeadless() {
         logger.info("Initializing driver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-logging");
@@ -183,24 +183,12 @@ public class FormFiller extends TimerTask {
         FormFillerUtils.clickToElement(element, elementDescription);
     }
 
-    private void clickToActiveDate() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
+    protected void clickToFirstAvailableDate() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
         String elementDescription = "DateSelection".toUpperCase();
-        String elementXpath = "//*[@id=\"xi-div-2\"]/div/div[1]/table/tbody/tr[5]/td[1]/a";
-        WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
-        System.out.println("Clicking ot Element" + element.getTagName());
-        System.out.println(element.getText());
+        String cssSelector = "[data-handler=selectDay]";
+        WebElement element = FormFillerUtils.getElementByCssSelector(cssSelector, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
     }
-
-    protected void selectTime() throws InterruptedException, ElementNotFoundException {
-        String elementName = "dd_zeiten";
-        String elementDescription = "Select time".toUpperCase();
-        List<WebElement> elements = FormFillerUtils.getElementsByTagName("td", driver);
-        elements.stream().forEach(s-> System.out.println(s.getAttribute("data-handler")));
-        //elements.stream().filter(element -> element.getAttribute("data-handler"))
-        //FormFillerUtils.selectOptionByIndex(element, elementDescription);
-    }
-
     private void clickWeiterButton() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
         String elementDescription = "weiter button".toUpperCase();
