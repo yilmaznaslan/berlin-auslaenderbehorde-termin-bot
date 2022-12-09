@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -117,11 +118,8 @@ public class FormFiller extends TimerTask {
     private WebDriver initDriverHeadless() {
         logger.info("Initializing driver");
         ChromeOptions options = new ChromeOptions();
-        //FirefoxOptions options = new FirefoxOptions();
-
         options.addArguments("--disable-logging");
         options.addArguments("--headless");
-        //return new FirefoxDriver();
         return new ChromeDriver(options);
     }
 
@@ -194,11 +192,13 @@ public class FormFiller extends TimerTask {
         FormFillerUtils.clickToElement(element, elementDescription);
     }
 
-    private void selectTime() throws InterruptedException, ElementNotFoundException {
+    protected void selectTime() throws InterruptedException, ElementNotFoundException {
         String elementName = "dd_zeiten";
         String elementDescription = "Select time".toUpperCase();
-        WebElement element = FormFillerUtils.getElementByName(elementName, elementDescription, driver);
-        FormFillerUtils.selectOptionByIndex(element, elementDescription);
+        List<WebElement> elements = FormFillerUtils.getElementsByTagName("td", driver);
+        elements.stream().forEach(s-> System.out.println(s.getAttribute("data-handler")));
+        //elements.stream().filter(element -> element.getAttribute("data-handler"))
+        //FormFillerUtils.selectOptionByIndex(element, elementDescription);
     }
 
     private void clickWeiterButton() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
