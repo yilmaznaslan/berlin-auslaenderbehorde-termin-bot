@@ -87,11 +87,15 @@ public class FormFiller extends TimerTask {
                 logger.info("URL: {}", url);
                 initDriverWithHead().get(url);
                 String pageSource = driver.getPageSource();
-                FormFillerUtils.writeSourceCodeToFile(pageSource);
+                FormFillerUtils.writeSourceCodeToFile(pageSource,searchCount);
                 String myPhoneNumber = System.getenv("myPhoneNumber");
                 makeCall(myPhoneNumber);
                 sendSMS(myPhoneNumber, url);
                 clickToFirstAvailableDate();
+                File scrFile2 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+                FileUtils.copyFile(scrFile2, new File("/Users/yilmaznaci.aslan/repositories/berlinTerminFinder/screenshot"+Integer.toString(searchCount)+".png"));
+
+
                 //selectTime();
                 clickWeiterButton();
                 //timer.cancel();
@@ -188,6 +192,9 @@ public class FormFiller extends TimerTask {
         String cssSelector = "[data-handler=selectDay]";
         WebElement element = FormFillerUtils.getElementByCssSelector(cssSelector, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
+        Thread.sleep(1);
+        String pageSource = driver.getPageSource();
+        FormFillerUtils.writeSourceCodeToFile(pageSource, searchCount);
     }
     private void clickWeiterButton() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";

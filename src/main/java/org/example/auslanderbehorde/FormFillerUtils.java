@@ -163,10 +163,10 @@ public class FormFillerUtils {
 
     }
 
-    public static void writeSourceCodeToFile(String content) {
+    public static void writeSourceCodeToFile(String content, int index) {
         String filePath = FormFiller.class.getClassLoader().getResource("org/example/FormFiller/terminDateSelect.html").getPath();
 
-        File newTextFile = new File(filePath);
+        File newTextFile = new File("/Users/yilmaznaci.aslan/repositories/berlinTerminFinder/asd_"+Integer.toString(index)+".html");
 
         FileWriter fw;
         try {

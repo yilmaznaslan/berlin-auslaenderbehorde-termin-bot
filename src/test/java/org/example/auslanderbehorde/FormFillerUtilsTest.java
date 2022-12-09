@@ -39,4 +39,8 @@ class FormFillerUtilsTest {
     }
 
 
+    @Test
+    void writeSourceCodeToFile() {
+        FormFillerUtils.writeSourceCodeToFile("adasd", 4);
+    }
 }
