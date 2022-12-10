@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.io.IOException;
 import java.util.List;
 
 class FormFillerUtilsTest {
@@ -43,4 +44,24 @@ class FormFillerUtilsTest {
     void writeSourceCodeToFile() {
         FormFillerUtils.writeSourceCodeToFile("adasd", 4);
     }
+
+    @Test
+    void testSaveScreenshot_GIVEN_THAT_current_page_is_date_selection() throws IOException {
+        // GIVEN
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
+        options.addArguments("--start-maximized");
+        options.addArguments("--start-fullscreen");
+        WebDriver driver = new ChromeDriver(options);
+        String url = "file:/Users/yilmaznaci.aslan/repositories/berlinTerminFinder/src/test/resources/terminDateSelect.html";
+
+
+        // WHEN
+        driver.get(url);
+        FormFillerUtils.saveScreenshot(driver);
+
+        // THEN
+    }
+
+
 }

@@ -11,6 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -81,8 +84,6 @@ public class FormFiller extends TimerTask {
             if (isResultSuccessful()) {
                 logger.info("Found a place !");
                 String url = driver.getCurrentUrl();
-                File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-                FileUtils.copyFile(scrFile1, new File("/Users/yilmaznaci.aslan/repositories/berlinTerminFinder/screenshot11.png"));
 
                 logger.info("URL: {}", url);
                 initDriverWithHead().get(url);
@@ -196,6 +197,7 @@ public class FormFiller extends TimerTask {
         String pageSource = driver.getPageSource();
         FormFillerUtils.writeSourceCodeToFile(pageSource, searchCount);
     }
+
     private void clickWeiterButton() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
         String elementDescription = "weiter button".toUpperCase();
@@ -244,6 +246,7 @@ public class FormFiller extends TimerTask {
         }
         return remainingMinute;
     }
+
 
 
 }

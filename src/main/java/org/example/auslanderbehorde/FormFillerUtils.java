@@ -1,8 +1,7 @@
 package org.example.auslanderbehorde;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class FormFillerUtils {
@@ -164,9 +165,11 @@ public class FormFillerUtils {
     }
 
     public static void writeSourceCodeToFile(String content, int index) {
-        String filePath = FormFiller.class.getClassLoader().getResource("org/example/FormFiller/terminDateSelect.html").getPath();
-
-        File newTextFile = new File("/Users/yilmaznaci.aslan/repositories/berlinTerminFinder/asd_"+Integer.toString(index)+".html");
+        String filePath = FormFiller.class.getResource("/").getPath();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        String dateAsStr = dtf.format(now);
+        File newTextFile = new File(filePath+"/page_"+dateAsStr+".html");
 
         FileWriter fw;
         try {
@@ -179,5 +182,13 @@ public class FormFillerUtils {
 
     }
 
+    public static void saveScreenshot(WebDriver driver) throws IOException {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        String dateAsStr = dtf.format(now);
+        File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        String filePath = FormFiller.class.getResource("/").getPath();
+        FileUtils.copyFile(scrFile1, new File(filePath+"/screenshot_"+ dateAsStr +".png"));
 
+    }
 }
