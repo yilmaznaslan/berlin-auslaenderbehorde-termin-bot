@@ -164,7 +164,7 @@ public class FormFillerUtils {
 
     }
 
-    public static void writeSourceCodeToFile(String content, int index) {
+    public static void saveSourceCodeToFile(String content) {
         String filePath = FormFiller.class.getResource("/").getPath();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();

@@ -12,9 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -37,6 +34,7 @@ public class FormFiller extends TimerTask {
     private String dswid;
     private String dsrid;
     private int searchCount = 0;
+    private int foundCount = 0;
 
     private WebDriver driver;
     private Timer timer = new Timer(true);
@@ -82,28 +80,22 @@ public class FormFiller extends TimerTask {
             clickNextButton();
 
             if (isResultSuccessful()) {
-                logger.info("Found a place !");
                 String url = driver.getCurrentUrl();
-
-                logger.info("URL: {}", url);
+                logger.info("Found a place. URL: {}", url);
                 initDriverWithHead().get(url);
-                String pageSource = driver.getPageSource();
-                FormFillerUtils.writeSourceCodeToFile(pageSource,searchCount);
+                FormFillerUtils.saveSourceCodeToFile(driver.getPageSource());
+                FormFillerUtils.saveScreenshot(driver);
                 String myPhoneNumber = System.getenv("myPhoneNumber");
                 makeCall(myPhoneNumber);
                 sendSMS(myPhoneNumber, url);
                 clickToFirstAvailableDate();
-                File scrFile2 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-                FileUtils.copyFile(scrFile2, new File("/Users/yilmaznaci.aslan/repositories/berlinTerminFinder/screenshot"+Integer.toString(searchCount)+".png"));
-
-
                 //selectTime();
-                clickWeiterButton();
+                //clickWeiterButton();
                 //timer.cancel();
             }
 
             this.searchCount = this.searchCount + 1;
-            logger.info("Completed search count: {}", searchCount);
+            logger.info("Completed search count: {}. Found Count: {}", searchCount, foundCount);
 
         } catch (Exception e) {
             logger.warn("Some error occurred. Reason ", e);
@@ -188,14 +180,14 @@ public class FormFiller extends TimerTask {
         FormFillerUtils.clickToElement(element, elementDescription);
     }
 
-    protected void clickToFirstAvailableDate() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
+    protected void clickToFirstAvailableDate() throws InterruptedException, ElementNotFoundException, InteractionFailedException, IOException {
         String elementDescription = "DateSelection".toUpperCase();
         String cssSelector = "[data-handler=selectDay]";
         WebElement element = FormFillerUtils.getElementByCssSelector(cssSelector, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
         Thread.sleep(1);
-        String pageSource = driver.getPageSource();
-        FormFillerUtils.writeSourceCodeToFile(pageSource, searchCount);
+        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource());
+        FormFillerUtils.saveScreenshot(driver);
     }
 
     private void clickWeiterButton() throws InterruptedException, ElementNotFoundException, InteractionFailedException {

@@ -2,14 +2,12 @@ package org.example.auslanderbehorde;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.IOException;
-import java.util.List;
 
 class FormFillerUtilsTest {
 
@@ -39,11 +37,6 @@ class FormFillerUtilsTest {
         Assertions.assertEquals(expectedMonth, actualMonth);
     }
 
-
-    @Test
-    void writeSourceCodeToFile() {
-        FormFillerUtils.writeSourceCodeToFile("adasd", 4);
-    }
 
     @Test
     void testSaveScreenshot_GIVEN_THAT_current_page_is_date_selection() throws IOException {
