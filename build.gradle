@@ -22,6 +22,8 @@ dependencies {
 
     implementation 'org.slf4j:slf4j-log4j12:2.0.0'
     implementation 'log4j:apache-log4j-extras:1.2.17'
+// https://mvnrepository.com/artifact/net.lightbody.bmp/browsermob-proxy
+    implementation 'net.lightbody.bmp:browsermob-proxy:2.1.4'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
