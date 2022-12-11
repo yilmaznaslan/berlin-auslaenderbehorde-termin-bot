@@ -1,6 +1,8 @@
 plugins {
-    id 'java'
-    id 'application'
+    id('java')
+    id('application')
+    id("com.github.johnrengelman.shadow") version "6.0.0"
+
 }
 
 group 'org.example'
@@ -12,19 +14,14 @@ repositories {
 }
 
 dependencies {
-// https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
-// https://mvnrepository.com/artifact/com.twilio.sdk/twilio
     implementation 'com.twilio.sdk:twilio:9.1.0'
 
     implementation 'org.seleniumhq.selenium:selenium-java:4.4.0'
     implementation 'org.slf4j:slf4j-api:1.6.1'
-    //implementation 'org.slf4j:slf4j-simple:1.6.1'
-    // https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12
-    implementation 'org.slf4j:slf4j-log4j12:2.0.0'
-// https://mvnrepository.com/artifact/log4j/apache-log4j-extras
-    implementation 'log4j:apache-log4j-extras:1.2.17'
 
+    implementation 'org.slf4j:slf4j-log4j12:2.0.0'
+    implementation 'log4j:apache-log4j-extras:1.2.17'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
@@ -32,4 +29,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+tasks.jar {
+    manifest.attributes["Main-Class"] = "org.example.Main"
 }
