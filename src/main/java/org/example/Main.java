@@ -32,12 +32,8 @@ public class Main {
 
 
 
-
-        while (true) {
-            //logger.debug("Number of threads " + Thread.activeCount());
-            Thread.sleep(1000);
-        }
-
+        ThreadMonitor threadMonitor = new ThreadMonitor();
+        threadMonitor.run();
     }
 
 

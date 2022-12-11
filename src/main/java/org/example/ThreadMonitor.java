@@ -9,7 +9,7 @@ public class ThreadMonitor implements Runnable{
     @Override
     public void run() {
         while(true){
-            logger.debug("Number of threads " + Thread.activeCount());
+            logger.info("Number of threads " + Thread.activeCount());
             try {
                 Thread.sleep(30000);
             } catch (InterruptedException e) {
