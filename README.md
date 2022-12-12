@@ -28,3 +28,7 @@ rm chromedriver_mac64.zip
 #WORKDIR /opt/hello
 #CMD ["java", "-jar", "berlinTerminFinder-1.0-SNAPSHOT-all.jar"]
 
+
+## ToDo's
+
+- java.util.concurrent.TimeoutException error

@@ -1,17 +1,19 @@
-package org.example.auslanderbehorde;
+package org.example.auslanderbehorde.form;
+
+import org.example.auslanderbehorde.form.enums.VisaEnum;
 
 public class FormInputs {
 
     private final String citizenshipValue;
     private final String applicationsNumber;
     private final String familyStatus;
-    private final String visaType;
+    private final VisaEnum visaEnum;
 
-    public FormInputs(String citizenshipValue, String applicationsNumber, String familyStatus, String visaType) {
+    public FormInputs(String citizenshipValue, String applicationsNumber, String familyStatus, VisaEnum visaEnum) {
         this.citizenshipValue = citizenshipValue;
         this.applicationsNumber = applicationsNumber;
         this.familyStatus = familyStatus;
-        this.visaType = visaType;
+        this.visaEnum = visaEnum;
     }
 
     public String getCitizenshipValue() {
@@ -26,7 +28,7 @@ public class FormInputs {
         return familyStatus;
     }
 
-    public String getVisaType() {
-        return visaType;
+    public VisaEnum getVisaEnum() {
+        return visaEnum;
     }
 }

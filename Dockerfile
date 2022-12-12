@@ -16,3 +16,16 @@ RUN apt-get -y update
 RUN apt-get -y install google-chrome-stable
 
 
+# Install ChromeDriver.
+RUN wget -N http://chromedriver.storage.googleapis.com/2.27/chromedriver_linux64.zip -P ~/
+RUN unzip ~/chromedriver_linux64.zip -d ~/
+RUN rm ~/chromedriver_linux64.zip
+RUN mv -f ~/chromedriver /usr/local/share/
+RUN chmod +x /usr/local/share/chromedriver
+RUN ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+
+
+
+EXPOSE 80
+WORKDIR /opt/hello
+CMD ["java", "-jar", "berlinTerminFinder-1.0-SNAPSHOT-all.jar"]

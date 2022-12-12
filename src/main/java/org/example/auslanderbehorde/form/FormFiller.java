@@ -1,5 +1,7 @@
-package org.example.auslanderbehorde;
+package org.example.auslanderbehorde.form;
 
+import org.example.auslanderbehorde.*;
+import org.example.auslanderbehorde.form.enums.VisaEnum;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -11,8 +13,8 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static org.example.auslanderbehorde.FormFillerUtils.SLEEP_DURATION_IN_MILISECONDS;
-import static org.example.auslanderbehorde.FormFillerUtils.TIMEOUT_FOR_INTERACTING_IN_SECONDS;
+import static org.example.auslanderbehorde.form.FormFillerUtils.SLEEP_DURATION_IN_MILISECONDS;
+import static org.example.auslanderbehorde.form.FormFillerUtils.TIMEOUT_FOR_INTERACTING_IN_SECONDS;
 import static org.example.notifications.Twilio.makeCall;
 import static org.example.notifications.Twilio.sendSMS;
 
@@ -24,7 +26,7 @@ public class FormFiller extends TimerTask {
     private final String citizenshipValue;
     private final String applicantNumber;
     private final String familyStatus;
-    private final String visaType;
+    private final VisaEnum visaEnum;
 
     private String requestId;
     private String dswid;
@@ -49,7 +51,8 @@ public class FormFiller extends TimerTask {
         this.citizenshipValue = formInputs.getCitizenshipValue();
         this.applicantNumber = formInputs.getApplicationsNumber();
         this.familyStatus = formInputs.getFamilyStatus();
-        this.visaType = formInputs.getVisaType();
+        this.visaEnum = formInputs.getVisaEnum();
+
     }
 
     @Override
@@ -72,7 +75,7 @@ public class FormFiller extends TimerTask {
             selectFamilyStatus();
             clickServiceType();
             clickVisaGroup();
-            clickVisaBlueCard();
+            clickToVisa();
             clickNextButton();
 
             if (isResultSuccessful()) {
@@ -162,10 +165,10 @@ public class FormFiller extends TimerTask {
         FormFillerUtils.clickToElement(element, elementDescription);
     }
 
-    private void clickVisaBlueCard() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
-        String elementXpath = "//*[@id=\"inner-163-0-1\"]/div/div[4]/div/div[11]/label";
-        String elementDescription = "blueCardVisa".toUpperCase();
-        WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
+    private void clickToVisa() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
+        String elementId = visaEnum.getId();
+        String elementDescription = visaEnum.getDataTag0();
+        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
     }
 

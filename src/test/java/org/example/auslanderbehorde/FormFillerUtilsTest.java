@@ -1,7 +1,11 @@
 package org.example.auslanderbehorde;
 
+import org.example.auslanderbehorde.form.FormFillerUtils;
+import org.example.auslanderbehorde.form.enums.EconomicActivityVisaDeEnum;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -11,6 +15,20 @@ import java.io.IOException;
 
 class FormFillerUtilsTest {
 
+    String path_EN = FormFillerUtilsTest.class.getClassLoader().getResource("org/example/TerminbuchenServicewahl.html").getPath();
+    String path_DE = FormFillerUtilsTest.class.getClassLoader().getResource("org/example/TerminbuchenServicewahl_DE.html").getPath();
+
+    String url_EN = "file:".concat(path_EN);
+    String url_DE = "file:".concat(path_DE);
+
+    WebDriver driver;
+
+    @BeforeEach
+    void initDriver(){
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
+        this.driver = new ChromeDriver(options);
+    }
 
     @Test
     void ASSERT_THAT_available_date_is_selected() throws ElementNotFoundException, InterruptedException {
@@ -37,24 +55,46 @@ class FormFillerUtilsTest {
         Assertions.assertEquals(expectedMonth, actualMonth);
     }
 
-
     @Test
-    void testSaveScreenshot_GIVEN_THAT_current_page_is_date_selection() throws IOException {
+    void AASERT_THAT_screenshot_is_saved_WHEN_testSaveScreenshot_is_called() throws IOException {
         // GIVEN
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
-        options.addArguments("--start-maximized");
-        options.addArguments("--start-fullscreen");
-        WebDriver driver = new ChromeDriver(options);
-        String url = "file:/Users/yilmaznaci.aslan/repositories/berlinTerminFinder/src/test/resources/terminDateSelect.html";
-
 
         // WHEN
-        driver.get(url);
+        driver.get(url_EN);
         FormFillerUtils.saveScreenshot(driver);
 
         // THEN
     }
 
+    @Test
+    void ASSERT_THAT_element_is_returned_WHEN_getById_is_called_GIVEN_THAT_current_page_is_servicewahl() throws IOException, ElementNotFoundException, InterruptedException {
+        // GIVEN
+        String id = "SERVICEWAHL_DE323-0-1-3-328338";
 
+        // WHEN
+        driver.get(url_EN);
+        WebElement element = FormFillerUtils.getElementById(id, "", driver);
+
+        // THEN
+        String label = "Aufenthaltserlaubnis für eine Berufsausbildung (§ 16a)";
+        Assertions.assertEquals(label, element.getAttribute("data-tag0"));
+    }
+
+    @Test
+    void ASSERT_THAT_element_is_returned_WHEN_getById_is_called_GIVEN_THAT_current_page_is_servicewahl_DE() throws IOException, ElementNotFoundException, InterruptedException {
+        // GIVEN
+        String id = EconomicActivityVisaDeEnum.BLUECARD.getId();
+
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
+        WebDriver asd =  new ChromeDriver(options);
+        // WHEN
+        asd.get(url_DE);
+        //WebElement  element = asd.findElement(By.id(id));
+        WebElement element = FormFillerUtils.getElementById(id, "", asd);
+
+        // THEN
+        String label = EconomicActivityVisaDeEnum.BLUECARD.getDataTag0();
+        Assertions.assertEquals(label, element.getAttribute("data-tag0"));
+    }
 }

@@ -1,6 +1,9 @@
-package org.example.auslanderbehorde;
+package org.example.auslanderbehorde.form;
 
 import org.apache.commons.io.FileUtils;
+import org.example.auslanderbehorde.ElementNotFoundException;
+import org.example.auslanderbehorde.InteractionFailedException;
+import org.example.auslanderbehorde.form.FormFiller;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
@@ -18,6 +21,28 @@ public class FormFillerUtils {
     static final int TIMEOUT_FOR_INTERACTING_IN_SECONDS = 10;
     static final int SLEEP_DURATION_IN_MILISECONDS = 1500;
 
+    public static WebElement getElementById(String id, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundException {
+        WebElement element = null;
+        int i = 1;
+        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+            try {
+                element = driver.findElement(By.id(id));
+                logger.info("Element: {}. Process: Getting by elementId. Result: Successful", elementDescription);
+                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+                break;
+            } catch (Exception e) {
+                logger.warn("Element: {}. Process: Getting by elementId. Result: Failed. Reason:{}", elementDescription, e.getMessage());
+            }
+            Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+            i++;
+        }
+        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+            logger.warn("Element: {}. Process: Getting by elementId. Result: Failed. Reason: Couldn't get elementById within timeout", elementDescription);
+            throw new ElementNotFoundException(elementDescription);
+
+        }
+        return element;
+    }
     public static WebElement getElementByName(String elementName, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundException {
         WebElement element = null;
         int i = 1;
@@ -82,6 +107,29 @@ public class FormFillerUtils {
         if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed. Reason: Couldn't click within timeout", elementDescription);
             throw new ElementNotFoundException(cssSelector);
+
+        }
+        return element;
+    }
+
+    public static WebElement getElementByValue(String value, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundException {
+        WebElement element = null;
+        int i = 0;
+        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+            try {
+                element = driver.findElement(By.linkText(value));
+                logger.info("Element: {}. Process: Getting by elementCssSelector. Result: Successful", elementDescription);
+                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+                break;
+            } catch (Exception e) {
+                logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed", elementDescription);
+            }
+            Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+            i++;
+        }
+        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+            logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed. Reason: Couldn't click within timeout", elementDescription);
+            throw new ElementNotFoundException(elementDescription);
 
         }
         return element;
