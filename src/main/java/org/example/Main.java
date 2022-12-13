@@ -1,10 +1,9 @@
 package org.example;
 
-import org.example.auslanderbehorde.form.FormFiller;
+import org.example.auslanderbehorde.form.business.FormFiller;
 import org.example.auslanderbehorde.form.FormInputs;
 import org.example.auslanderbehorde.SessionFinder;
 import org.example.auslanderbehorde.form.enums.EconomicActivityVisaDeEnum;
-import org.example.auslanderbehorde.form.enums.EconomicActivityVisaEnEnum;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
@@ -26,6 +25,7 @@ public class Main {
 
         List<FormInputs> formInputs = generateForms();
 
+
         for (FormInputs formInput: formInputs) {
             SessionFinder sessionFinder = new SessionFinder();
             sessionFinder.findRequestId();
@@ -37,6 +37,18 @@ public class Main {
         }
 
 
+
+        /*
+        SessionFinder sessionFinder = new SessionFinder();
+        sessionFinder.findRequestId();
+        String requestId = sessionFinder.getRequestId();
+        String dswid = sessionFinder.getDswid();
+        String dsrid = sessionFinder.getDsrid();
+        FormFiller formFiller = new FormFiller(requestId, dswid, dsrid, formInputs.get(0), new ChromeDriver(options));
+        formFiller.startScanning();
+
+
+         */
         ThreadMonitor threadMonitor = new ThreadMonitor();
         threadMonitor.run();
     }

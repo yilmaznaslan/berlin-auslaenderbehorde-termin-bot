@@ -1,6 +1,7 @@
-package org.example.auslanderbehorde.form;
+package org.example.auslanderbehorde.form.business;
 
 import org.example.auslanderbehorde.*;
+import org.example.auslanderbehorde.form.FormInputs;
 import org.example.auslanderbehorde.form.enums.VisaEnum;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,13 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static org.example.auslanderbehorde.form.FormFillerUtils.SLEEP_DURATION_IN_MILISECONDS;
-import static org.example.auslanderbehorde.form.FormFillerUtils.TIMEOUT_FOR_INTERACTING_IN_SECONDS;
-import static org.example.notifications.Twilio.makeCall;
-import static org.example.notifications.Twilio.sendSMS;
+import static org.example.auslanderbehorde.form.business.FormFillerUtils.SLEEP_DURATION_IN_MILISECONDS;
+import static org.example.auslanderbehorde.form.business.FormFillerUtils.TIMEOUT_FOR_INTERACTING_IN_SECONDS;
+import static org.example.auslanderbehorde.form.enums.FormParameterDeEnum.*;
 
 public class FormFiller extends TimerTask {
 
@@ -27,6 +28,7 @@ public class FormFiller extends TimerTask {
     private final String applicantNumber;
     private final String familyStatus;
     private final VisaEnum visaEnum;
+    private final long searchId;
 
     private String requestId;
     private String dswid;
@@ -47,6 +49,7 @@ public class FormFiller extends TimerTask {
         this.dswid = dswid;
         this.dsrid = dsrid;
         this.driver = webDriver;
+        this.searchId = new Random().nextLong();
 
         this.citizenshipValue = formInputs.getCitizenshipValue();
         this.applicantNumber = formInputs.getApplicationsNumber();
@@ -71,7 +74,7 @@ public class FormFiller extends TimerTask {
             }
 
             selectCitizenshipValue();
-            selectApplicantsNumber();
+            selectApplicantsCount();
             selectFamilyStatus();
             clickServiceType();
             clickVisaGroup();
@@ -79,18 +82,19 @@ public class FormFiller extends TimerTask {
             clickNextButton();
 
             if (isResultSuccessful()) {
+                foundCount++;
                 String url = driver.getCurrentUrl();
                 logger.info("Found a place. URL: {}", url);
                 initDriverWithHead().get(url);
                 FormFillerUtils.saveSourceCodeToFile(driver.getPageSource());
                 FormFillerUtils.saveScreenshot(driver);
                 String myPhoneNumber = System.getenv("myPhoneNumber");
-                makeCall(myPhoneNumber);
-                sendSMS(myPhoneNumber, url);
+                //makeCall(myPhoneNumber);
+                //sendSMS(myPhoneNumber, url);
                 clickToFirstAvailableDate();
-                //selectTime();
-                //clickWeiterButton();
-                //timer.cancel();
+                selectFirstAvailableTimeSlot();
+                clickWeiterButton();
+                timer.cancel();
             }
 
             this.searchCount = this.searchCount + 1;
@@ -98,8 +102,8 @@ public class FormFiller extends TimerTask {
 
         } catch (Exception e) {
             logger.warn("Some error occurred. Reason ", e);
-            this.driver.quit();
-            this.driver = initDriverHeadless();
+            driver.close();
+            driver = initDriverHeadless();
         }
 
     }
@@ -131,23 +135,31 @@ public class FormFiller extends TimerTask {
     }
 
     private void selectCitizenshipValue() throws InterruptedException, ElementNotFoundException {
-        String elementName = "sel_staat";
-        String elementDescription = "Citizenship".toUpperCase();
-        WebElement element = FormFillerUtils.getElementByName(elementName, elementDescription, driver);
+        String elementName = COUNTRY.getId();
+        String elementDescription = COUNTRY.name();
+        WebElement element = FormFillerUtils.getElementById(elementName, elementDescription, driver);
         FormFillerUtils.selectOption(element, elementDescription, citizenshipValue);
     }
 
-    private void selectApplicantsNumber() throws InterruptedException, ElementNotFoundException {
-        String elementName = "personenAnzahl_normal";
-        String elementDescription = "appliacntsNumber".toUpperCase();
-        WebElement element = FormFillerUtils.getElementByName(elementName, elementDescription, driver);
+    private void selectApplicantsCount() throws InterruptedException, ElementNotFoundException {
+        String elementId = APPLICANT_COUNT.getId();
+        String elementDescription = APPLICANT_COUNT.name();
+        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         FormFillerUtils.selectOption(element, elementDescription, applicantNumber);
     }
 
-    private void selectFamilyStatus() throws InterruptedException, ElementNotFoundException {
-        String elementName = "lebnBrMitFmly";
-        String elementDescription = "FamilyStatus".toUpperCase();
+    protected void selectFirstAvailableTimeSlot() throws ElementNotFoundException, InterruptedException {
+        String elementDescription = "TimeSlot".toUpperCase();
+        String elementName = "dd_zeiten";
         WebElement element = FormFillerUtils.getElementByName(elementName, elementDescription, driver);
+        FormFillerUtils.selectOptionByIndex(element, elementDescription);
+        Thread.sleep(1000);
+    }
+
+    private void selectFamilyStatus() throws InterruptedException, ElementNotFoundException {
+        String elementId = FAMILY_STATUS.getId();
+        String elementDescription = FAMILY_STATUS.name();
+        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         FormFillerUtils.selectOption(element, elementDescription, familyStatus);
     }
 
@@ -183,17 +195,25 @@ public class FormFiller extends TimerTask {
         String elementDescription = "DateSelection".toUpperCase();
         String cssSelector = "[data-handler=selectDay]";
         WebElement element = FormFillerUtils.getElementByCssSelector(cssSelector, elementDescription, driver);
+        String dateMonth = element.getAttribute("data-month");
+        String dateYear = element.getAttribute("data-year");
+        String dateDay = element.getText();
+        String info = String.format("Selected date: Day:%s Month:%s Year:%s", dateDay,dateMonth, dateYear);
+        logger.info(info);
         FormFillerUtils.clickToElement(element, elementDescription);
         Thread.sleep(1);
         FormFillerUtils.saveSourceCodeToFile(driver.getPageSource());
         FormFillerUtils.saveScreenshot(driver);
     }
 
-    private void clickWeiterButton() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
-        String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
+    private void clickWeiterButton() throws InterruptedException, ElementNotFoundException, InteractionFailedException, IOException {
+        String elementId = "applicationForm:managedForm:proceed";
         String elementDescription = "weiter button".toUpperCase();
-        WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
+        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
+        Thread.sleep(1);
+        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource());
+        FormFillerUtils.saveScreenshot(driver);
     }
 
     private boolean isResultSuccessful() throws InterruptedException {

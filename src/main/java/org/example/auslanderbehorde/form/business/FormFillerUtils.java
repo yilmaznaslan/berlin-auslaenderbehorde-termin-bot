@@ -1,9 +1,9 @@
-package org.example.auslanderbehorde.form;
+package org.example.auslanderbehorde.form.business;
 
 import org.apache.commons.io.FileUtils;
 import org.example.auslanderbehorde.ElementNotFoundException;
 import org.example.auslanderbehorde.InteractionFailedException;
-import org.example.auslanderbehorde.form.FormFiller;
+import org.example.auslanderbehorde.form.business.FormFiller;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
@@ -99,13 +99,13 @@ public class FormFillerUtils {
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
-                logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed", elementDescription);
+                logger.warn("Element: {}. Process: Getting by elementCssSelector. Result: Failed", elementDescription);
             }
             Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
             i++;
         }
         if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
-            logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed. Reason: Couldn't click within timeout", elementDescription);
+            logger.warn("Element: {}. Process: Getting by elementCssSelector. Result: Failed. Reason: Couldn't get within timeout", elementDescription);
             throw new ElementNotFoundException(cssSelector);
 
         }
@@ -193,11 +193,9 @@ public class FormFillerUtils {
             try {
                 Select select = new Select(element);
                 List<WebElement> availableHours = select.getOptions();
-                int hoursSize = availableHours.size();
-                logger.info("{} hours are found.", hoursSize);
-                int targetHour = hoursSize - 1;
-                select.selectByIndex(targetHour);
-                String selectValue = availableHours.get(targetHour).getText();
+                int targetHourIndex = 0;
+                select.selectByIndex(targetHourIndex);
+                String selectValue = availableHours.get(targetHourIndex).getText();
                 logger.info("Selected the value: {}.Select: {}", selectValue, select);
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
@@ -236,7 +234,13 @@ public class FormFillerUtils {
         String dateAsStr = dtf.format(now);
         File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         String filePath = FormFiller.class.getResource("/").getPath();
-        FileUtils.copyFile(scrFile1, new File(filePath+"/screenshot_"+ dateAsStr +".png"));
+        FileUtils.copyFile(scrFile1, new File(filePath+"/screenshot_"+ dateAsStr +"_0.png"));
+
+        JavascriptExecutor jse = (JavascriptExecutor)driver;
+        jse.executeScript("scroll(0, 1000);");
+        FileUtils.copyFile(scrFile1, new File(filePath+"/screenshot_"+ dateAsStr +"_1.png"));
+
+        jse.executeScript("scroll(0, -1000);");
 
     }
 }
