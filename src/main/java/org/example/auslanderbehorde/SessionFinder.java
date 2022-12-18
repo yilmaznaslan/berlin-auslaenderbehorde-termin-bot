@@ -1,11 +1,11 @@
 package org.example.auslanderbehorde;
 
 import okhttp3.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -15,7 +15,7 @@ import java.util.List;
 
 public class SessionFinder {
 
-    private  Logger logger = LoggerFactory.getLogger(SessionFinder.class);
+    private Logger logger = LogManager.getLogger(SessionFinder.class);
     private  String dswid;
     private  String dsrid;
     private String requestId;
@@ -73,7 +73,7 @@ public class SessionFinder {
         WebDriver driver = new ChromeDriver(options);
 
         String initialUrl = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
-        logger.info("Getting the URL: {}", initialUrl);
+        logger.info("Getting the URL: %s"+ initialUrl);
 
         driver.get(initialUrl);
         while (true) {
@@ -83,7 +83,7 @@ public class SessionFinder {
                 URL url = new URL(urlAfterRedirect);
                 String queryStr = url.getQuery();
                 if (this.dsrid == null && this.dswid == null) {
-                    logger.info("QueryString: {}", queryStr);
+                    logger.info("QueryString: %s"+ queryStr);
                     extractDswidAndDsrid(queryStr);
                 }
 
@@ -104,21 +104,15 @@ public class SessionFinder {
         List<String> queryStrings = List.of(queryStr.split("&"));
         dsrid = Arrays.stream(queryStrings.get(0).split("=")).toList().get(1);
         dswid = Arrays.stream(queryStrings.get(1).split("=")).toList().get(1);
-        logger.info("dswid: {}, dsrid: {}", dswid, dsrid);
+        logger.info(String.format("dswid: %s, dsrid: %s", dswid, dsrid));
     }
 
     private  String extractRequestId(String url) {
         List<String> urlAsList = List.of(url.split("/"));
         String requestIdAndV = urlAsList.get(urlAsList.size() - 1);
-
         String requestId = List.of(requestIdAndV.split("\\?")).get(0);
-
-        //dsrid = Arrays.stream(queryStrings.get(0).split("=")).toList().get(1);
-        //dswid = Arrays.stream(queryStrings.get(1).split("=")).toList().get(1);
-        logger.info("RequestID: {}", requestId);
-        //LOGGER.info("RequestId: {}, v: {}", dswid, dsrid);
+        logger.info(String.format("RequestID: %s",requestId));
         return requestId;
-
     }
 
     public String getDswid() {

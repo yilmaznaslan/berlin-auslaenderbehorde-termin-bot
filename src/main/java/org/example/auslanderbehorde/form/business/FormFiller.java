@@ -1,5 +1,8 @@
 package org.example.auslanderbehorde.form.business;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 import org.example.auslanderbehorde.*;
 import org.example.auslanderbehorde.form.FormInputs;
 import org.example.auslanderbehorde.form.enums.VisaEnum;
@@ -7,8 +10,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Random;
@@ -17,24 +18,26 @@ import java.util.TimerTask;
 
 import static org.example.auslanderbehorde.form.business.FormFillerUtils.SLEEP_DURATION_IN_MILISECONDS;
 import static org.example.auslanderbehorde.form.business.FormFillerUtils.TIMEOUT_FOR_INTERACTING_IN_SECONDS;
-import static org.example.auslanderbehorde.form.enums.FormParameterDeEnum.*;
+import static org.example.auslanderbehorde.form.enums.FormParameterEnum.*;
+import static org.example.notifications.Twilio.makeCall;
+import static org.example.notifications.Twilio.sendSMS;
 
 public class FormFiller extends TimerTask {
 
-    private final Logger logger = LoggerFactory.getLogger(FormFiller.class);
+    private final Logger logger = LogManager.getLogger(FormFiller.class);
     public static final int FORM_REFRESH_PERIOD_MILISECONDS = 1000;
 
     private final String citizenshipValue;
     private final String applicantNumber;
     private final String familyStatus;
     private final VisaEnum visaEnum;
-    private final long searchId;
+    private final long formId;
 
     private String requestId;
     private String dswid;
     private String dsrid;
-    private int searchCount = 0;
-    private int foundCount = 0;
+    private static int searchCount = 0;
+    private static int foundCount = 0;
 
     private WebDriver driver;
     private Timer timer = new Timer(true);
@@ -49,8 +52,8 @@ public class FormFiller extends TimerTask {
         this.dswid = dswid;
         this.dsrid = dsrid;
         this.driver = webDriver;
-        this.searchId = new Random().nextLong();
-
+        this.formId = new Random().nextLong();
+        FormFillerUtils.formId = formId;
         this.citizenshipValue = formInputs.getCitizenshipValue();
         this.applicantNumber = formInputs.getApplicationsNumber();
         this.familyStatus = formInputs.getFamilyStatus();
@@ -84,13 +87,14 @@ public class FormFiller extends TimerTask {
             if (isResultSuccessful()) {
                 foundCount++;
                 String url = driver.getCurrentUrl();
-                logger.info("Found a place. URL: {}", url);
+                String msg = String.format("Found a place. URL: %s", url);
+                logger.info(msg);
                 initDriverWithHead().get(url);
                 FormFillerUtils.saveSourceCodeToFile(driver.getPageSource());
                 FormFillerUtils.saveScreenshot(driver);
                 String myPhoneNumber = System.getenv("myPhoneNumber");
-                //makeCall(myPhoneNumber);
-                //sendSMS(myPhoneNumber, url);
+                makeCall(myPhoneNumber);
+                sendSMS(myPhoneNumber, url);
                 clickToFirstAvailableDate();
                 selectFirstAvailableTimeSlot();
                 clickWeiterButton();
@@ -98,7 +102,8 @@ public class FormFiller extends TimerTask {
             }
 
             this.searchCount = this.searchCount + 1;
-            logger.info("Completed search count: {}. Found Count: {}", searchCount, foundCount);
+            String msg = String.format("Completed search count: %s. Found Count: %s", searchCount, foundCount);
+            logger.info(msg);
 
         } catch (Exception e) {
             logger.warn("Some error occurred. Reason ", e);
@@ -111,7 +116,7 @@ public class FormFiller extends TimerTask {
     public void goToFormPage(String requestId, String dswid, String dsrid) {
         String hostUrl = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
         String targetUrl = hostUrl + "/" + requestId + "?dswid=" + dswid + "&dsrid=" + dsrid;
-        logger.info("Finding the URL: {}", targetUrl);
+        logger.info(String.format("Finding the URL: %s", targetUrl));
         driver.get(targetUrl);
     }
 
@@ -149,9 +154,9 @@ public class FormFiller extends TimerTask {
     }
 
     protected void selectFirstAvailableTimeSlot() throws ElementNotFoundException, InterruptedException {
-        String elementDescription = "TimeSlot".toUpperCase();
-        String elementName = "dd_zeiten";
-        WebElement element = FormFillerUtils.getElementByName(elementName, elementDescription, driver);
+        String elementId = TIME_SLOT.getId();
+        String elementDescription = TIME_SLOT.name();
+        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         FormFillerUtils.selectOptionByIndex(element, elementDescription);
         Thread.sleep(1000);
     }
@@ -225,16 +230,16 @@ public class FormFiller extends TimerTask {
             try {
                 WebElement element = FormFillerUtils.getElementByXPath(stageXPath, elementDescription, driver);
                 stageText = element.getText();
-                logger.info("Element: {}. Process: Getting Text. Status: Successfully. Value: {}", elementDescription, stageText);
+                logger.info(String.format("Element: %s. Process: Getting Text. Status: Successfully. Value: %s", elementDescription, stageText));
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
-                logger.info("Element: {}. Process: Getting Text. Status: Failed", elementDescription);
+                logger.info(String.format("Element: %s. Process: Getting Text. Status: Failed", elementDescription));
             }
             i++;
         }
         if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
-            logger.warn("Element: {}. Process: reading text, Result: Failed Reason: Couldn't select within timeout", elementDescription);
+            logger.warn(String.format("Element: %s. Process: reading text, Result: Failed Reason: Couldn't select within timeout", elementDescription));
         }
         return stageText.contains("Terminauswahl");
     }
@@ -251,7 +256,7 @@ public class FormFiller extends TimerTask {
             } else {
                 remainingMinute = 0;
             }
-            logger.info("Element: {}. Process: Getting time. Status: Successfully. Value: {}", elementDescription, timeStr);
+            logger.info(String.format("Element: %s. Process: Getting time. Status: Successfully. Value: %s", elementDescription, timeStr));
         } catch (Exception e) {
             logger.info("Element: {}. Process: Getting time. Status: Failed");
         }

@@ -1,10 +1,11 @@
 package org.example;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ThreadMonitor implements Runnable{
-    private final Logger logger = LoggerFactory.getLogger(ThreadMonitor.class);
+    private final Logger logger = LogManager.getLogger(ThreadMonitor.class);
 
     @Override
     public void run() {
