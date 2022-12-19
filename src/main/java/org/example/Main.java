@@ -2,17 +2,14 @@ package org.example;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.ThreadContext;
 import org.example.auslanderbehorde.form.business.FormFiller;
-import org.example.auslanderbehorde.form.FormInputs;
+import org.example.auslanderbehorde.form.model.FormInputs;
 import org.example.auslanderbehorde.SessionFinder;
 import org.example.auslanderbehorde.form.enums.EconomicActivityVisaDeEnum;
-import org.example.auslanderbehorde.form.enums.VisaEnum;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.util.ArrayList;
 import java.util.List;

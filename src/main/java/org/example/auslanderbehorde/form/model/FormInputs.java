@@ -1,4 +1,4 @@
-package org.example.auslanderbehorde.form;
+package org.example.auslanderbehorde.form.model;
 
 import org.example.auslanderbehorde.form.enums.VisaEnum;
 

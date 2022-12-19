@@ -1,7 +1,7 @@
 package org.example.auslanderbehorde.form.business;
 
-import org.example.auslanderbehorde.ElementNotFoundException;
-import org.example.auslanderbehorde.form.FormInputs;
+import org.example.auslanderbehorde.form.exceptions.ElementNotFoundException;
+import org.example.auslanderbehorde.form.model.FormInputs;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

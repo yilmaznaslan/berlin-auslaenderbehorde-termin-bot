@@ -4,8 +4,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
-import org.example.auslanderbehorde.ElementNotFoundException;
-import org.example.auslanderbehorde.InteractionFailedException;
+import org.example.auslanderbehorde.form.exceptions.ElementNotFoundException;
+import org.example.auslanderbehorde.form.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.form.enums.SeleniumProcessEnum;
 import org.example.auslanderbehorde.form.enums.SeleniumProcessResultEnum;
 import org.openqa.selenium.*;
@@ -174,10 +174,11 @@ public class FormFillerUtils {
             try {
                 Select select = new Select(element);
                 List<WebElement> availableHours = select.getOptions();
+                isTimeslotOptionVerified(element);
                 int targetHourIndex = 0;
                 select.selectByIndex(targetHourIndex);
                 String selectValue = availableHours.get(targetHourIndex).getText();
-                logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, SeleniumProcessResultEnum.SUCCESSFUL.name(), "Value:" + selectValue);
+                logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, SeleniumProcessResultEnum.SUCCESSFUL.name(), "Value: " + selectValue);
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
@@ -190,7 +191,18 @@ public class FormFillerUtils {
         }
 
     }
-
+    private static boolean isTimeslotOptionVerified(WebElement element){
+        Select select = new Select(element);
+        List<WebElement> availableHours = select.getOptions();
+        logger.info(String.format("There are %s options", availableHours.size()));
+        for (WebElement hours: availableHours) {
+            logger.info(hours.getText());
+        }
+        if(availableHours.get(0).getText().contains("Bitte")){
+            return false;
+        }
+        return true;
+    }
     public static void saveSourceCodeToFile(String content) {
         String filePath = FormFiller.class.getResource("/").getPath();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
@@ -220,8 +232,6 @@ public class FormFillerUtils {
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         jse.executeScript("scroll(0, 1000);");
         FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + dateAsStr + "_1.png"));
-
-        jse.executeScript("scroll(0, -1000);");
 
     }
 

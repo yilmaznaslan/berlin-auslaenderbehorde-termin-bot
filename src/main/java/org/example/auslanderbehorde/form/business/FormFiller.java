@@ -2,9 +2,10 @@ package org.example.auslanderbehorde.form.business;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.ThreadContext;
 import org.example.auslanderbehorde.*;
-import org.example.auslanderbehorde.form.FormInputs;
+import org.example.auslanderbehorde.form.exceptions.ElementNotFoundException;
+import org.example.auslanderbehorde.form.exceptions.InteractionFailedException;
+import org.example.auslanderbehorde.form.model.FormInputs;
 import org.example.auslanderbehorde.form.enums.VisaEnum;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -19,7 +20,6 @@ import java.util.TimerTask;
 import static org.example.auslanderbehorde.form.business.FormFillerUtils.SLEEP_DURATION_IN_MILISECONDS;
 import static org.example.auslanderbehorde.form.business.FormFillerUtils.TIMEOUT_FOR_INTERACTING_IN_SECONDS;
 import static org.example.auslanderbehorde.form.enums.FormParameterEnum.*;
-import static org.example.notifications.Twilio.makeCall;
 import static org.example.notifications.Twilio.sendSMS;
 
 public class FormFiller extends TimerTask {
@@ -85,20 +85,21 @@ public class FormFiller extends TimerTask {
             clickNextButton();
 
             if (isResultSuccessful()) {
+                Thread.sleep(1000);
                 foundCount++;
                 String url = driver.getCurrentUrl();
                 String msg = String.format("Found a place. URL: %s", url);
                 logger.info(msg);
                 initDriverWithHead().get(url);
-                FormFillerUtils.saveSourceCodeToFile(driver.getPageSource());
-                FormFillerUtils.saveScreenshot(driver);
+                //FormFillerUtils.saveSourceCodeToFile(driver.getPageSource());
+                //FormFillerUtils.saveScreenshot(driver);
                 String myPhoneNumber = System.getenv("myPhoneNumber");
-                makeCall(myPhoneNumber);
+                //makeCall(myPhoneNumber);
                 sendSMS(myPhoneNumber, url);
                 clickToFirstAvailableDate();
                 selectFirstAvailableTimeSlot();
                 clickWeiterButton();
-                timer.cancel();
+                //timer.cancel();
             }
 
             this.searchCount = this.searchCount + 1;
@@ -208,7 +209,7 @@ public class FormFiller extends TimerTask {
         FormFillerUtils.clickToElement(element, elementDescription);
         Thread.sleep(1);
         FormFillerUtils.saveSourceCodeToFile(driver.getPageSource());
-        FormFillerUtils.saveScreenshot(driver);
+        //FormFillerUtils.saveScreenshot(driver);
     }
 
     private void clickWeiterButton() throws InterruptedException, ElementNotFoundException, InteractionFailedException, IOException {
@@ -216,7 +217,7 @@ public class FormFiller extends TimerTask {
         String elementDescription = "weiter button".toUpperCase();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
-        Thread.sleep(1);
+        Thread.sleep(3);
         FormFillerUtils.saveSourceCodeToFile(driver.getPageSource());
         FormFillerUtils.saveScreenshot(driver);
     }
