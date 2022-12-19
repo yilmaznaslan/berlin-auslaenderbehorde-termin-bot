@@ -139,7 +139,7 @@ public class FormFillerUtils {
         }
     }
 
-    public static void selectOption(WebElement element, String elementDescription, String optionValue) {
+    public static void selectOptionByValue(WebElement element, String elementDescription, String optionValue) {
         if (element == null) {
             logger.warn("Element:{} is null, Process: Select can not be continued");
             return;
@@ -164,7 +164,7 @@ public class FormFillerUtils {
         }
     }
 
-    public static void selectOptionByIndex(WebElement element, String elementDescription) {
+    public static void selectOptionByIndex(WebElement element, String elementDescription, int index) {
         if (element == null) {
             logger.warn("Element:{} is null, process can not be continued");
             return;
@@ -174,10 +174,8 @@ public class FormFillerUtils {
             try {
                 Select select = new Select(element);
                 List<WebElement> availableHours = select.getOptions();
-                isTimeslotOptionVerified(element);
-                int targetHourIndex = 0;
-                select.selectByIndex(targetHourIndex);
-                String selectValue = availableHours.get(targetHourIndex).getText();
+                String selectValue = availableHours.get(index).getText();
+                select.selectByIndex(index);
                 logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, SeleniumProcessResultEnum.SUCCESSFUL.name(), "Value: " + selectValue);
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
@@ -191,18 +189,7 @@ public class FormFillerUtils {
         }
 
     }
-    private static boolean isTimeslotOptionVerified(WebElement element){
-        Select select = new Select(element);
-        List<WebElement> availableHours = select.getOptions();
-        logger.info(String.format("There are %s options", availableHours.size()));
-        for (WebElement hours: availableHours) {
-            logger.info(hours.getText());
-        }
-        if(availableHours.get(0).getText().contains("Bitte")){
-            return false;
-        }
-        return true;
-    }
+
     public static void saveSourceCodeToFile(String content) {
         String filePath = FormFiller.class.getResource("/").getPath();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
@@ -221,17 +208,17 @@ public class FormFillerUtils {
 
     }
 
-    public static void saveScreenshot(WebDriver driver) throws IOException {
+    public static void saveScreenshot(WebDriver driver, String suffix) throws IOException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String dateAsStr = dtf.format(now);
         File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         String filePath = FormFiller.class.getResource("/").getPath();
-        FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + dateAsStr + "_0.png"));
+        FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + suffix  + dateAsStr + "_0.png"));
 
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         jse.executeScript("scroll(0, 1000);");
-        FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + dateAsStr + "_1.png"));
+        FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + suffix  + dateAsStr + "_1.png"));
 
     }
 

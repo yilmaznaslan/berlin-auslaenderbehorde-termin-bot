@@ -16,33 +16,33 @@ import org.openqa.selenium.support.ui.Select;
 import java.io.IOException;
 
 import static org.example.auslanderbehorde.form.enums.EconomicActivityVisaDeEnum.BLUECARD;
+import static org.junit.jupiter.api.Assertions.*;
 
-class FormFillerTest {
+class AppointmentFinderTest {
 
     String path_DE = FormFiller.class.getClassLoader().getResource("org/example/form/business/dateSelection_DE.html").getPath();
 
     String url_DE = "file:".concat(path_DE);
 
     WebDriver driver;
-    FormInputs formInputs = new FormInputs("turkey", "1", "0", BLUECARD);
-    FormFiller underTest;
+    AppointmentFinder underTest;
 
     @BeforeEach
     void initDriver() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
+        //options.addArguments("--headless");
         this.driver = new ChromeDriver(options);
-        this.underTest = new FormFiller("", "", "", formInputs, driver);
+        this.underTest = new AppointmentFinder(driver);
     }
 
     @Test
     void ASSERT_THAT_first_available_time_is_selected_WHEN_handleSelectingTimeslot_is_called() throws ElementNotFoundException, InterruptedException, InteractionFailedException, IOException {
         // GIVEN
         String expectedTime = "09:30";
+        driver.get(url_DE);
 
         // WHEN
-        driver.get(url_DE);
-        //underTest.handleSelectingTimeslot();
+        underTest.handleSelectingTimeslot();
         WebElement webElement = driver.findElement(By.name("dd_zeiten"));
 
         // THEN
@@ -51,5 +51,4 @@ class FormFillerTest {
 
         Assertions.assertEquals(expectedTime, actualTime);
     }
-
 }

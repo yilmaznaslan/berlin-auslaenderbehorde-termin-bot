@@ -63,7 +63,7 @@ class FormFillerUtilsTest {
         driver.get(url_EN);
 
 
-        FormFillerUtils.saveScreenshot(driver);
+        FormFillerUtils.saveScreenshot(driver, "");
 
         // THEN
     }
