@@ -1,8 +1,9 @@
-package org.example.auslanderbehorde;
+package org.example.auslanderbehorde.sessionfinder.business;
 
 import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.example.auslanderbehorde.sessionfinder.model.SessionModel;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -15,10 +16,8 @@ import java.util.List;
 
 public class SessionFinder {
 
-    private Logger logger = LogManager.getLogger(SessionFinder.class);
-    private  String dswid;
-    private  String dsrid;
-    private String requestId;
+    private SessionModel sessionModel = new SessionModel();
+    private final Logger logger = LogManager.getLogger(SessionFinder.class);
 
     public SessionFinder() {
 
@@ -26,7 +25,7 @@ public class SessionFinder {
 
     public void findRequestId (){
         initiateSession();
-        activateRequestId(requestId);
+        activateRequestId(sessionModel.getRequestId());
     }
 
     private void activateRequestId(String requestId) {
@@ -73,7 +72,7 @@ public class SessionFinder {
         WebDriver driver = new ChromeDriver(options);
 
         String initialUrl = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
-        logger.info("Getting the URL: %s"+ initialUrl);
+        logger.info(String.format("Getting the URL: %s", initialUrl));
 
         driver.get(initialUrl);
         while (true) {
@@ -82,13 +81,13 @@ public class SessionFinder {
             try {
                 URL url = new URL(urlAfterRedirect);
                 String queryStr = url.getQuery();
-                if (this.dsrid == null && this.dswid == null) {
-                    logger.info("QueryString: %s"+ queryStr);
+                if (sessionModel.getDsrid() == null && sessionModel.getDswid() == null) {
+                    logger.info(String.format("QueryString: %s", queryStr));
                     extractDswidAndDsrid(queryStr);
                 }
 
                 if (urlAfterRedirect.contains("?v")) {
-                    this.requestId = extractRequestId(urlAfterRedirect);
+                    extractRequestId(urlAfterRedirect);
                     driver.close();
                     break;
                 }
@@ -102,28 +101,21 @@ public class SessionFinder {
 
     private void extractDswidAndDsrid(String queryStr) {
         List<String> queryStrings = List.of(queryStr.split("&"));
-        dsrid = Arrays.stream(queryStrings.get(0).split("=")).toList().get(1);
-        dswid = Arrays.stream(queryStrings.get(1).split("=")).toList().get(1);
+        String dsrid = Arrays.stream(queryStrings.get(0).split("=")).toList().get(1);
+        String dswid = Arrays.stream(queryStrings.get(1).split("=")).toList().get(1);
+        this.sessionModel = new SessionModel(dswid, dsrid);
         logger.info(String.format("dswid: %s, dsrid: %s", dswid, dsrid));
     }
 
-    private  String extractRequestId(String url) {
+    private  void extractRequestId(String url) {
         List<String> urlAsList = List.of(url.split("/"));
         String requestIdAndV = urlAsList.get(urlAsList.size() - 1);
         String requestId = List.of(requestIdAndV.split("\\?")).get(0);
         logger.info(String.format("RequestID: %s",requestId));
-        return requestId;
+        sessionModel.setRequestId(requestId);
     }
 
-    public String getDswid() {
-        return dswid;
-    }
-
-    public String getDsrid() {
-        return dsrid;
-    }
-
-    public String getRequestId() {
-        return requestId;
+    public SessionModel getSessionModel() {
+        return sessionModel;
     }
 }

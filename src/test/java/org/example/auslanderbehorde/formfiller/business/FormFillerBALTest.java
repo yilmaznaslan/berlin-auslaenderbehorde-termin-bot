@@ -3,6 +3,7 @@ package org.example.auslanderbehorde.formfiller.business;
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
+import org.example.auslanderbehorde.sessionfinder.model.SessionModel;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,7 @@ class FormFillerBALTest {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
         this.driver = new ChromeDriver(options);
-        this.underTest = new FormFillerBAL("", "", "", formInputs, driver);
+        this.underTest = new FormFillerBAL(new SessionModel("", "",""), formInputs, driver);
     }
 
     @Test

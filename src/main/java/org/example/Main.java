@@ -4,8 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.formfiller.business.FormFillerBAL;
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
-import org.example.auslanderbehorde.SessionFinder;
 import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum;
+import org.example.auslanderbehorde.sessionfinder.business.SessionFinder;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -42,20 +42,8 @@ public class Main {
 
         SessionFinder sessionFinder = new SessionFinder();
         sessionFinder.findRequestId();
-        String requestId = sessionFinder.getRequestId();
-        String dswid = sessionFinder.getDswid();
-        String dsrid = sessionFinder.getDsrid();
-        Proxy p=new Proxy();
-
-
-        p.setHttpProxy("www.abc.com:8080");
-        options.setCapability(CapabilityType.PROXY, p);
-
-
-        FormFillerBAL formFillerBAL = new FormFillerBAL(requestId, dswid, dsrid, new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD), new ChromeDriver(options));
+        FormFillerBAL formFillerBAL = new FormFillerBAL(sessionFinder.getSessionModel(), new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD), new ChromeDriver(options));
         formFillerBAL.startScanning();
-
-
 
 
         ThreadMonitor threadMonitor = new ThreadMonitor();
@@ -69,6 +57,5 @@ public class Main {
         }
         return result;
     }
-
 
 }

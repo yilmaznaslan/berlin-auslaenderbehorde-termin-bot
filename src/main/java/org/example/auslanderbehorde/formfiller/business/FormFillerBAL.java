@@ -2,12 +2,13 @@ package org.example.auslanderbehorde.formfiller.business;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.SessionFinder;
 import org.example.auslanderbehorde.appointmentfinder.business.AppointmentFinder;
 import org.example.auslanderbehorde.formfiller.enums.VisaEnum;
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
+import org.example.auslanderbehorde.sessionfinder.business.SessionFinder;
+import org.example.auslanderbehorde.sessionfinder.model.SessionModel;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -36,9 +37,7 @@ public class FormFillerBAL extends TimerTask {
     private final VisaEnum visaEnum;
 
     private final AppointmentFinder appointmentFinder;
-    private String requestId;
-    private String dswid;
-    private String dsrid;
+    private final SessionModel sessionModel;
     private static int searchCount = 0;
 
     private WebDriver driver;
@@ -49,10 +48,8 @@ public class FormFillerBAL extends TimerTask {
         timer.scheduleAtFixedRate(this, 0, FORM_REFRESH_PERIOD_MILISECONDS);
     }
 
-    public FormFillerBAL(String requestId, String dswid, String dsrid, FormInputs formInputs, WebDriver webDriver) {
-        this.requestId = requestId;
-        this.dswid = dswid;
-        this.dsrid = dsrid;
+    public FormFillerBAL(SessionModel sessionModel, FormInputs formInputs, WebDriver webDriver) {
+        this.sessionModel = sessionModel;
         this.driver = webDriver;
         FormFillerUtils.formId = new Random().nextLong();
         this.citizenshipValue = formInputs.getCitizenshipValue();
@@ -65,16 +62,16 @@ public class FormFillerBAL extends TimerTask {
     @Override
     public void run() {
         try {
-            goToFormPage(requestId, dswid, dsrid);
+            goToFormPage(sessionModel.getRequestId(), sessionModel.getDswid(), sessionModel.getDsrid());
             double remainingMinute = getRemainingTime();
 
             if (remainingMinute <= 1) {
                 logger.warn("Time is up");
                 SessionFinder sessionFinder = new SessionFinder();
                 sessionFinder.findRequestId();
-                this.requestId = sessionFinder.getRequestId();
-                this.dswid = sessionFinder.getDswid();
-                this.dsrid = sessionFinder.getDsrid();
+                sessionModel.setRequestId(sessionFinder.getSessionModel().getRequestId());
+                sessionModel.setDswid(sessionFinder.getSessionModel().getDswid());
+                sessionModel.setDsrid(sessionFinder.getSessionModel().getDsrid());
             }
 
             selectCitizenshipValue();
@@ -91,7 +88,7 @@ public class FormFillerBAL extends TimerTask {
                 //timer.cancel();
             }
 
-            this.searchCount = this.searchCount + 1;
+            searchCount = searchCount + 1;
             String msg = String.format("Completed search count: %s. Found count: %s", searchCount, foundAppointmentCount);
             logger.info(msg);
 
