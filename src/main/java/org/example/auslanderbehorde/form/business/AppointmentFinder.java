@@ -20,7 +20,7 @@ public class AppointmentFinder {
 
     private final Logger logger = LogManager.getLogger(AppointmentFinder.class);
 
-    private static int foundAppointmentCount = 0;
+    public static int foundAppointmentCount = 0;
 
     private final WebDriver driver;
 
@@ -54,7 +54,7 @@ public class AppointmentFinder {
             String myPhoneNumber = System.getenv("myPhoneNumber");
             sendSMS(myPhoneNumber, url);
             initDriverWithHead().get(url);
-            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource());
+            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "withHead");
             FormFillerUtils.saveScreenshot(driver, "withHead");
         } else {
             logger.info("Couldn't verify the timeslots");
@@ -68,7 +68,7 @@ public class AppointmentFinder {
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
         Thread.sleep(3);
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource());
+        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "afterClickNext");
         FormFillerUtils.saveScreenshot(driver, "afterClickNext");
     }
 
@@ -83,11 +83,13 @@ public class AppointmentFinder {
     protected boolean isTimeslotOptionVerified(WebElement element) {
         Select select = new Select(element);
         List<WebElement> availableHours = select.getOptions();
-        logger.info(String.format("There are %s options", availableHours.size()));
-        for (WebElement hours : availableHours) {
-            logger.info(hours.getText());
+        int availableHoursCount = availableHours.size();
+        logger.info(String.format("There are %s available timeslots", availableHoursCount));
+        for (int i = 0; i<availableHoursCount; i++) {
+            logger.info(String.format("Timeslot: %s, Value: %s", i, availableHours.get(i).getText()));
         }
         if (availableHours.get(0).getText().contains("Bitte")) {
+            logger.info("Failed to validate timeslots");
             return false;
         }
         return true;

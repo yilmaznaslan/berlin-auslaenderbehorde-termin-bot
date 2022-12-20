@@ -190,12 +190,12 @@ public class FormFillerUtils {
 
     }
 
-    public static void saveSourceCodeToFile(String content) {
+    public static void saveSourceCodeToFile(String content, String suffix) {
         String filePath = FormFiller.class.getResource("/").getPath();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String dateAsStr = dtf.format(now);
-        File newTextFile = new File(filePath + "/page_" + dateAsStr + ".html");
+        File newTextFile = new File(filePath + "/page_" + suffix + dateAsStr + ".html");
 
         FileWriter fw;
         try {

@@ -2,28 +2,24 @@ package org.example.auslanderbehorde.form.business;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.ThreadContext;
-import org.example.auslanderbehorde.*;
+import org.example.auslanderbehorde.SessionFinder;
+import org.example.auslanderbehorde.form.enums.VisaEnum;
 import org.example.auslanderbehorde.form.exceptions.ElementNotFoundException;
 import org.example.auslanderbehorde.form.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.form.model.FormInputs;
-import org.example.auslanderbehorde.form.enums.VisaEnum;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.Select;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static org.example.auslanderbehorde.form.business.AppointmentFinder.foundAppointmentCount;
 import static org.example.auslanderbehorde.form.business.FormFillerUtils.SLEEP_DURATION_IN_MILISECONDS;
 import static org.example.auslanderbehorde.form.business.FormFillerUtils.TIMEOUT_FOR_INTERACTING_IN_SECONDS;
 import static org.example.auslanderbehorde.form.enums.FormParameterEnum.*;
-import static org.example.notifications.Twilio.sendSMS;
 
 public class FormFiller extends TimerTask {
 
@@ -86,14 +82,14 @@ public class FormFiller extends TimerTask {
             clickToVisa();
             clickNextButton();
 
-            if (isResultSuccessful()) {
+            if (isAppointmentSelectionPageOpened()) {
                 Thread.sleep(1000);
                 appointmentFinder.handleFindingAppointment();
                 //timer.cancel();
             }
 
             this.searchCount = this.searchCount + 1;
-            String msg = String.format("Completed search count: %s", searchCount);
+            String msg = String.format("Completed search count: %s. Found count: %s", searchCount, foundAppointmentCount);
             logger.info(msg);
 
         } catch (Exception e) {
@@ -168,7 +164,7 @@ public class FormFiller extends TimerTask {
         FormFillerUtils.clickToElement(element, elementDescription);
     }
 
-    private boolean isResultSuccessful() {
+    private boolean isAppointmentSelectionPageOpened() {
         String stageXPath = ".//ul/li[2]/span";
         String elementDescription = "activeSectionTab".toUpperCase();
         String stageText = "";
