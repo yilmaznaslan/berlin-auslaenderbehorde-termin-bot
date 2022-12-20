@@ -18,6 +18,7 @@ public class SessionFinder {
 
     private Session session = new Session();
     private final Logger logger = LogManager.getLogger(SessionFinder.class);
+    private final String initialUrl = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
 
     public SessionFinder() {
 
@@ -66,18 +67,16 @@ public class SessionFinder {
     }
 
     private void initiateSession() {
-        System.setProperty("webdriver.chrome.driver", "chromedriver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
         WebDriver driver = new ChromeDriver(options);
 
-        String initialUrl = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
         logger.info(String.format("Getting the URL: %s", initialUrl));
-
         driver.get(initialUrl);
+
         while (true) {
             String urlAfterRedirect = driver.getCurrentUrl();
-            logger.debug("CurrentURL: " + urlAfterRedirect);
+            logger.info("CurrentURL: " + urlAfterRedirect);
             try {
                 URL url = new URL(urlAfterRedirect);
                 String queryStr = url.getQuery();

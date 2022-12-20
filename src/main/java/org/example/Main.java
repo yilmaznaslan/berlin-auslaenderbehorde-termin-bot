@@ -45,7 +45,7 @@ public class Main {
         threadMonitor.startMonitoring();
 
         while(true){
-
+            Thread.sleep(1000);
         }
     }
 

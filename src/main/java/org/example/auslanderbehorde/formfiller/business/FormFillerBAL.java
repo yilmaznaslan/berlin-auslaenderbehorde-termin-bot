@@ -61,9 +61,10 @@ public class FormFillerBAL extends TimerTask {
     public void run() {
         try {
             if(session==null){
+                logger.info("Session is not created.");
                 initNewSession();
             }
-            goToFormPage(session.getRequestId(), session.getDswid(), session.getDsrid());
+            getFormPage(session.getRequestId(), session.getDswid(), session.getDsrid());
 
             double remainingMinute = getRemainingTime();
 
@@ -99,10 +100,10 @@ public class FormFillerBAL extends TimerTask {
 
     }
 
-    public void goToFormPage(String requestId, String dswid, String dsrid) {
+    public void getFormPage(String requestId, String dswid, String dsrid) {
         String hostUrl = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
         String targetUrl = hostUrl + "/" + requestId + "?dswid=" + dswid + "&dsrid=" + dsrid;
-        logger.info(String.format("Finding the URL: %s", targetUrl));
+        logger.info(String.format("Getting the URL: %s", targetUrl));
         driver.get(targetUrl);
     }
 
@@ -204,6 +205,7 @@ public class FormFillerBAL extends TimerTask {
     }
 
     private void initNewSession(){
+        logger.info("initiating a new session");
         SessionFinder sessionFinder = new SessionFinder();
         sessionFinder.findRequestId();
         session = sessionFinder.getSessionModel();
