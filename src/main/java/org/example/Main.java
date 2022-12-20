@@ -6,10 +6,8 @@ import org.example.auslanderbehorde.formfiller.business.FormFillerBAL;
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
 import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum;
 import org.example.auslanderbehorde.sessionfinder.business.SessionFinder;
-import org.openqa.selenium.Proxy;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.CapabilityType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,15 +37,16 @@ public class Main {
         }
 */
 
-
-        SessionFinder sessionFinder = new SessionFinder();
-        sessionFinder.findRequestId();
-        FormFillerBAL formFillerBAL = new FormFillerBAL(sessionFinder.getSessionModel(), new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD), new ChromeDriver(options));
+        FormFillerBAL formFillerBAL = new FormFillerBAL(new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD), new ChromeDriver(options));
         formFillerBAL.startScanning();
 
 
         ThreadMonitor threadMonitor = new ThreadMonitor();
-        threadMonitor.run();
+        threadMonitor.startMonitoring();
+
+        while(true){
+
+        }
     }
 
     public static List<FormInputs> generateForms(){

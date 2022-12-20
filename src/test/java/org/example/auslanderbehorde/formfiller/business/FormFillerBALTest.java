@@ -1,9 +1,7 @@
 package org.example.auslanderbehorde.formfiller.business;
 
-import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundException;
-import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
-import org.example.auslanderbehorde.sessionfinder.model.SessionModel;
+import org.example.auslanderbehorde.sessionfinder.model.Session;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,8 +11,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.Select;
-
-import java.io.IOException;
 
 import static org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum.BLUECARD;
 
@@ -33,7 +29,7 @@ class FormFillerBALTest {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
         this.driver = new ChromeDriver(options);
-        this.underTest = new FormFillerBAL(new SessionModel("", "",""), formInputs, driver);
+        this.underTest = new FormFillerBAL(formInputs, driver);
     }
 
     @Test

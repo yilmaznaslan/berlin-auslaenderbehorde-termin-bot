@@ -8,7 +8,7 @@ import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundExcepti
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
 import org.example.auslanderbehorde.sessionfinder.business.SessionFinder;
-import org.example.auslanderbehorde.sessionfinder.model.SessionModel;
+import org.example.auslanderbehorde.sessionfinder.model.Session;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -37,19 +37,17 @@ public class FormFillerBAL extends TimerTask {
     private final VisaEnum visaEnum;
 
     private final AppointmentFinder appointmentFinder;
-    private final SessionModel sessionModel;
+    private Session session;
     private static int searchCount = 0;
 
     private WebDriver driver;
     private final Timer timer = new Timer(true);
 
-
     public void startScanning() {
         timer.scheduleAtFixedRate(this, 0, FORM_REFRESH_PERIOD_MILISECONDS);
     }
 
-    public FormFillerBAL(SessionModel sessionModel, FormInputs formInputs, WebDriver webDriver) {
-        this.sessionModel = sessionModel;
+    public FormFillerBAL(FormInputs formInputs, WebDriver webDriver) {
         this.driver = webDriver;
         FormFillerUtils.formId = new Random().nextLong();
         this.citizenshipValue = formInputs.getCitizenshipValue();
@@ -62,16 +60,16 @@ public class FormFillerBAL extends TimerTask {
     @Override
     public void run() {
         try {
-            goToFormPage(sessionModel.getRequestId(), sessionModel.getDswid(), sessionModel.getDsrid());
+            if(session==null){
+                initNewSession();
+            }
+            goToFormPage(session.getRequestId(), session.getDswid(), session.getDsrid());
+
             double remainingMinute = getRemainingTime();
 
             if (remainingMinute <= 1) {
                 logger.warn("Time is up");
-                SessionFinder sessionFinder = new SessionFinder();
-                sessionFinder.findRequestId();
-                sessionModel.setRequestId(sessionFinder.getSessionModel().getRequestId());
-                sessionModel.setDswid(sessionFinder.getSessionModel().getDswid());
-                sessionModel.setDsrid(sessionFinder.getSessionModel().getDsrid());
+                initNewSession();
             }
 
             selectCitizenshipValue();
@@ -96,6 +94,7 @@ public class FormFillerBAL extends TimerTask {
             logger.warn("Some error occurred. Reason ", e);
             driver.close();
             driver = initDriverHeadless();
+            initNewSession();
         }
 
     }
@@ -204,4 +203,9 @@ public class FormFillerBAL extends TimerTask {
         return remainingMinute;
     }
 
+    private void initNewSession(){
+        SessionFinder sessionFinder = new SessionFinder();
+        sessionFinder.findRequestId();
+        session = sessionFinder.getSessionModel();
+    }
 }

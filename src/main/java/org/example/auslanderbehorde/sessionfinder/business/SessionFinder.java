@@ -3,7 +3,7 @@ package org.example.auslanderbehorde.sessionfinder.business;
 import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.sessionfinder.model.SessionModel;
+import org.example.auslanderbehorde.sessionfinder.model.Session;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class SessionFinder {
 
-    private SessionModel sessionModel = new SessionModel();
+    private Session session = new Session();
     private final Logger logger = LogManager.getLogger(SessionFinder.class);
 
     public SessionFinder() {
@@ -25,7 +25,7 @@ public class SessionFinder {
 
     public void findRequestId (){
         initiateSession();
-        activateRequestId(sessionModel.getRequestId());
+        activateRequestId(session.getRequestId());
     }
 
     private void activateRequestId(String requestId) {
@@ -81,7 +81,7 @@ public class SessionFinder {
             try {
                 URL url = new URL(urlAfterRedirect);
                 String queryStr = url.getQuery();
-                if (sessionModel.getDsrid() == null && sessionModel.getDswid() == null) {
+                if (session.getDsrid() == null && session.getDswid() == null) {
                     logger.info(String.format("QueryString: %s", queryStr));
                     extractDswidAndDsrid(queryStr);
                 }
@@ -103,8 +103,8 @@ public class SessionFinder {
         List<String> queryStrings = List.of(queryStr.split("&"));
         String dsrid = Arrays.stream(queryStrings.get(0).split("=")).toList().get(1);
         String dswid = Arrays.stream(queryStrings.get(1).split("=")).toList().get(1);
-        this.sessionModel = new SessionModel(dswid, dsrid);
-        logger.info(String.format("dswid: %s, dsrid: %s", dswid, dsrid));
+        this.session = new Session(dswid, dsrid);
+        logger.info(String.format("Dswid: %s, Dsrid: %s", dswid, dsrid));
     }
 
     private  void extractRequestId(String url) {
@@ -112,10 +112,10 @@ public class SessionFinder {
         String requestIdAndV = urlAsList.get(urlAsList.size() - 1);
         String requestId = List.of(requestIdAndV.split("\\?")).get(0);
         logger.info(String.format("RequestID: %s",requestId));
-        sessionModel.setRequestId(requestId);
+        session.setRequestId(requestId);
     }
 
-    public SessionModel getSessionModel() {
-        return sessionModel;
+    public Session getSessionModel() {
+        return session;
     }
 }

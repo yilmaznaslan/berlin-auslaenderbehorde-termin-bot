@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.TIME_SLOT;
+import static org.example.notifications.Twilio.makeCall;
 import static org.example.notifications.Twilio.sendSMS;
 
 public class AppointmentFinder {
@@ -53,6 +54,7 @@ public class AppointmentFinder {
             logger.info( String.format("Found a place. URL: %s", url));
             logger.info(String.format("Found Appointment count: %s", foundAppointmentCount));
             String myPhoneNumber = System.getenv("myPhoneNumber");
+            makeCall(myPhoneNumber);
             sendSMS(myPhoneNumber, url);
             initDriverWithHead().get(url);
             FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "withHead");
