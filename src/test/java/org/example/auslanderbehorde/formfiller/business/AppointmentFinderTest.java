@@ -1,8 +1,8 @@
-package org.example.auslanderbehorde.form.business;
+package org.example.auslanderbehorde.formfiller.business;
 
-import org.example.auslanderbehorde.form.exceptions.ElementNotFoundException;
-import org.example.auslanderbehorde.form.exceptions.InteractionFailedException;
-import org.example.auslanderbehorde.form.model.FormInputs;
+import org.example.auslanderbehorde.appointmentfinder.business.AppointmentFinder;
+import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundException;
+import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,34 +15,31 @@ import org.openqa.selenium.support.ui.Select;
 
 import java.io.IOException;
 
-import static org.example.auslanderbehorde.form.enums.EconomicActivityVisaDeEnum.BLUECARD;
+class AppointmentFinderTest {
 
-class FormFillerTest {
-
-    String path_DE = FormFiller.class.getClassLoader().getResource("org/example/form/business/dateSelection_DE.html").getPath();
+    String path_DE = FormFillerBAL.class.getClassLoader().getResource("org/example/form/business/dateSelection_DE.html").getPath();
 
     String url_DE = "file:".concat(path_DE);
 
     WebDriver driver;
-    FormInputs formInputs = new FormInputs("turkey", "1", "0", BLUECARD);
-    FormFiller underTest;
+    AppointmentFinder underTest;
 
     @BeforeEach
     void initDriver() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
+        //options.addArguments("--headless");
         this.driver = new ChromeDriver(options);
-        this.underTest = new FormFiller("", "", "", formInputs, driver);
+        this.underTest = new AppointmentFinder(driver);
     }
 
     @Test
     void ASSERT_THAT_first_available_time_is_selected_WHEN_handleSelectingTimeslot_is_called() throws ElementNotFoundException, InterruptedException, InteractionFailedException, IOException {
         // GIVEN
         String expectedTime = "09:30";
+        driver.get(url_DE);
 
         // WHEN
-        driver.get(url_DE);
-        //underTest.handleSelectingTimeslot();
+        underTest.handleSelectingTimeslot();
         WebElement webElement = driver.findElement(By.name("dd_zeiten"));
 
         // THEN
@@ -51,5 +48,4 @@ class FormFillerTest {
 
         Assertions.assertEquals(expectedTime, actualTime);
     }
-
 }

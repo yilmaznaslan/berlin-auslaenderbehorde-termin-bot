@@ -1,4 +1,4 @@
-package org.example.auslanderbehorde.form.enums;
+package org.example.auslanderbehorde.formfiller.enums;
 
 public enum EconomicActivityVisaDeEnum implements VisaEnum {
     BLUECARD("SERVICEWAHL_DE163-0-1-1-324659", "EU Blue Card / Blaue Karte EU (sect. 18b para. 2)"),

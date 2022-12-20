@@ -1,4 +1,4 @@
-package org.example.auslanderbehorde.form.enums;
+package org.example.auslanderbehorde.formfiller.enums;
 
 public enum SeleniumProcessResultEnum {
     SUCCESSFUL,

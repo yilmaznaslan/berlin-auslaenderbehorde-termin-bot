@@ -1,8 +1,8 @@
 package org.example.auslanderbehorde;
 
-import org.example.auslanderbehorde.form.exceptions.ElementNotFoundException;
-import org.example.auslanderbehorde.form.business.FormFillerUtils;
-import org.example.auslanderbehorde.form.enums.EconomicActivityVisaDeEnum;
+import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundException;
+import org.example.auslanderbehorde.formfiller.business.FormFillerUtils;
+import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,10 +13,10 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.IOException;
 
-class FormFillerUtilsTest {
+class FormFillerBALUtilsTest {
 
-    String path_EN = FormFillerUtilsTest.class.getClassLoader().getResource("org/example/TerminbuchenServicewahl.html").getPath();
-    String path_DE = FormFillerUtilsTest.class.getClassLoader().getResource("org/example/TerminbuchenServicewahl_DE.html").getPath();
+    String path_EN = FormFillerBALUtilsTest.class.getClassLoader().getResource("org/example/TerminbuchenServicewahl.html").getPath();
+    String path_DE = FormFillerBALUtilsTest.class.getClassLoader().getResource("org/example/TerminbuchenServicewahl_DE.html").getPath();
 
     String url_EN = "file:".concat(path_EN);
     String url_DE = "file:".concat(path_DE);
@@ -69,7 +69,7 @@ class FormFillerUtilsTest {
     }
 
     @Test
-    void ASSERT_THAT_element_is_returned_WHEN_getById_is_called_GIVEN_THAT_current_page_is_servicewahl() throws IOException, ElementNotFoundException, InterruptedException {
+    void ASSERT_THAT_element_is_returned_WHEN_getById_is_called_GIVEN_THAT_current_page_is_servicewahl() throws ElementNotFoundException, InterruptedException {
         // GIVEN
         String id = "SERVICEWAHL_DE323-0-1-3-328338";
 
@@ -83,7 +83,7 @@ class FormFillerUtilsTest {
     }
 
     @Test
-    void ASSERT_THAT_element_is_returned_WHEN_getById_is_called_GIVEN_THAT_current_page_is_servicewahl_DE() throws IOException, ElementNotFoundException, InterruptedException {
+    void ASSERT_THAT_element_is_returned_WHEN_getById_is_called_GIVEN_THAT_current_page_is_servicewahl_DE() throws ElementNotFoundException, InterruptedException {
         // GIVEN
         String id = EconomicActivityVisaDeEnum.BLUECARD.getId();
 

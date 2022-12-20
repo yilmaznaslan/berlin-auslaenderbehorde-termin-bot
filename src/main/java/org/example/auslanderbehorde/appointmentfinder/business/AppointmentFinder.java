@@ -1,9 +1,10 @@
-package org.example.auslanderbehorde.form.business;
+package org.example.auslanderbehorde.appointmentfinder.business;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.form.exceptions.ElementNotFoundException;
-import org.example.auslanderbehorde.form.exceptions.InteractionFailedException;
+import org.example.auslanderbehorde.formfiller.business.FormFillerUtils;
+import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundException;
+import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -13,7 +14,7 @@ import org.openqa.selenium.support.ui.Select;
 import java.io.IOException;
 import java.util.List;
 
-import static org.example.auslanderbehorde.form.enums.FormParameterEnum.TIME_SLOT;
+import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.TIME_SLOT;
 import static org.example.notifications.Twilio.sendSMS;
 
 public class AppointmentFinder {
@@ -39,7 +40,7 @@ public class AppointmentFinder {
         }
     }
 
-    protected void handleSelectingTimeslot() throws ElementNotFoundException, InterruptedException, InteractionFailedException, IOException {
+    public void handleSelectingTimeslot() throws ElementNotFoundException, InterruptedException, InteractionFailedException, IOException {
         String elementId = TIME_SLOT.getId();
         String elementDescription = TIME_SLOT.name();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);

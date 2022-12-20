@@ -1,6 +1,6 @@
-package org.example.auslanderbehorde.form.model;
+package org.example.auslanderbehorde.formfiller.model;
 
-import org.example.auslanderbehorde.form.enums.VisaEnum;
+import org.example.auslanderbehorde.formfiller.enums.VisaEnum;
 
 public class FormInputs {
 

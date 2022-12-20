@@ -2,10 +2,10 @@ package org.example;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.form.business.FormFiller;
-import org.example.auslanderbehorde.form.model.FormInputs;
+import org.example.auslanderbehorde.formfiller.business.FormFillerBAL;
+import org.example.auslanderbehorde.formfiller.model.FormInputs;
 import org.example.auslanderbehorde.SessionFinder;
-import org.example.auslanderbehorde.form.enums.EconomicActivityVisaDeEnum;
+import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -52,8 +52,8 @@ public class Main {
         options.setCapability(CapabilityType.PROXY, p);
 
 
-        FormFiller formFiller = new FormFiller(requestId, dswid, dsrid, new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD), new ChromeDriver(options));
-        formFiller.startScanning();
+        FormFillerBAL formFillerBAL = new FormFillerBAL(requestId, dswid, dsrid, new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD), new ChromeDriver(options));
+        formFillerBAL.startScanning();
 
 
 

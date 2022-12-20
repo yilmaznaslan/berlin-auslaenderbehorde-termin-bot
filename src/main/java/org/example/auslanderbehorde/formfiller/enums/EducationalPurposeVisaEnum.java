@@ -1,4 +1,4 @@
-package org.example.auslanderbehorde.form.enums;
+package org.example.auslanderbehorde.formfiller.enums;
 
 public enum EducationalPurposeVisaEnum {
     LANGUAGE_COURSE ("SERVICEWAHL_EN123-0-1-3-324289", "Residence permit for attending a language course (sect. 16f para. 1)"),

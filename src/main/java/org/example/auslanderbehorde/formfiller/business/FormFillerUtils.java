@@ -1,13 +1,13 @@
-package org.example.auslanderbehorde.form.business;
+package org.example.auslanderbehorde.formfiller.business;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
-import org.example.auslanderbehorde.form.exceptions.ElementNotFoundException;
-import org.example.auslanderbehorde.form.exceptions.InteractionFailedException;
-import org.example.auslanderbehorde.form.enums.SeleniumProcessEnum;
-import org.example.auslanderbehorde.form.enums.SeleniumProcessResultEnum;
+import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundException;
+import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
+import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessEnum;
+import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessResultEnum;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 
@@ -141,7 +141,7 @@ public class FormFillerUtils {
 
     public static void selectOptionByValue(WebElement element, String elementDescription, String optionValue) {
         if (element == null) {
-            logger.warn("Element:{} is null, Process: Select can not be continued");
+            logger.warn("Element:{} is null, Process: Select can not be continued", elementDescription);
             return;
         }
         int i = 0;
@@ -166,7 +166,7 @@ public class FormFillerUtils {
 
     public static void selectOptionByIndex(WebElement element, String elementDescription, int index) {
         if (element == null) {
-            logger.warn("Element:{} is null, process can not be continued");
+            logger.warn("Element:{} is null, process can not be continued", elementDescription);
             return;
         }
         int i = 0;
@@ -191,7 +191,7 @@ public class FormFillerUtils {
     }
 
     public static void saveSourceCodeToFile(String content, String suffix) {
-        String filePath = FormFiller.class.getResource("/").getPath();
+        String filePath = FormFillerBAL.class.getResource("/").getPath();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String dateAsStr = dtf.format(now);
@@ -213,7 +213,7 @@ public class FormFillerUtils {
         LocalDateTime now = LocalDateTime.now();
         String dateAsStr = dtf.format(now);
         File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-        String filePath = FormFiller.class.getResource("/").getPath();
+        String filePath = FormFillerBAL.class.getResource("/").getPath();
         FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + suffix  + dateAsStr + "_0.png"));
 
         JavascriptExecutor jse = (JavascriptExecutor) driver;

@@ -1,12 +1,13 @@
-package org.example.auslanderbehorde.form.business;
+package org.example.auslanderbehorde.formfiller.business;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.SessionFinder;
-import org.example.auslanderbehorde.form.enums.VisaEnum;
-import org.example.auslanderbehorde.form.exceptions.ElementNotFoundException;
-import org.example.auslanderbehorde.form.exceptions.InteractionFailedException;
-import org.example.auslanderbehorde.form.model.FormInputs;
+import org.example.auslanderbehorde.appointmentfinder.business.AppointmentFinder;
+import org.example.auslanderbehorde.formfiller.enums.VisaEnum;
+import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundException;
+import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
+import org.example.auslanderbehorde.formfiller.model.FormInputs;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -16,21 +17,24 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static org.example.auslanderbehorde.form.business.AppointmentFinder.foundAppointmentCount;
-import static org.example.auslanderbehorde.form.business.FormFillerUtils.SLEEP_DURATION_IN_MILISECONDS;
-import static org.example.auslanderbehorde.form.business.FormFillerUtils.TIMEOUT_FOR_INTERACTING_IN_SECONDS;
-import static org.example.auslanderbehorde.form.enums.FormParameterEnum.*;
+import static org.example.auslanderbehorde.appointmentfinder.business.AppointmentFinder.foundAppointmentCount;
+import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.SLEEP_DURATION_IN_MILISECONDS;
+import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.TIMEOUT_FOR_INTERACTING_IN_SECONDS;
+import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.*;
 
-public class FormFiller extends TimerTask {
+/**
+ * Business Access Layer for filling the form
+ */
+public class FormFillerBAL extends TimerTask {
 
-    private final Logger logger = LogManager.getLogger(FormFiller.class);
+    private final Logger logger = LogManager.getLogger(FormFillerBAL.class);
     public static final int FORM_REFRESH_PERIOD_MILISECONDS = 1000;
 
     private final String citizenshipValue;
     private final String applicantNumber;
     private final String familyStatus;
     private final VisaEnum visaEnum;
-    private final long formId;
+
     private final AppointmentFinder appointmentFinder;
     private String requestId;
     private String dswid;
@@ -38,20 +42,19 @@ public class FormFiller extends TimerTask {
     private static int searchCount = 0;
 
     private WebDriver driver;
-    private Timer timer = new Timer(true);
+    private final Timer timer = new Timer(true);
 
 
     public void startScanning() {
         timer.scheduleAtFixedRate(this, 0, FORM_REFRESH_PERIOD_MILISECONDS);
     }
 
-    public FormFiller(String requestId, String dswid, String dsrid, FormInputs formInputs, WebDriver webDriver) {
+    public FormFillerBAL(String requestId, String dswid, String dsrid, FormInputs formInputs, WebDriver webDriver) {
         this.requestId = requestId;
         this.dswid = dswid;
         this.dsrid = dsrid;
         this.driver = webDriver;
-        this.formId = new Random().nextLong();
-        FormFillerUtils.formId = formId;
+        FormFillerUtils.formId = new Random().nextLong();
         this.citizenshipValue = formInputs.getCitizenshipValue();
         this.applicantNumber = formInputs.getApplicationsNumber();
         this.familyStatus = formInputs.getFamilyStatus();
@@ -196,12 +199,10 @@ public class FormFiller extends TimerTask {
             String timeStr = timeBar.getText();
             if (timeStr != null) {
                 remainingMinute = Integer.parseInt(timeStr.split(":")[0]);
-            } else {
-                remainingMinute = 0;
             }
             logger.info(String.format("Element: %s. Process: Getting time. Status: Successfully. Value: %s", elementDescription, timeStr));
         } catch (Exception e) {
-            logger.info("Element: {}. Process: Getting time. Status: Failed");
+            logger.info("Element: {}. Process: Getting time. Status: Failed", elementDescription);
         }
         return remainingMinute;
     }
