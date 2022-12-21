@@ -19,4 +19,6 @@ class SessionFinderTest {
         Assertions.assertNotNull(session.getDsrid());
         Assertions.assertNotNull(session.getDswid());
     }
+
+    // missgin test for a scenerioa what the netty timeout error is recevied
 }
