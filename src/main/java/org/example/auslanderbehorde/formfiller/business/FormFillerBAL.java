@@ -95,7 +95,11 @@ public class FormFillerBAL extends TimerTask {
             logger.warn("Some error occurred. Reason ", e);
             driver.close();
             driver = initDriverHeadless();
-            initNewSession();
+            try {
+                initNewSession();
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
         }
 
     }
@@ -204,10 +208,9 @@ public class FormFillerBAL extends TimerTask {
         return remainingMinute;
     }
 
-    private void initNewSession(){
+    private void initNewSession() throws InterruptedException {
         logger.info("initiating a new session");
         SessionFinder sessionFinder = new SessionFinder();
-        sessionFinder.findRequestId();
-        session = sessionFinder.getSessionModel();
+        session = sessionFinder.findAndGetSession();
     }
 }

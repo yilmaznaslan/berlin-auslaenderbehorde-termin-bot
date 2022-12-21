@@ -18,15 +18,18 @@ public class SessionFinder {
 
     private Session session = new Session();
     private final Logger logger = LogManager.getLogger(SessionFinder.class);
-    private final String initialUrl = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
+    private final int requestLimit = 40;
+    int requestCount = 0;
+    private WebDriver driver;
 
     public SessionFinder() {
 
     }
 
-    public void findRequestId (){
+    public Session findAndGetSession() throws InterruptedException {
         initiateSession();
         activateRequestId(session.getRequestId());
+        return session;
     }
 
     private void activateRequestId(String requestId) {
@@ -66,13 +69,8 @@ public class SessionFinder {
         }
     }
 
-    private void initiateSession() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
-        WebDriver driver = new ChromeDriver(options);
-
-        logger.info(String.format("Getting the URL: %s", initialUrl));
-        driver.get(initialUrl);
+    private void initiateSession() throws InterruptedException {
+        getMainPage();
 
         while (true) {
             String urlAfterRedirect = driver.getCurrentUrl();
@@ -91,11 +89,17 @@ public class SessionFinder {
                     break;
                 }
 
+                if (requestCount >= requestLimit) {
+                    requestCount = 0;
+                    getMainPage();
+                }
+
             } catch (MalformedURLException e) {
                 logger.error("URL is malformed exception occurred", e);
             }
+            Thread.sleep(50);
+            requestCount++;
         }
-
     }
 
     private void extractDswidAndDsrid(String queryStr) {
@@ -106,15 +110,20 @@ public class SessionFinder {
         logger.info(String.format("Dswid: %s, Dsrid: %s", dswid, dsrid));
     }
 
-    private  void extractRequestId(String url) {
+    private void extractRequestId(String url) {
         List<String> urlAsList = List.of(url.split("/"));
         String requestIdAndV = urlAsList.get(urlAsList.size() - 1);
         String requestId = List.of(requestIdAndV.split("\\?")).get(0);
-        logger.info(String.format("RequestID: %s",requestId));
+        logger.info(String.format("RequestID: %s", requestId));
         session.setRequestId(requestId);
     }
 
-    public Session getSessionModel() {
-        return session;
+    private void getMainPage() {
+        String INITIAL_URL = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
+        driver = new ChromeDriver(options);
+        logger.info(String.format("Getting the URL: %s", INITIAL_URL));
+        driver.get(INITIAL_URL);
     }
 }

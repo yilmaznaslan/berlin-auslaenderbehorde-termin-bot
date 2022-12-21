@@ -66,6 +66,11 @@
             <AppenderRef ref="elasticsearch"/>
         </Root>
 
+        <Logger name="org.example.auslanderbehorde.sessionfinder.business" level="debug" >
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="elasticsearch"/>
+        </Logger>
+
     </Loggers>
 
 </Configuration>
