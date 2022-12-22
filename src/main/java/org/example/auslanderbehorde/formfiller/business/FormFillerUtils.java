@@ -4,10 +4,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
-import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
-import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessEnum;
 import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessResultEnum;
+import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
+import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 
@@ -21,7 +21,6 @@ import java.util.List;
 public class FormFillerUtils {
     private static final Logger logger = LogManager.getLogger(FormFillerUtils.class);
     static final int TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS = 25;
-    static final int TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS = 5;
     static final int SLEEP_DURATION_IN_MILISECONDS = 1500;
     public static long formId;
 
@@ -35,36 +34,13 @@ public class FormFillerUtils {
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
-                logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name());
+                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
             }
             Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
             i++;
         }
         if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logger.warn("Element: {}. Process: Getting by elementId. Result: Failed. Reason: Couldn't get elementById within timeout", elementDescription);
-            throw new ElementNotFoundTimeoutException(elementDescription);
-
-        }
-        return element;
-    }
-
-    public static WebElement getElementByName(String elementName, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
-        WebElement element = null;
-        int i = 1;
-        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            try {
-                element = driver.findElement(By.name(elementName));
-                logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_NAME, "Successful");
-                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
-                break;
-            } catch (Exception e) {
-                logger.warn("Element: {}. Process: Getting by elementName. Result: Failed. Reason:{}", elementDescription, e.getMessage());
-            }
-            Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
-            i++;
-        }
-        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_NAME.name(), SeleniumProcessResultEnum.FAILED.name(), e);
+            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
             throw new ElementNotFoundTimeoutException(elementDescription);
 
         }
@@ -81,13 +57,13 @@ public class FormFillerUtils {
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
-                logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH.name(), SeleniumProcessResultEnum.FAILED.name());
+
             }
             Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
             i++;
         }
         if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed. Reason: Couldn't get the element within timeout", elementDescription);
+            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH.name(), SeleniumProcessResultEnum.FAILED.name(), "");
             throw new ElementNotFoundTimeoutException(elementDescription);
 
         }
@@ -104,111 +80,17 @@ public class FormFillerUtils {
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
-                logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR.name(), SeleniumProcessResultEnum.FAILED.name());
+                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR.name(), SeleniumProcessResultEnum.FAILED.name(), "");
             }
             Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
             i++;
         }
         if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logger.warn("Element: {}. Process: Getting by elementCssSelector. Result: Failed. Reason: Couldn't get within timeout", elementDescription);
+            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR.name(), SeleniumProcessResultEnum.FAILED.name(), "");
             throw new ElementNotFoundTimeoutException(cssSelector);
 
         }
         return element;
-    }
-
-    public static String getElementTextValue(WebElement element, String elementDescription){
-        String stageText = "";
-        int i = 0;
-        while (i <= TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS) {
-            try {
-                stageText = element.getText();
-                logInfo(elementDescription, SeleniumProcessEnum.GETTING_TEXT, SeleniumProcessResultEnum.SUCCESSFUL.name(), String.format("Value: %s", stageText));
-                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
-                break;
-            } catch (Exception e) {
-                logWarn(elementDescription, SeleniumProcessEnum.GETTING_TEXT.name(), SeleniumProcessResultEnum.FAILED.name());
-            }
-            i++;
-        }
-        if (i > TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS) {
-            logger.warn(String.format("Element: %s. Process: reading text, Result: Failed Reason: Couldn't select within timeout", elementDescription));
-        }
-        return stageText;
-    }
-
-    public static void clickToElement(WebElement element, String elementDescription) throws InteractionFailedException {
-        if (element == null) {
-            logger.warn("Element:{} is null, Process: Click can not be continued", elementDescription);
-            return;
-        }
-        int i = 0;
-        while (i <= TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS) {
-            try {
-                element.click();
-                logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, "Successful");
-                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
-                break;
-            } catch (Exception e) {
-                logger.warn("Element: {}. Process: Click, Result: Failed. Exception: ", elementDescription, e);
-            }
-            i++;
-        }
-        if (i > TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS) {
-            logger.warn("Element: {}. Process: Click, Result: Failed Reason: Couldn't click within timeout", elementDescription);
-            throw new InteractionFailedException("");
-        }
-    }
-
-    public static void selectOptionByValue(WebElement element, String elementDescription, String optionValue) {
-        if (element == null) {
-            logger.warn("Element:{} is null, Process: Select can not be continued", elementDescription);
-            return;
-        }
-        int i = 0;
-        while (i <= TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS) {
-            try {
-                Select select = new Select(element);
-                select.selectByValue(optionValue);
-                WebElement option = select.getFirstSelectedOption();
-                String selectValue = option.getText();
-                logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
-                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
-                break;
-            } catch (Exception e) {
-                logger.warn("Element: {}. Process: Select, Result: Failed Reason:{}", elementDescription, e.getMessage());
-            }
-            i++;
-        }
-        if (i > TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS) {
-            logger.warn("Element: {}. Process: Select, Result: Failed Reason: Couldn't select within timeout", elementDescription);
-        }
-    }
-
-    public static void selectOptionByIndex(WebElement element, String elementDescription, int index) {
-        if (element == null) {
-            logger.warn("Element:{} is null, process can not be continued", elementDescription);
-            return;
-        }
-        int i = 0;
-        while (i <= TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS) {
-            try {
-                Select select = new Select(element);
-                List<WebElement> availableHours = select.getOptions();
-                String selectValue = availableHours.get(index).getText();
-                select.selectByIndex(index);
-                logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, SeleniumProcessResultEnum.SUCCESSFUL.name(), "Value: " + selectValue);
-                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
-                break;
-            } catch (Exception e) {
-                logger.warn("Element: {}. Process: Select, Result: Failed Reason:{}", elementDescription, e.getMessage());
-            }
-            i++;
-        }
-        if (i > TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS) {
-            logger.warn("Element: {}. Process: Select, Result: Failed Reason: Couldn't select within timeout", elementDescription);
-        }
-
     }
 
     public static void saveSourceCodeToFile(String content, String suffix) {
@@ -235,11 +117,11 @@ public class FormFillerUtils {
         String dateAsStr = dtf.format(now);
         File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         String filePath = FormFillerBAL.class.getResource("/").getPath();
-        FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + suffix  + dateAsStr + "_0.png"));
+        FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + suffix + dateAsStr + "_0.png"));
 
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         jse.executeScript("scroll(0, 1000);");
-        FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + suffix  + dateAsStr + "_1.png"));
+        FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + suffix + dateAsStr + "_1.png"));
 
     }
 
@@ -258,24 +140,33 @@ public class FormFillerUtils {
         ThreadContext.put("seleniumProcess", process.name());
         ThreadContext.put("seleniumStatus", status);
         logger.info(String.format("Element: %s, Process:%s, Status:%s, Msg:%s", elementDescription, process, status, msg));
-        //ThreadContext.clearAll();
+        ThreadContext.clearAll();
     }
 
-    public static void logWarn(String elementDescription, String process, String status) {
+    public static void logWarn(String elementDescription, String process, String status, Throwable throwable) {
         ThreadContext.put("formId", String.valueOf(formId));
         ThreadContext.put("elementDescription", elementDescription);
         ThreadContext.put("seleniumProcess", process);
         ThreadContext.put("seleniumStatus", status);
-        logger.warn(String.format("Element: %s, Process:%s, Status:%s", elementDescription, process, status));
-        //ThreadContext.clearAll();
+        logger.warn(String.format("Element: %s, Process:%s, Status:%s ", elementDescription, process, status), throwable);
+        ThreadContext.clearAll();
     }
 
-    public static void logWarn(String elementDescription, String process, String status, Throwable e) {
+    public static void logWarn(String elementDescription, String process, String status, String msg) {
         ThreadContext.put("formId", String.valueOf(formId));
         ThreadContext.put("elementDescription", elementDescription);
         ThreadContext.put("seleniumProcess", process);
         ThreadContext.put("seleniumStatus", status);
-        logger.warn(String.format("Element: %s, Process:%s, Status:%s", elementDescription, process, status), e);
-        //ThreadContext.clearAll();
+        logger.warn(String.format("Element: %s, Process:%s, Status:%s Msg:%s", elementDescription, process, status, msg));
+        ThreadContext.clearAll();
+    }
+
+    public static void logWarn(String elementDescription, String process, String status, String msg, Throwable e) {
+        ThreadContext.put("formId", String.valueOf(formId));
+        ThreadContext.put("elementDescription", elementDescription);
+        ThreadContext.put("seleniumProcess", process);
+        ThreadContext.put("seleniumStatus", status);
+        logger.warn(String.format("Element: %s, Process:%s, Status:%s Msg:%s", elementDescription, process, status, msg), e);
+        ThreadContext.clearAll();
     }
 }

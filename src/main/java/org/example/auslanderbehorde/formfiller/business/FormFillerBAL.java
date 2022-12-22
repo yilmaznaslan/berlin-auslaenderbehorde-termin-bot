@@ -3,22 +3,27 @@ package org.example.auslanderbehorde.formfiller.business;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.appointmentfinder.business.AppointmentFinder;
+import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessEnum;
+import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessResultEnum;
 import org.example.auslanderbehorde.formfiller.enums.VisaEnum;
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
 import org.example.auslanderbehorde.sessionfinder.business.SessionFinder;
 import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.Select;
 
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import static org.example.auslanderbehorde.appointmentfinder.business.AppointmentFinder.foundAppointmentCount;
+import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.*;
 import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.*;
 
 /**
@@ -121,66 +126,96 @@ public class FormFillerBAL extends TimerTask {
         String elementName = COUNTRY.getId();
         String elementDescription = COUNTRY.name();
         WebElement element = FormFillerUtils.getElementById(elementName, elementDescription, driver);
-        FormFillerUtils.selectOptionByValue(element, elementDescription, citizenshipValue);
+        Select select = new Select(element);
+        select.selectByValue( citizenshipValue);
+        WebElement option = select.getFirstSelectedOption();
+        String selectValue = option.getText();
+        logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
     }
 
     private void selectApplicantsCount() throws InterruptedException, ElementNotFoundTimeoutException {
         String elementId = APPLICANT_COUNT.getId();
         String elementDescription = APPLICANT_COUNT.name();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        FormFillerUtils.selectOptionByValue(element, elementDescription, applicantNumber);
-    }
+        Select select = new Select(element);
+        select.selectByValue(applicantNumber);
+        WebElement option = select.getFirstSelectedOption();
+        String selectValue = option.getText();
+        logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);    }
 
     private void selectFamilyStatus() throws InterruptedException, ElementNotFoundTimeoutException {
         String elementId = FAMILY_STATUS.getId();
         String elementDescription = FAMILY_STATUS.name();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        FormFillerUtils.selectOptionByValue(element, elementDescription, familyStatus);
-    }
+        Select select = new Select(element);
+        select.selectByValue(familyStatus);
+        WebElement option = select.getFirstSelectedOption();
+        String selectValue = option.getText();
+        logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);    }
 
-    private void clickServiceType() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
+    private void clickServiceType() throws InterruptedException, ElementNotFoundTimeoutException{
         String elementXPath = "//*[@id=\"xi-div-30\"]/div[1]/label/p";
         String elementDescription = "serviceType".toUpperCase();
         WebElement element = FormFillerUtils.getElementByXPath(elementXPath, elementDescription, driver);
-        FormFillerUtils.clickToElement(element, elementDescription);
+        element.click();
+        logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());
     }
 
-    private void clickVisaGroup() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
+    private void clickVisaGroup() throws InterruptedException, ElementNotFoundTimeoutException{
         String elementXpath = "//*[@id=\"inner-163-0-1\"]/div/div[3]/label";
         String elementDescription = "visaGroup".toUpperCase();
         WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
-        FormFillerUtils.clickToElement(element, elementDescription);
+        element.click();
+        logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());
     }
 
-    private void clickToVisa() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
+    private void clickToVisa() throws InterruptedException, ElementNotFoundTimeoutException{
         String elementId = visaEnum.getId();
         String elementDescription = visaEnum.getDataTag0();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        FormFillerUtils.clickToElement(element, elementDescription);
-    }
+        element.click();
+        logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());    }
 
-    private void sendForm() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
+    private void sendForm() throws InterruptedException, ElementNotFoundTimeoutException{
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
         String elementDescription = "clickButton".toUpperCase();
         WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
-        FormFillerUtils.clickToElement(element, elementDescription);
-    }
+        element.click();
+        logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());    }
 
-    private boolean isAppointmentSelectionPageOpened() throws ElementNotFoundTimeoutException, InterruptedException {
+    private boolean isAppointmentSelectionPageOpened() throws InteractionFailedException{
         String stageXPath = ".//ul/li[2]/span";
         String elementDescription = "activeSectionTab".toUpperCase();
-        WebElement element = FormFillerUtils.getElementByXPath(stageXPath, elementDescription, driver);
-        String stageText = FormFillerUtils.getElementTextValue(element, elementDescription);
-        return stageText.contains("Terminauswahl");
+        int i = 1;
+        String stageText;
+        while(i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS){
+            try{
+                WebElement element = FormFillerUtils.getElementByXPath(stageXPath, elementDescription, driver);
+                stageText = element.getText();
+                logInfo(elementDescription, SeleniumProcessEnum.GETTING_TEXT, SeleniumProcessResultEnum.SUCCESSFUL.name(), String.format("Value: %s", stageText));
+                if(!stageText.equals("")){
+                    return stageText.contains("Terminauswahl");
+                }
+            } catch(StaleElementReferenceException | InterruptedException | ElementNotFoundTimeoutException e){
+                logWarn(elementDescription, SeleniumProcessEnum.GETTING_TEXT.name(), SeleniumProcessResultEnum.FAILED.name(), e);
+            }
+            i++;
+        }
+        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed. Reason: Couldn't get the element within timeout", elementDescription);
+            throw new InteractionFailedException(elementDescription);
+
+        }
+        return false;
     }
 
-    private double getRemainingTime() throws InterruptedException, ElementNotFoundTimeoutException {
+    private double getRemainingTime() {
         String elementXpath = "//*[@id=\"progressBar\"]/div";
         String elementDescription = "remainingTime".toUpperCase();
         int remainingMinute = 0;
         try {
             WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
-            String timeStr = FormFillerUtils.getElementTextValue(element, elementDescription);
+            String timeStr = element.getText();
             if (timeStr != null) {
                 remainingMinute = Integer.parseInt(timeStr.split(":")[0]);
             }

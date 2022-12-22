@@ -3,6 +3,8 @@ package org.example.auslanderbehorde.appointmentfinder.business;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.formfiller.business.FormFillerUtils;
+import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessEnum;
+import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessResultEnum;
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.openqa.selenium.WebDriver;
@@ -14,6 +16,7 @@ import org.openqa.selenium.support.ui.Select;
 import java.io.IOException;
 import java.util.List;
 
+import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.logInfo;
 import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.TIME_SLOT;
 import static org.example.notifications.TwilioAdapter.makeCall;
 import static org.example.notifications.TwilioAdapter.sendSMS;
@@ -36,7 +39,8 @@ public class AppointmentFinder {
         WebElement element = FormFillerUtils.getElementByCssSelector(cssSelector, elementDescription, driver);
         if(isDateVerified(element)){
             logger.info("Date is verified");
-            FormFillerUtils.clickToElement(element, elementDescription);
+            element.click();
+            logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, "Successful");
             handleSelectingTimeslot();
         }
     }
@@ -47,7 +51,11 @@ public class AppointmentFinder {
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         if (isTimeslotOptionVerified(element)) {
             foundAppointmentCount++;
-            FormFillerUtils.selectOptionByIndex(element, elementDescription, 0);
+            Select select = new Select(element);
+            List<WebElement> availableHours = select.getOptions();
+            String selectValue = availableHours.get(0).getText();
+            select.selectByIndex(0);
+            logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, SeleniumProcessResultEnum.SUCCESSFUL.name(), "Value: " + selectValue);
             Thread.sleep(1000);
             clickNextButton();
             String url = driver.getCurrentUrl();
@@ -69,7 +77,8 @@ public class AppointmentFinder {
         String elementId = "applicationForm:managedForm:proceed";
         String elementDescription = "weiter button".toUpperCase();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        FormFillerUtils.clickToElement(element, elementDescription);
+        element.click();
+        logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, "Successful");
         Thread.sleep(3);
         FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "afterClickNext");
         FormFillerUtils.saveScreenshot(driver, "afterClickNext");
