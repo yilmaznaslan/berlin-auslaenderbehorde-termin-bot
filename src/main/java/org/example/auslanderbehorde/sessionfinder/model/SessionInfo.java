@@ -2,23 +2,23 @@ package org.example.auslanderbehorde.sessionfinder.model;
 
 import java.util.Objects;
 
-public class Session {
+public class SessionInfo {
     private  String dswid;
     private  String dsrid;
     private String requestId;
 
-    public Session(String dswid, String dsrid) {
+    public SessionInfo(String dswid, String dsrid) {
         this.dswid = dswid;
         this.dsrid = dsrid;
     }
 
-    public Session(String dswid, String dsrid, String requestId) {
+    public SessionInfo(String dswid, String dsrid, String requestId) {
         this.dswid = dswid;
         this.dsrid = dsrid;
         this.requestId = requestId;
     }
 
-    public Session() {
+    public SessionInfo() {
     }
 
     public String getDswid() {
@@ -49,8 +49,8 @@ public class Session {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Session session = (Session) o;
-        return Objects.equals(dswid, session.dswid) && Objects.equals(dsrid, session.dsrid) && Objects.equals(requestId, session.requestId);
+        SessionInfo sessionInfo = (SessionInfo) o;
+        return Objects.equals(dswid, sessionInfo.dswid) && Objects.equals(dsrid, sessionInfo.dsrid) && Objects.equals(requestId, sessionInfo.requestId);
     }
 
     @Override

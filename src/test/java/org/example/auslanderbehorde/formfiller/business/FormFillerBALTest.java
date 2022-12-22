@@ -1,7 +1,6 @@
 package org.example.auslanderbehorde.formfiller.business;
 
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
-import org.example.auslanderbehorde.sessionfinder.model.Session;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

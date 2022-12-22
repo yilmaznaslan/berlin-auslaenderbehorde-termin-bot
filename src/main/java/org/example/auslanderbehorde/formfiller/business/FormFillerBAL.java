@@ -8,7 +8,7 @@ import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundExcepti
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
 import org.example.auslanderbehorde.sessionfinder.business.SessionFinder;
-import org.example.auslanderbehorde.sessionfinder.model.Session;
+import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -37,7 +37,7 @@ public class FormFillerBAL extends TimerTask {
     private final VisaEnum visaEnum;
 
     private final AppointmentFinder appointmentFinder;
-    private Session session;
+    private SessionInfo sessionInfo;
     private static int searchCount = 0;
 
     private WebDriver driver;
@@ -60,11 +60,11 @@ public class FormFillerBAL extends TimerTask {
     @Override
     public void run() {
         try {
-            if(session==null){
+            if(sessionInfo ==null){
                 logger.info("Session is not created.");
                 initNewSession();
             }
-            getFormPage(session.getRequestId(), session.getDswid(), session.getDsrid());
+            getFormPage(sessionInfo.getRequestId(), sessionInfo.getDswid(), sessionInfo.getDsrid());
 
             double remainingMinute = getRemainingTime();
 
@@ -79,7 +79,7 @@ public class FormFillerBAL extends TimerTask {
             clickServiceType();
             clickVisaGroup();
             clickToVisa();
-            clickNextButton();
+            sendForm();
 
             if (isAppointmentSelectionPageOpened()) {
                 Thread.sleep(1000);
@@ -161,7 +161,7 @@ public class FormFillerBAL extends TimerTask {
         FormFillerUtils.clickToElement(element, elementDescription);
     }
 
-    private void clickNextButton() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
+    private void sendForm() throws InterruptedException, ElementNotFoundException, InteractionFailedException {
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
         String elementDescription = "clickButton".toUpperCase();
         WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
@@ -211,6 +211,6 @@ public class FormFillerBAL extends TimerTask {
     private void initNewSession() throws InterruptedException {
         logger.info("initiating a new session");
         SessionFinder sessionFinder = new SessionFinder();
-        session = sessionFinder.findAndGetSession();
+        sessionInfo = sessionFinder.findAndGetSession();
     }
 }

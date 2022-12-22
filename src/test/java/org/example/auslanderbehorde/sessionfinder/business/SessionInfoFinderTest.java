@@ -1,10 +1,10 @@
 package org.example.auslanderbehorde.sessionfinder.business;
 
-import org.example.auslanderbehorde.sessionfinder.model.Session;
+import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.RepeatedTest;
 
-class SessionFinderTest {
+class SessionInfoFinderTest {
 
     @RepeatedTest(30)
     void findRequestId() throws InterruptedException {
@@ -12,12 +12,12 @@ class SessionFinderTest {
         SessionFinder underTest = new SessionFinder();
 
         // WHEN
-        Session session = underTest.findAndGetSession();
+        SessionInfo sessionInfo = underTest.findAndGetSession();
 
         // THEN
-        Assertions.assertNotNull(session.getRequestId());
-        Assertions.assertNotNull(session.getDsrid());
-        Assertions.assertNotNull(session.getDswid());
+        Assertions.assertNotNull(sessionInfo.getRequestId());
+        Assertions.assertNotNull(sessionInfo.getDsrid());
+        Assertions.assertNotNull(sessionInfo.getDswid());
     }
 
     // missgin test for a scenerioa what the netty timeout error is recevied

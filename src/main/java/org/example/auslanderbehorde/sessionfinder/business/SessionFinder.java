@@ -3,20 +3,18 @@ package org.example.auslanderbehorde.sessionfinder.business;
 import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.sessionfinder.model.Session;
+import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
 public class SessionFinder {
 
-    private Session session = new Session();
+    private SessionInfo sessionInfo = new SessionInfo();
     private final Logger logger = LogManager.getLogger(SessionFinder.class);
     private final int requestLimit = 40;
     int requestCount = 0;
@@ -26,10 +24,11 @@ public class SessionFinder {
 
     }
 
-    public Session findAndGetSession() throws InterruptedException {
+    public SessionInfo findAndGetSession() throws InterruptedException {
+        getMainPage();
         initiateSession();
-        activateRequestId(session.getRequestId());
-        return session;
+        activateRequestId(sessionInfo.getRequestId());
+        return sessionInfo;
     }
 
     private void activateRequestId(String requestId) {
@@ -72,15 +71,14 @@ public class SessionFinder {
     }
 
     private void initiateSession() throws InterruptedException {
-        getMainPage();
-
         while (true) {
             String urlAfterRedirect = driver.getCurrentUrl();
-            logger.info("CurrentURL: " + urlAfterRedirect);
+            logger.info(String.format("Iteration: %s, CurrentURL: %s",requestCount, urlAfterRedirect));
             try {
                 URL url = new URL(urlAfterRedirect);
                 String queryStr = url.getQuery();
-                if (session.getDsrid() == null && session.getDswid() == null) {
+
+                if (sessionInfo.getDsrid() == null && sessionInfo.getDswid() == null) {
                     logger.info(String.format("QueryString: %s", queryStr));
                     extractDswidAndDsrid(queryStr);
                 }
@@ -92,12 +90,21 @@ public class SessionFinder {
                 }
 
                 if (requestCount >= requestLimit) {
+                    logger.warn("Reached to requestLimit");
                     requestCount = 0;
+                    driver.close();
                     getMainPage();
                 }
 
-            } catch (MalformedURLException e) {
-                logger.error("URL is malformed exception occurred", e);
+                if (urlAfterRedirect.contains("logout")) {
+                    logger.warn("Kicked out");
+                    requestCount = 0;
+                    driver.close();
+                    getMainPage();
+                }
+
+            } catch (Exception e) {
+                logger.error("Some error occurred during getting a session info", e);
             }
             Thread.sleep(50);
             requestCount++;
@@ -108,7 +115,7 @@ public class SessionFinder {
         List<String> queryStrings = List.of(queryStr.split("&"));
         String dsrid = Arrays.stream(queryStrings.get(0).split("=")).toList().get(1);
         String dswid = Arrays.stream(queryStrings.get(1).split("=")).toList().get(1);
-        this.session = new Session(dswid, dsrid);
+        this.sessionInfo = new SessionInfo(dswid, dsrid);
         logger.info(String.format("Dswid: %s, Dsrid: %s", dswid, dsrid));
     }
 
@@ -117,7 +124,7 @@ public class SessionFinder {
         String requestIdAndV = urlAsList.get(urlAsList.size() - 1);
         String requestId = List.of(requestIdAndV.split("\\?")).get(0);
         logger.info(String.format("RequestID: %s", requestId));
-        session.setRequestId(requestId);
+        sessionInfo.setRequestId(requestId);
     }
 
     private void getMainPage() {
@@ -125,7 +132,7 @@ public class SessionFinder {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
         driver = new ChromeDriver(options);
-        logger.info(String.format("Getting the URL: %s", INITIAL_URL));
+        logger.info(String.format("Getting the main page: %s", INITIAL_URL));
         driver.get(INITIAL_URL);
     }
 }

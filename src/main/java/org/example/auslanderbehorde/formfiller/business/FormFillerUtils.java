@@ -20,7 +20,7 @@ import java.util.List;
 
 public class FormFillerUtils {
     private static final Logger logger = LogManager.getLogger(FormFillerUtils.class);
-    static final int TIMEOUT_FOR_INTERACTING_IN_SECONDS = 10;
+    static final int TIMEOUT_FOR_INTERACTING_IN_SECONDS = 25;
     static final int SLEEP_DURATION_IN_MILISECONDS = 1500;
     public static long formId;
 
