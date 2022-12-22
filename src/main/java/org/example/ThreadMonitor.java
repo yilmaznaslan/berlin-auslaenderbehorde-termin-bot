@@ -17,13 +17,13 @@ public class ThreadMonitor extends TimerTask {
     }
     @Override
     public void run() {
-
-        ThreadContext.put("threadCount", String.valueOf(Thread.activeCount()));
-        logger.info("Number of threads " + Thread.activeCount());
+        int threadCount = Thread.activeCount();
+        ThreadContext.put("threadCount", String.valueOf(threadCount));
+        logger.info(String.format("Number of threads: %s", threadCount));
         try {
             Thread.sleep(30000);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            logger.error(String.format("Some error occurred during monitoring the threads. Reason: ", e));
         }
     }
 

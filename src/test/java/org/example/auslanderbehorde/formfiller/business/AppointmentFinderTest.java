@@ -1,7 +1,7 @@
 package org.example.auslanderbehorde.formfiller.business;
 
 import org.example.auslanderbehorde.appointmentfinder.business.AppointmentFinder;
-import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundException;
+import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +33,7 @@ class AppointmentFinderTest {
     }
 
     @Test
-    void ASSERT_THAT_first_available_time_is_selected_WHEN_handleSelectingTimeslot_is_called() throws ElementNotFoundException, InterruptedException, InteractionFailedException, IOException {
+    void ASSERT_THAT_first_available_time_is_selected_WHEN_handleSelectingTimeslot_is_called() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException, IOException {
         // GIVEN
         String expectedTime = "09:30";
         driver.get(url_DE);

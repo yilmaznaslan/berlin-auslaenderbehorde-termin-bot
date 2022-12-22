@@ -1,6 +1,6 @@
 package org.example.auslanderbehorde;
 
-import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundException;
+import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.business.FormFillerUtils;
 import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum;
 import org.junit.jupiter.api.Assertions;
@@ -31,7 +31,7 @@ class FormFillerBALUtilsTest {
     }
 
     @Test
-    void ASSERT_THAT_available_date_is_selected() throws ElementNotFoundException, InterruptedException {
+    void ASSERT_THAT_available_date_is_selected() throws ElementNotFoundTimeoutException, InterruptedException {
         // GIVEN
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
@@ -69,7 +69,7 @@ class FormFillerBALUtilsTest {
     }
 
     @Test
-    void ASSERT_THAT_element_is_returned_WHEN_getById_is_called_GIVEN_THAT_current_page_is_servicewahl() throws ElementNotFoundException, InterruptedException {
+    void ASSERT_THAT_element_is_returned_WHEN_getById_is_called_GIVEN_THAT_current_page_is_servicewahl() throws ElementNotFoundTimeoutException, InterruptedException {
         // GIVEN
         String id = "SERVICEWAHL_DE323-0-1-3-328338";
 
@@ -83,7 +83,7 @@ class FormFillerBALUtilsTest {
     }
 
     @Test
-    void ASSERT_THAT_element_is_returned_WHEN_getById_is_called_GIVEN_THAT_current_page_is_servicewahl_DE() throws ElementNotFoundException, InterruptedException {
+    void ASSERT_THAT_element_is_returned_WHEN_getById_is_called_GIVEN_THAT_current_page_is_servicewahl_DE() throws ElementNotFoundTimeoutException, InterruptedException {
         // GIVEN
         String id = EconomicActivityVisaDeEnum.BLUECARD.getId();
 

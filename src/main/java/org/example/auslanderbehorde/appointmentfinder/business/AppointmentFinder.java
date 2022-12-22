@@ -3,7 +3,7 @@ package org.example.auslanderbehorde.appointmentfinder.business;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.formfiller.business.FormFillerUtils;
-import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundException;
+import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.TIME_SLOT;
-import static org.example.notifications.Twilio.makeCall;
-import static org.example.notifications.Twilio.sendSMS;
+import static org.example.notifications.TwilioAdapter.makeCall;
+import static org.example.notifications.TwilioAdapter.sendSMS;
 
 public class AppointmentFinder {
 
@@ -30,7 +30,7 @@ public class AppointmentFinder {
         this.driver = webDriver;
     }
 
-    public void handleFindingAppointment() throws ElementNotFoundException, InterruptedException, InteractionFailedException, IOException{
+    public void handleFindingAppointment() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException, IOException{
         String elementDescription = "DateSelection".toUpperCase();
         String cssSelector = "[data-handler=selectDay]";
         WebElement element = FormFillerUtils.getElementByCssSelector(cssSelector, elementDescription, driver);
@@ -41,7 +41,7 @@ public class AppointmentFinder {
         }
     }
 
-    public void handleSelectingTimeslot() throws ElementNotFoundException, InterruptedException, InteractionFailedException, IOException {
+    public void handleSelectingTimeslot() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException, IOException {
         String elementId = TIME_SLOT.getId();
         String elementDescription = TIME_SLOT.name();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
@@ -65,7 +65,7 @@ public class AppointmentFinder {
         Thread.sleep(1000);
     }
 
-    protected void clickNextButton() throws InterruptedException, ElementNotFoundException, InteractionFailedException, IOException {
+    protected void clickNextButton() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException, IOException {
         String elementId = "applicationForm:managedForm:proceed";
         String elementDescription = "weiter button".toUpperCase();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);

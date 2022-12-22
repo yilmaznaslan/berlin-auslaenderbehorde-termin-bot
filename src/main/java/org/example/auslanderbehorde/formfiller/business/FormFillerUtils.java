@@ -4,7 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
-import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundException;
+import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessEnum;
 import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessResultEnum;
@@ -24,30 +24,30 @@ public class FormFillerUtils {
     static final int SLEEP_DURATION_IN_MILISECONDS = 1500;
     public static long formId;
 
-    public static WebElement getElementById(String id, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundException {
+    public static WebElement getElementById(String id, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
         WebElement element = null;
         int i = 1;
         while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             try {
                 element = driver.findElement(By.id(id));
-                logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_ID, "Successful");
+                logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_ID, SeleniumProcessResultEnum.SUCCESSFUL.name());
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
-                logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH.name(), SeleniumProcessResultEnum.FAILED.name(), e);
+                logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), e);
             }
             Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
             i++;
         }
         if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             logger.warn("Element: {}. Process: Getting by elementId. Result: Failed. Reason: Couldn't get elementById within timeout", elementDescription);
-            throw new ElementNotFoundException(elementDescription);
+            throw new ElementNotFoundTimeoutException(elementDescription);
 
         }
         return element;
     }
 
-    public static WebElement getElementByName(String elementName, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundException {
+    public static WebElement getElementByName(String elementName, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
         WebElement element = null;
         int i = 1;
         while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
@@ -64,53 +64,53 @@ public class FormFillerUtils {
         }
         if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_NAME.name(), SeleniumProcessResultEnum.FAILED.name(), e);
-            throw new ElementNotFoundException(elementDescription);
+            throw new ElementNotFoundTimeoutException(elementDescription);
 
         }
         return element;
     }
 
-    public static WebElement getElementByXPath(String xpath, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundException {
+    public static WebElement getElementByXPath(String xpath, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
         WebElement element = null;
         int i = 0;
         while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             try {
                 element = driver.findElement(By.xpath(xpath));
-                logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH, "Successful");
+                logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH, SeleniumProcessResultEnum.SUCCESSFUL.name());
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
-                logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed", elementDescription);
+                logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH.name(), SeleniumProcessResultEnum.FAILED.name(), e);
             }
             Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
             i++;
         }
         if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed. Reason: Couldn't get the element within timeout", elementDescription);
-            throw new ElementNotFoundException(elementDescription);
+            throw new ElementNotFoundTimeoutException(elementDescription);
 
         }
         return element;
     }
 
-    public static WebElement getElementByCssSelector(String cssSelector, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundException {
+    public static WebElement getElementByCssSelector(String cssSelector, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
         WebElement element = null;
         int i = 0;
         while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             try {
                 element = driver.findElement(By.cssSelector(cssSelector));
-                logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR, "Successful");
+                logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR, SeleniumProcessResultEnum.SUCCESSFUL.name());
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
-                logger.warn("Element: {}. Process: Getting by elementCssSelector. Result: Failed", elementDescription);
+                logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR.name(), SeleniumProcessResultEnum.FAILED.name(), e);
             }
             Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
             i++;
         }
         if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             logger.warn("Element: {}. Process: Getting by elementCssSelector. Result: Failed. Reason: Couldn't get within timeout", elementDescription);
-            throw new ElementNotFoundException(cssSelector);
+            throw new ElementNotFoundTimeoutException(cssSelector);
 
         }
         return element;
