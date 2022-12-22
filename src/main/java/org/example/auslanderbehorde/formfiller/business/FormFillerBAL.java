@@ -168,26 +168,11 @@ public class FormFillerBAL extends TimerTask {
         FormFillerUtils.clickToElement(element, elementDescription);
     }
 
-    private boolean isAppointmentSelectionPageOpened() {
+    private boolean isAppointmentSelectionPageOpened() throws ElementNotFoundTimeoutException, InterruptedException {
         String stageXPath = ".//ul/li[2]/span";
         String elementDescription = "activeSectionTab".toUpperCase();
-        String stageText = "";
-        int i = 0;
-        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
-            try {
-                WebElement element = FormFillerUtils.getElementByXPath(stageXPath, elementDescription, driver);
-                stageText = element.getText();
-                logger.info(String.format("Element: %s. Process: Getting Text. Status: Successfully. Value: %s", elementDescription, stageText));
-                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
-                break;
-            } catch (Exception e) {
-                logger.info(String.format("Element: %s. Process: Getting Text. Status: Failed", elementDescription));
-            }
-            i++;
-        }
-        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
-            logger.warn(String.format("Element: %s. Process: reading text, Result: Failed Reason: Couldn't select within timeout", elementDescription));
-        }
+        WebElement element = FormFillerUtils.getElementByXPath(stageXPath, elementDescription, driver);
+        String stageText = FormFillerUtils.getElementTextValue(element, elementDescription);
         return stageText.contains("Terminauswahl");
     }
 

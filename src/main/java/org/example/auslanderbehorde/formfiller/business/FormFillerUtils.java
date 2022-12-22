@@ -34,7 +34,7 @@ public class FormFillerUtils {
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
-                logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), e);
+                logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name());
             }
             Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
             i++;
@@ -80,7 +80,7 @@ public class FormFillerUtils {
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
-                logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH.name(), SeleniumProcessResultEnum.FAILED.name(), e);
+                logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH.name(), SeleniumProcessResultEnum.FAILED.name());
             }
             Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
             i++;
@@ -103,7 +103,7 @@ public class FormFillerUtils {
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
-                logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR.name(), SeleniumProcessResultEnum.FAILED.name(), e);
+                logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR.name(), SeleniumProcessResultEnum.FAILED.name());
             }
             Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
             i++;
@@ -114,6 +114,26 @@ public class FormFillerUtils {
 
         }
         return element;
+    }
+
+    public static String getElementTextValue(WebElement element, String elementDescription){
+        String stageText = "";
+        int i = 0;
+        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+            try {
+                stageText = element.getText();
+                logInfo(elementDescription, SeleniumProcessEnum.GETTING_TEXT, SeleniumProcessResultEnum.SUCCESSFUL.name(), String.format("Value: %s", stageText));
+                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+                break;
+            } catch (Exception e) {
+                logWarn(elementDescription, SeleniumProcessEnum.GETTING_TEXT.name(), SeleniumProcessResultEnum.FAILED.name(), e);
+            }
+            i++;
+        }
+        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+            logger.warn(String.format("Element: %s. Process: reading text, Result: Failed Reason: Couldn't select within timeout", elementDescription));
+        }
+        return stageText;
     }
 
     public static void clickToElement(WebElement element, String elementDescription) throws InteractionFailedException {
@@ -237,6 +257,15 @@ public class FormFillerUtils {
         ThreadContext.put("seleniumProcess", process.name());
         ThreadContext.put("seleniumStatus", status);
         logger.info(elementDescription + " " + process + " " + status + msg);
+        //ThreadContext.clearAll();
+    }
+
+    public static void logWarn(String elementDescription, String process, String status) {
+        ThreadContext.put("formId", String.valueOf(formId));
+        ThreadContext.put("elementDescription", elementDescription);
+        ThreadContext.put("seleniumProcess", process);
+        ThreadContext.put("seleniumStatus", status);
+        logger.warn(elementDescription + " " + process + " " + status);
         //ThreadContext.clearAll();
     }
 
