@@ -247,7 +247,7 @@ public class FormFillerUtils {
         ThreadContext.put("elementDescription", elementDescription);
         ThreadContext.put("seleniumProcess", process.name());
         ThreadContext.put("seleniumStatus", status);
-        logger.info(elementDescription + " " + process + " " + status);
+        logger.info(String.format("Element: %s, Process:%s, Status:%s", elementDescription, process, status));
         //ThreadContext.clearAll();
     }
 
@@ -256,7 +256,7 @@ public class FormFillerUtils {
         ThreadContext.put("elementDescription", elementDescription);
         ThreadContext.put("seleniumProcess", process.name());
         ThreadContext.put("seleniumStatus", status);
-        logger.info(elementDescription + " " + process + " " + status + msg);
+        logger.info(String.format("Element: %s, Process:%s, Status:%s, Msg:", elementDescription, process, status, msg));
         //ThreadContext.clearAll();
     }
 
@@ -265,7 +265,7 @@ public class FormFillerUtils {
         ThreadContext.put("elementDescription", elementDescription);
         ThreadContext.put("seleniumProcess", process);
         ThreadContext.put("seleniumStatus", status);
-        logger.warn(elementDescription + " " + process + " " + status);
+        logger.warn(String.format("Element: %s, Process:%s, Status:%s", elementDescription, process, status));
         //ThreadContext.clearAll();
     }
 
@@ -274,7 +274,7 @@ public class FormFillerUtils {
         ThreadContext.put("elementDescription", elementDescription);
         ThreadContext.put("seleniumProcess", process);
         ThreadContext.put("seleniumStatus", status);
-        logger.warn(elementDescription + " " + process + " " + status, e);
+        logger.warn(String.format("Element: %s, Process:%s, Status:%s", elementDescription, process, status), e);
         //ThreadContext.clearAll();
     }
 }
