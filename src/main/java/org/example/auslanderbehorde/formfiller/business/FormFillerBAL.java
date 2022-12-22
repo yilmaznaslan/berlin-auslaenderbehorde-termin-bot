@@ -19,8 +19,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static org.example.auslanderbehorde.appointmentfinder.business.AppointmentFinder.foundAppointmentCount;
-import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.SLEEP_DURATION_IN_MILISECONDS;
-import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.TIMEOUT_FOR_INTERACTING_IN_SECONDS;
 import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.*;
 
 /**
@@ -179,14 +177,13 @@ public class FormFillerBAL extends TimerTask {
     private double getRemainingTime() throws InterruptedException, ElementNotFoundTimeoutException {
         String elementXpath = "//*[@id=\"progressBar\"]/div";
         String elementDescription = "remainingTime".toUpperCase();
-        WebElement timeBar = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
         int remainingMinute = 0;
         try {
-            String timeStr = timeBar.getText();
+            WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
+            String timeStr = FormFillerUtils.getElementTextValue(element, elementDescription);
             if (timeStr != null) {
                 remainingMinute = Integer.parseInt(timeStr.split(":")[0]);
             }
-            logger.info(String.format("Element: %s. Process: Getting time. Status: Successfully. Value: %s", elementDescription, timeStr));
         } catch (Exception e) {
             logger.info("Element: {}. Process: Getting time. Status: Failed", elementDescription);
         }

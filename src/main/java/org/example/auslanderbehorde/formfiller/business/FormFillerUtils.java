@@ -20,14 +20,15 @@ import java.util.List;
 
 public class FormFillerUtils {
     private static final Logger logger = LogManager.getLogger(FormFillerUtils.class);
-    static final int TIMEOUT_FOR_INTERACTING_IN_SECONDS = 25;
+    static final int TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS = 25;
+    static final int TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS = 5;
     static final int SLEEP_DURATION_IN_MILISECONDS = 1500;
     public static long formId;
 
     public static WebElement getElementById(String id, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
         WebElement element = null;
         int i = 1;
-        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
                 element = driver.findElement(By.id(id));
                 logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_ID, SeleniumProcessResultEnum.SUCCESSFUL.name());
@@ -39,7 +40,7 @@ public class FormFillerUtils {
             Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
             i++;
         }
-        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             logger.warn("Element: {}. Process: Getting by elementId. Result: Failed. Reason: Couldn't get elementById within timeout", elementDescription);
             throw new ElementNotFoundTimeoutException(elementDescription);
 
@@ -50,7 +51,7 @@ public class FormFillerUtils {
     public static WebElement getElementByName(String elementName, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
         WebElement element = null;
         int i = 1;
-        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
                 element = driver.findElement(By.name(elementName));
                 logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_NAME, "Successful");
@@ -62,7 +63,7 @@ public class FormFillerUtils {
             Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
             i++;
         }
-        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_NAME.name(), SeleniumProcessResultEnum.FAILED.name(), e);
             throw new ElementNotFoundTimeoutException(elementDescription);
 
@@ -73,7 +74,7 @@ public class FormFillerUtils {
     public static WebElement getElementByXPath(String xpath, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
         WebElement element = null;
         int i = 0;
-        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
                 element = driver.findElement(By.xpath(xpath));
                 logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH, SeleniumProcessResultEnum.SUCCESSFUL.name());
@@ -85,7 +86,7 @@ public class FormFillerUtils {
             Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
             i++;
         }
-        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed. Reason: Couldn't get the element within timeout", elementDescription);
             throw new ElementNotFoundTimeoutException(elementDescription);
 
@@ -96,7 +97,7 @@ public class FormFillerUtils {
     public static WebElement getElementByCssSelector(String cssSelector, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
         WebElement element = null;
         int i = 0;
-        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
                 element = driver.findElement(By.cssSelector(cssSelector));
                 logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR, SeleniumProcessResultEnum.SUCCESSFUL.name());
@@ -108,7 +109,7 @@ public class FormFillerUtils {
             Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
             i++;
         }
-        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             logger.warn("Element: {}. Process: Getting by elementCssSelector. Result: Failed. Reason: Couldn't get within timeout", elementDescription);
             throw new ElementNotFoundTimeoutException(cssSelector);
 
@@ -119,18 +120,18 @@ public class FormFillerUtils {
     public static String getElementTextValue(WebElement element, String elementDescription){
         String stageText = "";
         int i = 0;
-        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+        while (i <= TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS) {
             try {
                 stageText = element.getText();
                 logInfo(elementDescription, SeleniumProcessEnum.GETTING_TEXT, SeleniumProcessResultEnum.SUCCESSFUL.name(), String.format("Value: %s", stageText));
                 Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
                 break;
             } catch (Exception e) {
-                logWarn(elementDescription, SeleniumProcessEnum.GETTING_TEXT.name(), SeleniumProcessResultEnum.FAILED.name(), e);
+                logWarn(elementDescription, SeleniumProcessEnum.GETTING_TEXT.name(), SeleniumProcessResultEnum.FAILED.name());
             }
             i++;
         }
-        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+        if (i > TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS) {
             logger.warn(String.format("Element: %s. Process: reading text, Result: Failed Reason: Couldn't select within timeout", elementDescription));
         }
         return stageText;
@@ -142,7 +143,7 @@ public class FormFillerUtils {
             return;
         }
         int i = 0;
-        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+        while (i <= TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS) {
             try {
                 element.click();
                 logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, "Successful");
@@ -153,7 +154,7 @@ public class FormFillerUtils {
             }
             i++;
         }
-        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+        if (i > TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS) {
             logger.warn("Element: {}. Process: Click, Result: Failed Reason: Couldn't click within timeout", elementDescription);
             throw new InteractionFailedException("");
         }
@@ -165,7 +166,7 @@ public class FormFillerUtils {
             return;
         }
         int i = 0;
-        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+        while (i <= TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS) {
             try {
                 Select select = new Select(element);
                 select.selectByValue(optionValue);
@@ -179,7 +180,7 @@ public class FormFillerUtils {
             }
             i++;
         }
-        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+        if (i > TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS) {
             logger.warn("Element: {}. Process: Select, Result: Failed Reason: Couldn't select within timeout", elementDescription);
         }
     }
@@ -190,7 +191,7 @@ public class FormFillerUtils {
             return;
         }
         int i = 0;
-        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+        while (i <= TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS) {
             try {
                 Select select = new Select(element);
                 List<WebElement> availableHours = select.getOptions();
@@ -204,7 +205,7 @@ public class FormFillerUtils {
             }
             i++;
         }
-        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+        if (i > TIMEOUT_FOR_INTERACTING_ELEMENT_IN_SECONDS) {
             logger.warn("Element: {}. Process: Select, Result: Failed Reason: Couldn't select within timeout", elementDescription);
         }
 
@@ -256,7 +257,7 @@ public class FormFillerUtils {
         ThreadContext.put("elementDescription", elementDescription);
         ThreadContext.put("seleniumProcess", process.name());
         ThreadContext.put("seleniumStatus", status);
-        logger.info(String.format("Element: %s, Process:%s, Status:%s, Msg:", elementDescription, process, status, msg));
+        logger.info(String.format("Element: %s, Process:%s, Status:%s, Msg:%s", elementDescription, process, status, msg));
         //ThreadContext.clearAll();
     }
 
