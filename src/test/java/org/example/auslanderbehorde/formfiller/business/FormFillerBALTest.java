@@ -1,5 +1,7 @@
 package org.example.auslanderbehorde.formfiller.business;
 
+import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum;
+import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,9 +28,20 @@ class FormFillerBALTest {
     @BeforeEach
     void initDriver() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
+        //options.addArguments("--headless");
         this.driver = new ChromeDriver(options);
-        this.underTest = new FormFillerBAL(formInputs, driver);
+        //this.underTest = new FormFillerBAL(formInputs, driver);
+    }
+
+    @Test
+    void ASSERT_THAT_form_successfully_filled_WHEN_run_is_called() {
+        // GIVEN
+
+        // WHEN
+        FormFillerBAL formFillerBAL = new FormFillerBAL(new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD), driver);
+        formFillerBAL.startScanning();
+        // THEN
+
     }
 
     @Test
@@ -46,6 +59,44 @@ class FormFillerBALTest {
         String actualTime = select.getFirstSelectedOption().getText();
 
         Assertions.assertEquals(expectedTime, actualTime);
+    }
+
+    @Test
+    void ASSERT_THAT_appointmentSelection_is_not_captured_WHEN_isAppointmentSelectionPageOpened_is_called() {
+        // GIVEN
+        String path = FormFillerBAL.class.getClassLoader().getResource("page_dateSelection2022-12-23_08:11:45.html").getPath();
+        String url = "file:".concat(path);
+
+        // WHEN
+        driver.get(url);
+        underTest = new FormFillerBAL(formInputs, driver);
+        boolean actualResult;
+        try {
+            actualResult = underTest.isCalenderOpened();
+        } catch (InteractionFailedException e) {
+            throw new RuntimeException(e);
+        }
+
+        // THEN
+        Assertions.assertFalse(actualResult);
+    }
+
+    @Test
+    void ASSERT_THAT_appointmentSelection_is_captured_WHEN_isAppointmentSelectionPageOpened_is_called_GIVEN_termin_page_is_correct() {
+        // GIVEN
+
+        // WHEN
+        driver.get(url_DE);
+        underTest = new FormFillerBAL(formInputs, driver);
+        boolean actualResult;
+        try {
+            actualResult = underTest.isCalenderOpened();
+        } catch (InteractionFailedException e) {
+            throw new RuntimeException(e);
+        }
+
+        // THEN
+        Assertions.assertTrue(actualResult);
     }
 
 }
