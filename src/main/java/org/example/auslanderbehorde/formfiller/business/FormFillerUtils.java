@@ -21,6 +21,9 @@ import java.util.List;
 public class FormFillerUtils {
     private static final Logger logger = LogManager.getLogger(FormFillerUtils.class);
     static final int TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS = 25;
+    static final int TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS = 7;
+
+    static final int TIMEOUT_FOR_INTERACTING_IN_SECONDS = 25;
     static final int SLEEP_DURATION_IN_MILISECONDS = 1500;
     public static long formId;
 
@@ -70,6 +73,28 @@ public class FormFillerUtils {
         return element;
     }
 
+    public static WebElement getElementByXPathCalender(String xpath, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
+        WebElement element = null;
+        int i = 0;
+        while (i <= TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS) {
+            try {
+                element = driver.findElement(By.xpath(xpath));
+                logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH, SeleniumProcessResultEnum.SUCCESSFUL.name());
+                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+                break;
+            } catch (Exception e) {
+
+            }
+            Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+            i++;
+        }
+        if (i > TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS) {
+            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            throw new ElementNotFoundTimeoutException(elementDescription);
+        }
+        return element;
+    }
+
     public static WebElement getElementByCssSelector(String cssSelector, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
         WebElement element = null;
         int i = 0;
@@ -93,6 +118,80 @@ public class FormFillerUtils {
         return element;
     }
 
+    public static void clickToElement(WebElement element, String elementDescription) throws InteractionFailedException {
+        if (element == null) {
+            logger.warn("Element:{} is null, Process: Click can not be continued", elementDescription);
+            return;
+        }
+        int i = 0;
+        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+            try {
+                element.click();
+                logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, "Successful");
+                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+                break;
+            } catch (Exception e) {
+                //logger.warn("Element: {}. Process: Click, Result: Failed. Exception: ", elementDescription, e);
+            }
+            i++;
+        }
+        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+            logWarn(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            throw new InteractionFailedException("");
+        }
+    }
+
+    public static void selectOptionByValue(WebElement element, String elementDescription, String optionValue) throws InteractionFailedException {
+        if (element == null) {
+            logger.warn("Element:{} is null, Process: Select can not be continued", elementDescription);
+            return;
+        }
+        int i = 0;
+        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+            try {
+                Select select = new Select(element);
+                select.selectByValue(optionValue);
+                WebElement option = select.getFirstSelectedOption();
+                String selectValue = option.getText();
+                logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
+                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+                break;
+            } catch (Exception e) {
+                //logger.warn("Element: {}. Process: Select, Result: Failed Reason:{}", elementDescription, e.getMessage());
+            }
+            i++;
+        }
+        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+            logWarn(elementDescription, SeleniumProcessEnum.SELECTING_OPTION.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            throw new InteractionFailedException("");
+        }
+    }
+
+    public static void selectOptionByIndex(WebElement element, String elementDescription, int index) {
+        if (element == null) {
+            logger.warn("Element:{} is null, process can not be continued", elementDescription);
+            return;
+        }
+        int i = 0;
+        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+            try {
+                Select select = new Select(element);
+                List<WebElement> availableHours = select.getOptions();
+                String selectValue = availableHours.get(index).getText();
+                select.selectByIndex(index);
+                logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, SeleniumProcessResultEnum.SUCCESSFUL.name(), "Value: " + selectValue);
+                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+                break;
+            } catch (Exception e) {
+                logger.warn("Element: {}. Process: Select, Result: Failed Reason:{}", elementDescription, e.getMessage());
+            }
+            i++;
+        }
+        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+            logger.warn("Element: {}. Process: Select, Result: Failed Reason: Couldn't select within timeout", elementDescription);
+        }
+
+    }
     public static void saveSourceCodeToFile(String content, String suffix) {
         String filePath = FormFillerBAL.class.getResource("/").getPath();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");

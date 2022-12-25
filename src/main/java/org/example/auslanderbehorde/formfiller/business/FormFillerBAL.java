@@ -18,11 +18,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.Select;
 
+import java.io.IOException;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import static org.example.auslanderbehorde.appointmentfinder.business.AppointmentFinder.foundAppointmentCount;
+import static org.example.auslanderbehorde.appointmentfinder.business.AppointmentFinder.handledAppointmentCount;
 import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.*;
 import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.*;
 
@@ -39,9 +41,9 @@ public class FormFillerBAL extends TimerTask {
     private final String familyStatus;
     private final VisaEnum visaEnum;
 
-    private final AppointmentFinder appointmentFinder;
     private SessionInfo sessionInfo;
     private static int searchCount = 0;
+    private static int succesfullyFormSentCount = 0;
 
     private WebDriver driver;
     private final Timer timer = new Timer(true);
@@ -57,7 +59,6 @@ public class FormFillerBAL extends TimerTask {
         this.applicantNumber = formInputs.getApplicationsNumber();
         this.familyStatus = formInputs.getFamilyStatus();
         this.visaEnum = formInputs.getVisaEnum();
-        this.appointmentFinder = new AppointmentFinder(webDriver);
     }
 
     @Override
@@ -84,14 +85,16 @@ public class FormFillerBAL extends TimerTask {
             clickToVisa();
             sendForm();
 
-            if (isAppointmentSelectionPageOpened()) {
+            if (isCalenderOpened()) {
+                succesfullyFormSentCount++;
                 Thread.sleep(1000);
+                AppointmentFinder appointmentFinder = new AppointmentFinder(driver);
                 appointmentFinder.handleFindingAppointment();
                 //timer.cancel();
             }
 
-            incSearchcount();
-            String msg = String.format("Completed search count: %s. Found count: %s", searchCount, foundAppointmentCount);
+            searchCount++;
+            String msg = String.format("Completed search count: %s. SuccessfullyFormSenCount:%s, HandledAppoi.Count:%s, Found count: %s", searchCount, succesfullyFormSentCount, handledAppointmentCount, foundAppointmentCount);
             logger.info(msg);
 
         } catch (Exception e) {
@@ -133,57 +136,67 @@ public class FormFillerBAL extends TimerTask {
         logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
     }
 
-    private void selectApplicantsCount() throws InterruptedException, ElementNotFoundTimeoutException {
+    private void selectApplicantsCount() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementId = APPLICANT_COUNT.getId();
         String elementDescription = APPLICANT_COUNT.name();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        Select select = new Select(element);
-        select.selectByValue(applicantNumber);
-        WebElement option = select.getFirstSelectedOption();
-        String selectValue = option.getText();
-        logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);    }
+        FormFillerUtils.selectOptionByValue(element, elementDescription, applicantNumber);
+        //Select select = new Select(element);
+        //select.selectByValue(applicantNumber);
+        //WebElement option = select.getFirstSelectedOption();
+        //String selectValue = option.getText();
+        //logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
+        }
 
-    private void selectFamilyStatus() throws InterruptedException, ElementNotFoundTimeoutException {
+    private void selectFamilyStatus() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementId = FAMILY_STATUS.getId();
         String elementDescription = FAMILY_STATUS.name();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        Select select = new Select(element);
-        select.selectByValue(familyStatus);
-        WebElement option = select.getFirstSelectedOption();
-        String selectValue = option.getText();
-        logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);    }
+        FormFillerUtils.selectOptionByValue(element, elementDescription, familyStatus);
+        //Select select = new Select(element);
+        //select.selectByValue(familyStatus);
+        //WebElement option = select.getFirstSelectedOption();
+        //String selectValue = option.getText();
+        // logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
+        }
 
-    private void clickServiceType() throws InterruptedException, ElementNotFoundTimeoutException{
+    private void clickServiceType() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementXPath = "//*[@id=\"xi-div-30\"]/div[1]/label/p";
         String elementDescription = "serviceType".toUpperCase();
         WebElement element = FormFillerUtils.getElementByXPath(elementXPath, elementDescription, driver);
-        element.click();
-        logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());
+        FormFillerUtils.clickToElement(element, elementDescription);
+        //element.click();
+        //logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());
     }
 
-    private void clickVisaGroup() throws InterruptedException, ElementNotFoundTimeoutException{
+    private void clickVisaGroup() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementXpath = "//*[@id=\"inner-163-0-1\"]/div/div[3]/label";
         String elementDescription = "visaGroup".toUpperCase();
         WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
-        element.click();
-        logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());
+        FormFillerUtils.clickToElement(element, elementDescription);
+        //element.click();
+        //logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());
     }
 
-    private void clickToVisa() throws InterruptedException, ElementNotFoundTimeoutException{
+    private void clickToVisa() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementId = visaEnum.getId();
         String elementDescription = visaEnum.getDataTag0();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        element.click();
-        logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());    }
+        FormFillerUtils.clickToElement(element, elementDescription);
+        //element.click();
+        //logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());
+        }
 
-    private void sendForm() throws InterruptedException, ElementNotFoundTimeoutException{
+    private void sendForm() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
         String elementDescription = "clickButton".toUpperCase();
         WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
-        element.click();
-        logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());    }
+        FormFillerUtils.clickToElement(element, elementDescription);
+        //element.click();
+        //logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());
+    }
 
-    private boolean isAppointmentSelectionPageOpened() throws InteractionFailedException{
+    protected boolean isCalenderOpened() throws InteractionFailedException{
         String stageXPath = ".//ul/li[2]/span";
         String elementDescription = "activeSectionTab".toUpperCase();
         int i = 1;
@@ -193,11 +206,24 @@ public class FormFillerBAL extends TimerTask {
                 WebElement element = FormFillerUtils.getElementByXPath(stageXPath, elementDescription, driver);
                 stageText = element.getText();
                 logInfo(elementDescription, SeleniumProcessEnum.GETTING_TEXT, SeleniumProcessResultEnum.SUCCESSFUL.name(), String.format("Value: %s", stageText));
-                if(!stageText.equals("")){
-                    return stageText.contains("Terminauswahl");
+                if(stageText.contains("Servicewahl")){
                 }
+                String asd = "//*[@id=\"xi-div-1\"]/div[3]";
+                try{
+                    String elementDescription1 = "calender".toUpperCase();
+                    WebElement calender = FormFillerUtils.getElementByXPathCalender(asd,elementDescription1, driver);
+                    FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "dateSelection_in");
+                    FormFillerUtils.saveScreenshot(driver, "dateSelection_in");
+                    return true;
+                    //return stageText.contains("Terminauswahl") && calender.isDisplayed();
+                } catch(ElementNotFoundTimeoutException e){
+                    return false;
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
             } catch(StaleElementReferenceException | InterruptedException | ElementNotFoundTimeoutException e){
-                logWarn(elementDescription, SeleniumProcessEnum.GETTING_TEXT.name(), SeleniumProcessResultEnum.FAILED.name(), e);
+                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_TEXT.name(), SeleniumProcessResultEnum.FAILED.name(), e);
             }
             i++;
         }
@@ -231,7 +257,4 @@ public class FormFillerBAL extends TimerTask {
         sessionInfo = sessionFinder.findAndGetSession();
     }
 
-    private static void incSearchcount(){
-        searchCount = searchCount+1;
-    }
 }

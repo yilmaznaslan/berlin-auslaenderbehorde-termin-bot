@@ -26,6 +26,7 @@ public class AppointmentFinder {
     private final Logger logger = LogManager.getLogger(AppointmentFinder.class);
 
     public static int foundAppointmentCount = 0;
+    public static int handledAppointmentCount = 0;
 
     private final WebDriver driver;
 
@@ -34,8 +35,11 @@ public class AppointmentFinder {
     }
 
     public void handleFindingAppointment() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException, IOException{
+        handledAppointmentCount++;
         String elementDescription = "DateSelection".toUpperCase();
         String cssSelector = "[data-handler=selectDay]";
+        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "dateSelection");
+        FormFillerUtils.saveScreenshot(driver, "dateSelection");
         WebElement element = FormFillerUtils.getElementByCssSelector(cssSelector, elementDescription, driver);
         if(isDateVerified(element)){
             logger.info("Date is verified");
