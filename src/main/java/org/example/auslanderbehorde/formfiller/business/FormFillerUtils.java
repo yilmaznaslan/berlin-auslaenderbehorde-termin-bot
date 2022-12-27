@@ -21,10 +21,10 @@ import java.util.List;
 public class FormFillerUtils {
     private static final Logger logger = LogManager.getLogger(FormFillerUtils.class);
     static final int TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS = 25;
-    static final int TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS = 7;
+    static final int TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS = 5;
 
     static final int TIMEOUT_FOR_INTERACTING_IN_SECONDS = 25;
-    static final int SLEEP_DURATION_IN_MILISECONDS = 1500;
+    static final int SLEEP_DURATION_IN_MILLISECONDS = 1500;
     public static long formId;
 
     public static WebElement getElementById(String id, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
@@ -34,12 +34,12 @@ public class FormFillerUtils {
             try {
                 element = driver.findElement(By.id(id));
                 logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_ID, SeleniumProcessResultEnum.SUCCESSFUL.name());
-                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
             } catch (Exception e) {
                 //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
             }
-            Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
             i++;
         }
         if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
@@ -57,12 +57,12 @@ public class FormFillerUtils {
             try {
                 element = driver.findElement(By.xpath(xpath));
                 logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH, SeleniumProcessResultEnum.SUCCESSFUL.name());
-                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
             } catch (Exception e) {
 
             }
-            Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
             i++;
         }
         if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
@@ -80,12 +80,12 @@ public class FormFillerUtils {
             try {
                 element = driver.findElement(By.xpath(xpath));
                 logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH, SeleniumProcessResultEnum.SUCCESSFUL.name());
-                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
             } catch (Exception e) {
 
             }
-            Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
             i++;
         }
         if (i > TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS) {
@@ -102,12 +102,12 @@ public class FormFillerUtils {
             try {
                 element = driver.findElement(By.cssSelector(cssSelector));
                 logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR, SeleniumProcessResultEnum.SUCCESSFUL.name());
-                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
             } catch (Exception e) {
                 //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR.name(), SeleniumProcessResultEnum.FAILED.name(), "");
             }
-            Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
             i++;
         }
         if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
@@ -128,7 +128,7 @@ public class FormFillerUtils {
             try {
                 element.click();
                 logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, "Successful");
-                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
             } catch (Exception e) {
                 //logger.warn("Element: {}. Process: Click, Result: Failed. Exception: ", elementDescription, e);
@@ -154,7 +154,7 @@ public class FormFillerUtils {
                 WebElement option = select.getFirstSelectedOption();
                 String selectValue = option.getText();
                 logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
-                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
             } catch (Exception e) {
                 //logger.warn("Element: {}. Process: Select, Result: Failed Reason:{}", elementDescription, e.getMessage());
@@ -180,7 +180,7 @@ public class FormFillerUtils {
                 String selectValue = availableHours.get(index).getText();
                 select.selectByIndex(index);
                 logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, SeleniumProcessResultEnum.SUCCESSFUL.name(), "Value: " + selectValue);
-                Thread.sleep(SLEEP_DURATION_IN_MILISECONDS);
+                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
             } catch (Exception e) {
                 logger.warn("Element: {}. Process: Select, Result: Failed Reason:{}", elementDescription, e.getMessage());

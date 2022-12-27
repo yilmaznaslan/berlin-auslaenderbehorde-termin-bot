@@ -38,7 +38,7 @@ class FormFillerBALTest {
         // GIVEN
 
         // WHEN
-        FormFillerBAL formFillerBAL = new FormFillerBAL(new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD), driver);
+        FormFillerBAL formFillerBAL = new FormFillerBAL(new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD));
         formFillerBAL.startScanning();
         // THEN
 
@@ -69,7 +69,7 @@ class FormFillerBALTest {
 
         // WHEN
         driver.get(url);
-        underTest = new FormFillerBAL(formInputs, driver);
+        underTest = new FormFillerBAL(formInputs);
         boolean actualResult;
         try {
             actualResult = underTest.isCalenderOpened();
@@ -87,7 +87,7 @@ class FormFillerBALTest {
 
         // WHEN
         driver.get(url_DE);
-        underTest = new FormFillerBAL(formInputs, driver);
+        underTest = new FormFillerBAL(formInputs);
         boolean actualResult;
         try {
             actualResult = underTest.isCalenderOpened();

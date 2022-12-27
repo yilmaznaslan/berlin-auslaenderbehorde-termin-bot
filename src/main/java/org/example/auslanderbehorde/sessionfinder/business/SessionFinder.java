@@ -4,10 +4,11 @@ import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +19,7 @@ public class SessionFinder {
     private final Logger logger = LogManager.getLogger(SessionFinder.class);
     private final int requestLimit = 40;
     int requestCount = 0;
-    private WebDriver driver;
+    private RemoteWebDriver driver;
 
     public SessionFinder() {
 
@@ -72,39 +73,41 @@ public class SessionFinder {
 
     private void initiateSession() throws InterruptedException {
         while (true) {
-            String urlAfterRedirect = driver.getCurrentUrl();
-            logger.info(String.format("Iteration: %s, CurrentURL: %s",requestCount, urlAfterRedirect));
             try {
-                URL url = new URL(urlAfterRedirect);
-                String queryStr = url.getQuery();
-
-                if (sessionInfo.getDsrid() == null && sessionInfo.getDswid() == null) {
-                    logger.info(String.format("QueryString: %s", queryStr));
-                    extractDswidAndDsrid(queryStr);
-                }
-
-                if (urlAfterRedirect.contains("?v")) {
-                    extractRequestId(urlAfterRedirect);
-                    driver.close();
-                    break;
-                }
+                String urlAfterRedirect = driver.getCurrentUrl();
+                logger.info(String.format("Iteration: %s, CurrentURL: %s",requestCount, urlAfterRedirect));
 
                 if (requestCount >= requestLimit) {
                     logger.warn("Reached to requestLimit");
                     requestCount = 0;
-                    driver.close();
+                    driver.quit();
                     getMainPage();
                 }
 
                 if (urlAfterRedirect.contains("logout")) {
                     logger.warn("Kicked out");
                     requestCount = 0;
-                    driver.close();
+                    driver.quit();
                     getMainPage();
+                }
+
+                URL url = new URL(urlAfterRedirect);
+                String queryStr = url.getQuery();
+                logger.info(String.format("QueryString: %s", queryStr));
+
+                if (sessionInfo.getDsrid() == null && sessionInfo.getDswid() == null && queryStr!=null) {
+                    extractDswidAndDsrid(queryStr);
+                }
+
+                if (urlAfterRedirect.contains("?v")) {
+                    extractRequestId(urlAfterRedirect);
+                    driver.quit();
+                    break;
                 }
 
             } catch (Exception e) {
                 logger.error("Some error occurred during getting a session info", e);
+                getMainPage();
             }
             Thread.sleep(50);
             requestCount++;
@@ -127,11 +130,25 @@ public class SessionFinder {
         sessionInfo.setRequestId(requestId);
     }
 
-    private void getMainPage() {
-        String INITIAL_URL = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
+    protected void getMainPage() {
+
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
-        driver = new ChromeDriver(options);
+        options.setPageLoadStrategy(PageLoadStrategy.NONE);
+        options.addArguments("--no-proxy-server");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--enable-automation");
+        //options.addArguments("--headless");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-browser-side-navigation");
+        options.addArguments("--ignore-certificate-errors");
+        String remoteUrl = "http://localhost:4444/wd/hub";
+        try {
+            driver = new RemoteWebDriver(new URL(remoteUrl), options);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+
+        String INITIAL_URL = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
         logger.info(String.format("Getting the main page: %s", INITIAL_URL));
         driver.get(INITIAL_URL);
     }
