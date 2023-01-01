@@ -42,7 +42,11 @@ public class SessionFinder {
         while (true) {
             try {
                 String urlAfterRedirect = driver.getCurrentUrl();
-                logger.info(String.format("Iteration: %s, CurrentURL: %s", requestCount, urlAfterRedirect));
+                logger.debug(String.format("Iteration: %s, CurrentURL: %s", requestCount, urlAfterRedirect));
+
+                URL url = new URL(urlAfterRedirect);
+                String queryStr = url.getQuery();
+                logger.debug(String.format("QueryString: %s", queryStr));
 
                 if (requestCount >= requestLimit) {
                     logger.warn("Reached to requestLimit");
@@ -56,9 +60,6 @@ public class SessionFinder {
                     getMainPage();
                 }
 
-                URL url = new URL(urlAfterRedirect);
-                String queryStr = url.getQuery();
-                logger.info(String.format("QueryString: %s", queryStr));
 
                 if (sessionInfo.getDsrid() == null && sessionInfo.getDswid() == null && queryStr != null) {
                     extractDswidAndDsrid(queryStr);
@@ -77,7 +78,6 @@ public class SessionFinder {
             Thread.sleep(50);
             requestCount++;
         }
-        //driver.close();
     }
 
     private void extractDswidAndDsrid(String queryStr) {
