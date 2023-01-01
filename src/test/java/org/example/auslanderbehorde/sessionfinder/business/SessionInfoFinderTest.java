@@ -9,7 +9,7 @@ class SessionInfoFinderTest {
     @RepeatedTest(30)
     void findRequestId() throws InterruptedException {
         // GIVEN
-        SessionFinder underTest = new SessionFinder();
+        SessionFinder underTest = new SessionFinder(driver);
 
         // WHEN
         SessionInfo sessionInfo = underTest.findAndGetSession();

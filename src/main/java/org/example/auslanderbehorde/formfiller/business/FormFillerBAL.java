@@ -13,18 +13,15 @@ import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedExcep
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
 import org.example.auslanderbehorde.sessionfinder.business.SessionFinder;
 import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
-import org.openqa.selenium.PageLoadStrategy;
+import org.example.notifications.Helper;
 import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.WindowType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Random;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -53,6 +50,7 @@ public class FormFillerBAL extends TimerTask {
 
     private RemoteWebDriver driver;
     private final Timer timer = new Timer(true);
+    String winHandleBefore;
 
     public void startScanning() {
         logger.info(String.format("Scheduled the task at rate: %s", FORM_REFRESH_PERIOD_MILLISECONDS));
@@ -70,14 +68,28 @@ public class FormFillerBAL extends TimerTask {
 
     @Override
     public void run() {
+        int initSessionTryCount = 0;
         try {
+            while (true) {
+                initSessionTryCount++;
+                initNewSession();
+                break;
+            }
+        } catch (Exception e) {
+            logger.error("Session initialization had failed. initSessionTryCount: {} Exception: ", initSessionTryCount, e);
+            driver.quit();
+            driver = Helper.initDriverHeadless();
+        }
+        try {
+            /*
             if (sessionInfo == null) {
                 logger.info("Session is not created.");
                 initNewSession();
             }
-
+             */
+            initNewSession();
             fillForm();
-
+/*
             double remainingMinute = getRemainingTime();
 
             if (remainingMinute <= 1) {
@@ -85,7 +97,7 @@ public class FormFillerBAL extends TimerTask {
                 initNewSession();
                 fillForm();
             }
-
+ */
             sendForm();
 
             if (isCalenderOpened()) {
@@ -115,9 +127,13 @@ public class FormFillerBAL extends TimerTask {
         String hostUrl = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
         String targetUrl = hostUrl + "/" + requestId + "?dswid=" + dswid + "&dsrid=" + dsrid;
         logger.info(String.format("Getting the URL: %s", targetUrl));
+        winHandleBefore = driver.getWindowHandle();
+        System.out.println("WindowHandle" + winHandleBefore);
+        Set<String> handle = driver.getWindowHandles();
+        handle.forEach((asd) -> System.out.println("handle" + asd));
+        //driver.switchTo().window(handle.stream().toList().get(0));
         driver.get(targetUrl);
     }
-
 
     private void selectCitizenshipValue() throws InterruptedException, ElementNotFoundTimeoutException {
         String elementName = COUNTRY.getId();
@@ -254,9 +270,16 @@ public class FormFillerBAL extends TimerTask {
     }
 
     private void initNewSession() throws InterruptedException {
-        logger.info("initiating a new session");
-        SessionFinder sessionFinder = new SessionFinder();
+        logger.info("initiating a new auslaenderbehorde session");
+        driver.switchTo().newWindow(WindowType.TAB);
+        SessionFinder sessionFinder = new SessionFinder(driver);
         sessionInfo = sessionFinder.findAndGetSession();
+        winHandleBefore = driver.getWindowHandle();
+        System.out.println("WindowHandle" + winHandleBefore);
+        Set<String> handle = driver.getWindowHandles();
+        handle.forEach((asd) -> System.out.println("handle" + asd));
+        driver.switchTo().window(handle.stream().toList().get(0)).close();
+        driver.switchTo().window(winHandleBefore);
     }
 
     private String makeGetCall(String s) {
@@ -334,7 +357,7 @@ public class FormFillerBAL extends TimerTask {
 
     }
 
-    public RemoteWebDriver getDriver(){
+    public RemoteWebDriver getDriver() {
         return this.driver;
     }
 }

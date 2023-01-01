@@ -4,11 +4,9 @@ import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
-import org.openqa.selenium.PageLoadStrategy;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -19,18 +17,86 @@ public class SessionFinder {
     private final Logger logger = LogManager.getLogger(SessionFinder.class);
     private final int requestLimit = 40;
     int requestCount = 0;
-    private RemoteWebDriver driver;
+    private final RemoteWebDriver driver;
 
-    public SessionFinder() {
+    public SessionFinder(RemoteWebDriver driver) {
 
+        this.driver = driver;
     }
 
     public SessionInfo findAndGetSession() throws InterruptedException {
         getMainPage();
+        //Thread.sleep(20000);
         initiateSession();
         activateRequestId(sessionInfo.getRequestId());
         return sessionInfo;
     }
+
+    protected void getMainPage() {
+        String INITIAL_URL = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
+        logger.info(String.format("Getting the main page: %s", INITIAL_URL));
+        driver.get(INITIAL_URL);
+    }
+
+    private void initiateSession() throws InterruptedException {
+        while (true) {
+            try {
+                String urlAfterRedirect = driver.getCurrentUrl();
+                logger.info(String.format("Iteration: %s, CurrentURL: %s", requestCount, urlAfterRedirect));
+
+                if (requestCount >= requestLimit) {
+                    logger.warn("Reached to requestLimit");
+                    requestCount = 0;
+                    getMainPage();
+                }
+
+                if (urlAfterRedirect.contains("logout")) {
+                    logger.warn("Kicked out");
+                    requestCount = 0;
+                    getMainPage();
+                }
+
+                URL url = new URL(urlAfterRedirect);
+                String queryStr = url.getQuery();
+                logger.info(String.format("QueryString: %s", queryStr));
+
+                if (sessionInfo.getDsrid() == null && sessionInfo.getDswid() == null && queryStr != null) {
+                    extractDswidAndDsrid(queryStr);
+                }
+
+                if (urlAfterRedirect.contains("?v")) {
+                    extractRequestId(urlAfterRedirect);
+                    break;
+                }
+
+            } catch (Exception e) {
+                logger.error("Some error occurred during getting a session info", e);
+                //driver.close();
+                getMainPage();
+            }
+            Thread.sleep(50);
+            requestCount++;
+        }
+        //driver.close();
+    }
+
+    private void extractDswidAndDsrid(String queryStr) {
+        List<String> queryStrings = List.of(queryStr.split("&"));
+        String dsrid = Arrays.stream(queryStrings.get(0).split("=")).toList().get(1);
+        String dswid = Arrays.stream(queryStrings.get(1).split("=")).toList().get(1);
+        this.sessionInfo = new SessionInfo(dswid, dsrid);
+        logger.info(String.format("Dswid: %s, Dsrid: %s", dswid, dsrid));
+    }
+
+    private void extractRequestId(String url) {
+        List<String> urlAsList = List.of(url.split("/"));
+        String requestIdAndV = urlAsList.get(urlAsList.size() - 1);
+        String requestId = List.of(requestIdAndV.split("\\?")).get(0);
+        logger.info(String.format("RequestID: %s", requestId));
+        sessionInfo.setRequestId(requestId);
+    }
+
+
 
     private void activateRequestId(String requestId) {
         while (true) {
@@ -69,87 +135,5 @@ public class SessionFinder {
                 logger.error("Executing  request failed", e);
             }
         }
-    }
-
-    private void initiateSession() throws InterruptedException {
-        while (true) {
-            try {
-                String urlAfterRedirect = driver.getCurrentUrl();
-                logger.info(String.format("Iteration: %s, CurrentURL: %s",requestCount, urlAfterRedirect));
-
-                if (requestCount >= requestLimit) {
-                    logger.warn("Reached to requestLimit");
-                    requestCount = 0;
-                    driver.quit();
-                    getMainPage();
-                }
-
-                if (urlAfterRedirect.contains("logout")) {
-                    logger.warn("Kicked out");
-                    requestCount = 0;
-                    driver.quit();
-                    getMainPage();
-                }
-
-                URL url = new URL(urlAfterRedirect);
-                String queryStr = url.getQuery();
-                logger.info(String.format("QueryString: %s", queryStr));
-
-                if (sessionInfo.getDsrid() == null && sessionInfo.getDswid() == null && queryStr!=null) {
-                    extractDswidAndDsrid(queryStr);
-                }
-
-                if (urlAfterRedirect.contains("?v")) {
-                    extractRequestId(urlAfterRedirect);
-                    driver.quit();
-                    break;
-                }
-
-            } catch (Exception e) {
-                logger.error("Some error occurred during getting a session info", e);
-                getMainPage();
-            }
-            Thread.sleep(50);
-            requestCount++;
-        }
-    }
-
-    private void extractDswidAndDsrid(String queryStr) {
-        List<String> queryStrings = List.of(queryStr.split("&"));
-        String dsrid = Arrays.stream(queryStrings.get(0).split("=")).toList().get(1);
-        String dswid = Arrays.stream(queryStrings.get(1).split("=")).toList().get(1);
-        this.sessionInfo = new SessionInfo(dswid, dsrid);
-        logger.info(String.format("Dswid: %s, Dsrid: %s", dswid, dsrid));
-    }
-
-    private void extractRequestId(String url) {
-        List<String> urlAsList = List.of(url.split("/"));
-        String requestIdAndV = urlAsList.get(urlAsList.size() - 1);
-        String requestId = List.of(requestIdAndV.split("\\?")).get(0);
-        logger.info(String.format("RequestID: %s", requestId));
-        sessionInfo.setRequestId(requestId);
-    }
-
-    protected void getMainPage() {
-
-        ChromeOptions options = new ChromeOptions();
-        options.setPageLoadStrategy(PageLoadStrategy.NONE);
-        options.addArguments("--no-proxy-server");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--enable-automation");
-        //options.addArguments("--headless");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--disable-browser-side-navigation");
-        options.addArguments("--ignore-certificate-errors");
-        String remoteUrl = "http://localhost:4444/wd/hub";
-        try {
-            driver = new RemoteWebDriver(new URL(remoteUrl), options);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-
-        String INITIAL_URL = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
-        logger.info(String.format("Getting the main page: %s", INITIAL_URL));
-        driver.get(INITIAL_URL);
     }
 }

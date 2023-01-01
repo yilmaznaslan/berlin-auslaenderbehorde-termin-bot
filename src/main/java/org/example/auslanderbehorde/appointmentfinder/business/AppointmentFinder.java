@@ -62,15 +62,23 @@ public class AppointmentFinder {
             logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, SeleniumProcessResultEnum.SUCCESSFUL.name(), "Value: " + selectValue);
             Thread.sleep(1000);
             clickNextButton();
+            Thread.sleep(5000);
             String url = driver.getCurrentUrl();
             logger.info( String.format("Found a place. URL: %s", url));
             logger.info(String.format("Found Appointment count: %s", foundAppointmentCount));
-            String myPhoneNumber = System.getenv("myPhoneNumber");
-            makeCall(myPhoneNumber);
-            sendSMS(myPhoneNumber, url);
-            initDriverWithHead().get(url);
-            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "withHead");
-            FormFillerUtils.saveScreenshot(driver, "withHead");
+//            String myPhoneNumber = System.getenv("myPhoneNumber");
+//            makeCall(myPhoneNumber);
+//            sendSMS(myPhoneNumber, url);
+            int i = 0;
+            while(i<120){
+                url = driver.getCurrentUrl();
+                logger.info( String.format("Found a place. URL: %s", url));
+                FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "_timeslot_"+i);
+                FormFillerUtils.saveScreenshot(driver, "_timeslot_"+i);
+                i++;
+                Thread.sleep(1000);
+            }
+
         } else {
             logger.info("Couldn't verify the timeslots");
         }

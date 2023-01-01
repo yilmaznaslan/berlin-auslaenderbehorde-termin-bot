@@ -21,7 +21,7 @@ rm chromedriver_mac64.zip
 ## How to dockerize
 `docker build --tag 'berlinterminfinder:latest' .` 
 
-``
+`docker run -d --network=host berlinterminfinder:latest`
 
 # Setup
 #COPY build/libs/berlinTerminFinder-1.0-SNAPSHOT-all.jar /opt/hello/

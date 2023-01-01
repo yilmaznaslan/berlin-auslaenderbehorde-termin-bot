@@ -218,10 +218,11 @@ public class FormFillerUtils {
         String filePath = FormFillerBAL.class.getResource("/").getPath();
         FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + suffix + dateAsStr + "_0.png"));
 
+        /*
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         jse.executeScript("scroll(0, 1000);");
         FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + suffix + dateAsStr + "_1.png"));
-
+         */
     }
 
     public static void logInfo(String elementDescription, SeleniumProcessEnum process, String status) {

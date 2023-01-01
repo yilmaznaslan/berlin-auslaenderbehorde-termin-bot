@@ -7,6 +7,7 @@ import org.example.auslanderbehorde.formfiller.model.FormInputs;
 import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum;
 import org.example.auslanderbehorde.sessionfinder.business.SessionFinder;
 import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
+import org.example.notifications.Helper;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -18,6 +19,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.example.notifications.Helper.initDriverHeadless;
 
 public class Main {
 
@@ -39,12 +42,12 @@ public class Main {
             formFiller.startScanning();
         }
 */
-
-        SessionFinder sessionFinder = new SessionFinder();
-        SessionInfo sessionInfo = sessionFinder.findAndGetSession();
-        Thread.sleep(5000);
         RemoteWebDriver remoteWebDriver = initDriverHeadless();
-        FormFillerBAL formFillerBAL = new FormFillerBAL(new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD), sessionInfo , remoteWebDriver);
+        //SessionFinder sessionFinder = new SessionFinder(remoteWebDriver);
+        //SessionInfo sessionInfo = sessionFinder.findAndGetSession();
+        //Thread.sleep(40000);
+
+        FormFillerBAL formFillerBAL = new FormFillerBAL(new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD), null , remoteWebDriver);
         formFillerBAL.startScanning();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -72,39 +75,7 @@ public class Main {
         return result;
     }
 
-    private static RemoteWebDriver initDriverHeadless() {
-        logger.info("Initializing driver");
-        ChromeOptions options = new ChromeOptions();
-        options.setPageLoadStrategy(PageLoadStrategy.NONE);
-        options.addArguments("--no-proxy-server");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--enable-automation");
-        //options.addArguments("--headless");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--disable-browser-side-navigation");
-        options.addArguments("--ignore-certificate-errors");
-        //options.addArguments("--disable-gpu");
-        //chromeOptions.addArguments("--disable-logging");
-        //chromeOptions.addArguments("--disable-popup-blocking");
 
-        //chromeOptions.addArguments("--headless");
-        //int freePort = findFreePort();
-        //chromeOptions.addArguments("--remote-debugging-port=" + freePort);
-
-        String remoteUrl = "http://localhost:4444/wd/hub";
-        RemoteWebDriver driver = null;
-        try {
-            driver = new RemoteWebDriver(new URL(remoteUrl), options);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-        //String response = makeGetCall("http://127.0.0.1:" + freePort + "/json");
-        //String webSocketUrl = response.substring(response.indexOf("ws://127.0.0.1"), response.length() - 4);
-        //WebSocket socket = makeSocketConnection(webSocketUrl);
-        //socket.send( "{\"id\":1,\"method\":\"Network.enable\"}" );
-        logger.info("Driver is initialized for");
-        return driver;
-    }
 
     private static void  cleanDrivers(){
 
