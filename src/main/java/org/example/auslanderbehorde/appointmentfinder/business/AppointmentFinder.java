@@ -75,25 +75,18 @@ public class AppointmentFinder {
                 logger.info( String.format("Found a place. URL: %s", url));
                 FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "_timeslot_"+i);
                 FormFillerUtils.saveScreenshot(driver, "_timeslot_"+i);
-                i++;
-                Thread.sleep(1000);
+                i = i +1;
+                Thread.sleep(100);
             }
 
-        } else {
-            logger.info("Couldn't verify the timeslots");
         }
-        Thread.sleep(1000);
     }
 
-    protected void clickNextButton() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException, IOException {
+    protected void clickNextButton() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementId = "applicationForm:managedForm:proceed";
         String elementDescription = "weiter button".toUpperCase();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        element.click();
-        logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, "Successful");
-        Thread.sleep(3);
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "afterClickNext");
-        FormFillerUtils.saveScreenshot(driver, "afterClickNext");
+        FormFillerUtils.clickToElement(element, elementDescription);
     }
 
     protected boolean isDateVerified(WebElement element) {

@@ -197,7 +197,7 @@ public class FormFillerUtils {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String dateAsStr = dtf.format(now);
-        File newTextFile = new File(filePath + "/page_" + suffix + dateAsStr + ".html");
+        File newTextFile = new File(filePath + "/page_" + suffix + "_" + dateAsStr + ".html");
 
         FileWriter fw;
         try {
@@ -216,7 +216,7 @@ public class FormFillerUtils {
         String dateAsStr = dtf.format(now);
         File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         String filePath = FormFillerBAL.class.getResource("/").getPath();
-        FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + suffix + dateAsStr + "_0.png"));
+        FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + suffix + "_" + dateAsStr + ".png"));
 
         /*
         JavascriptExecutor jse = (JavascriptExecutor) driver;

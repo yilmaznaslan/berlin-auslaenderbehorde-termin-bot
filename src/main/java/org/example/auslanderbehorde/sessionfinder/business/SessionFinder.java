@@ -4,9 +4,10 @@ import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
-import org.openqa.selenium.Alert;
+import org.example.notifications.Helper;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +18,7 @@ public class SessionFinder {
     private final Logger logger = LogManager.getLogger(SessionFinder.class);
     private final int requestLimit = 40;
     int requestCount = 0;
-    private final RemoteWebDriver driver;
+    private RemoteWebDriver driver;
 
     public SessionFinder(RemoteWebDriver driver) {
 
@@ -26,7 +27,6 @@ public class SessionFinder {
 
     public SessionInfo findAndGetSession() throws InterruptedException {
         getMainPage();
-        //Thread.sleep(20000);
         initiateSession();
         activateRequestId(sessionInfo.getRequestId());
         return sessionInfo;
@@ -40,41 +40,47 @@ public class SessionFinder {
 
     private void initiateSession() throws InterruptedException {
         while (true) {
+            String urlAfterRedirect = null;
             try {
-                String urlAfterRedirect = driver.getCurrentUrl();
+                urlAfterRedirect = driver.getCurrentUrl();
                 logger.debug(String.format("Iteration: %s, CurrentURL: %s", requestCount, urlAfterRedirect));
+            } catch (Exception e) {
+                logger.error("Some error occurred during getting a session info using the driver", e);
+                driver.quit();
+                driver = Helper.initDriverHeadless();
+                getMainPage();
+            }
 
+
+            try {
                 URL url = new URL(urlAfterRedirect);
                 String queryStr = url.getQuery();
                 logger.debug(String.format("QueryString: %s", queryStr));
-
-                if (requestCount >= requestLimit) {
-                    logger.warn("Reached to requestLimit");
-                    requestCount = 0;
-                    getMainPage();
-                }
-
-                if (urlAfterRedirect.contains("logout")) {
-                    logger.warn("Kicked out");
-                    requestCount = 0;
-                    getMainPage();
-                }
-
-
                 if (sessionInfo.getDsrid() == null && sessionInfo.getDswid() == null && queryStr != null) {
                     extractDswidAndDsrid(queryStr);
                 }
+            } catch (MalformedURLException e) {
+                logger.error("Wrong url. Reason: ", e);
+                continue;
+            }
 
-                if (urlAfterRedirect.contains("?v")) {
-                    extractRequestId(urlAfterRedirect);
-                    break;
-                }
-
-            } catch (Exception e) {
-                logger.error("Some error occurred during getting a session info", e);
-                //driver.close();
+            if (requestCount >= requestLimit) {
+                logger.warn("Reached to requestLimit");
+                requestCount = 0;
                 getMainPage();
             }
+
+            if (urlAfterRedirect.contains("logout")) {
+                logger.warn("Kicked out");
+                requestCount = 0;
+                getMainPage();
+            }
+
+            if (urlAfterRedirect.contains("?v")) {
+                extractRequestId(urlAfterRedirect);
+                break;
+            }
+
             Thread.sleep(50);
             requestCount++;
         }
@@ -95,7 +101,6 @@ public class SessionFinder {
         logger.info(String.format("RequestID: %s", requestId));
         sessionInfo.setRequestId(requestId);
     }
-
 
 
     private void activateRequestId(String requestId) {
@@ -135,5 +140,9 @@ public class SessionFinder {
                 logger.error("Executing  request failed", e);
             }
         }
+    }
+
+    public RemoteWebDriver getDriver() {
+        return driver;
     }
 }

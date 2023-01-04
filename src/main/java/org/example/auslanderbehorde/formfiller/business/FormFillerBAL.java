@@ -50,7 +50,7 @@ public class FormFillerBAL extends TimerTask {
 
     private RemoteWebDriver driver;
     private final Timer timer = new Timer(true);
-    String winHandleBefore;
+    String currentWindowHandle;
 
     public void startScanning() {
         logger.info(String.format("Scheduled the task at rate: %s", FORM_REFRESH_PERIOD_MILLISECONDS));
@@ -72,7 +72,7 @@ public class FormFillerBAL extends TimerTask {
         try {
             while (true) {
                 initSessionTryCount++;
-                initNewSession();
+                initNewSessionInfo();
                 break;
             }
         } catch (Exception e) {
@@ -87,7 +87,7 @@ public class FormFillerBAL extends TimerTask {
                 initNewSession();
             }
              */
-            initNewSession();
+            //initNewSession();
             fillForm();
 /*
             double remainingMinute = getRemainingTime();
@@ -115,7 +115,7 @@ public class FormFillerBAL extends TimerTask {
             logger.warn("Some error occurred. Reason ", e);
             //driver.close();
             try {
-                initNewSession();
+                initNewSessionInfo();
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
             }
@@ -127,8 +127,8 @@ public class FormFillerBAL extends TimerTask {
         String hostUrl = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
         String targetUrl = hostUrl + "/" + requestId + "?dswid=" + dswid + "&dsrid=" + dsrid;
         logger.info(String.format("Getting the URL: %s", targetUrl));
-        winHandleBefore = driver.getWindowHandle();
-        System.out.println("WindowHandle" + winHandleBefore);
+        currentWindowHandle = driver.getWindowHandle();
+        System.out.println("WindowHandle" + currentWindowHandle);
         Set<String> handle = driver.getWindowHandles();
         handle.forEach((asd) -> System.out.println("handle" + asd));
         //driver.switchTo().window(handle.stream().toList().get(0));
@@ -269,17 +269,17 @@ public class FormFillerBAL extends TimerTask {
         return remainingMinute;
     }
 
-    private void initNewSession() throws InterruptedException {
+    private void initNewSessionInfo() throws InterruptedException {
         logger.info("initiating a new auslaenderbehorde session");
         driver.switchTo().newWindow(WindowType.TAB);
         SessionFinder sessionFinder = new SessionFinder(driver);
         sessionInfo = sessionFinder.findAndGetSession();
-        winHandleBefore = driver.getWindowHandle();
-        System.out.println("WindowHandle" + winHandleBefore);
+        currentWindowHandle = sessionFinder.getDriver().getWindowHandle();
         Set<String> handle = driver.getWindowHandles();
-        handle.forEach((asd) -> System.out.println("handle" + asd));
+        handle.forEach((asd) -> logger.info(String.format("Window handle: " + asd)));
+        logger.info(String.format("Current window handle: %s", currentWindowHandle));
         driver.switchTo().window(handle.stream().toList().get(0)).close();
-        driver.switchTo().window(winHandleBefore);
+        driver.switchTo().window(currentWindowHandle);
     }
 
     private String makeGetCall(String s) {
