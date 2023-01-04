@@ -128,10 +128,6 @@ public class FormFillerBAL extends TimerTask {
         String targetUrl = hostUrl + "/" + requestId + "?dswid=" + dswid + "&dsrid=" + dsrid;
         logger.info(String.format("Getting the URL: %s", targetUrl));
         currentWindowHandle = driver.getWindowHandle();
-        System.out.println("WindowHandle" + currentWindowHandle);
-        Set<String> handle = driver.getWindowHandles();
-        handle.forEach((asd) -> System.out.println("handle" + asd));
-        //driver.switchTo().window(handle.stream().toList().get(0));
         driver.get(targetUrl);
     }
 
@@ -236,8 +232,6 @@ public class FormFillerBAL extends TimerTask {
                     //return stageText.contains("Terminauswahl") && calender.isDisplayed();
                 } catch (ElementNotFoundTimeoutException e) {
                     return false;
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
                 }
 
             } catch (StaleElementReferenceException | InterruptedException | ElementNotFoundTimeoutException e) {
@@ -270,15 +264,17 @@ public class FormFillerBAL extends TimerTask {
     }
 
     private void initNewSessionInfo() throws InterruptedException {
-        logger.info("initiating a new auslaenderbehorde session");
+        logger.info("Switching to a new tab");
         driver.switchTo().newWindow(WindowType.TAB);
+        Thread.sleep(2000);
         SessionFinder sessionFinder = new SessionFinder(driver);
         sessionInfo = sessionFinder.findAndGetSession();
         currentWindowHandle = sessionFinder.getDriver().getWindowHandle();
         Set<String> handle = driver.getWindowHandles();
         handle.forEach((asd) -> logger.info(String.format("Window handle: " + asd)));
-        logger.info(String.format("Current window handle: %s", currentWindowHandle));
+        logger.info(String.format("Closing the  window handle: %s", handle.stream().toList().get(0)));
         driver.switchTo().window(handle.stream().toList().get(0)).close();
+        logger.info(String.format("Switching to window handle: %s", currentWindowHandle));
         driver.switchTo().window(currentWindowHandle);
     }
 

@@ -210,13 +210,17 @@ public class FormFillerUtils {
 
     }
 
-    public static void saveScreenshot(WebDriver driver, String suffix) throws IOException {
+    public static void saveScreenshot(WebDriver driver, String suffix) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String dateAsStr = dtf.format(now);
         File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         String filePath = FormFillerBAL.class.getResource("/").getPath();
-        FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + suffix + "_" + dateAsStr + ".png"));
+        try {
+            FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + suffix + "_" + dateAsStr + ".png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         /*
         JavascriptExecutor jse = (JavascriptExecutor) driver;

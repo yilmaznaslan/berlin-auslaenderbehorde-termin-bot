@@ -3,6 +3,7 @@ package org.example.auslanderbehorde.sessionfinder.business;
 import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.example.auslanderbehorde.formfiller.business.FormFillerUtils;
 import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
 import org.example.notifications.Helper;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -61,6 +62,7 @@ public class SessionFinder {
                 }
             } catch (MalformedURLException e) {
                 logger.error("Wrong url. Reason: ", e);
+                FormFillerUtils.saveScreenshot(driver, "malformedurl");
                 continue;
             }
 
