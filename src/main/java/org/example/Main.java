@@ -3,20 +3,10 @@ package org.example;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.formfiller.business.FormFillerBAL;
-import org.example.auslanderbehorde.formfiller.model.FormInputs;
 import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum;
-import org.example.auslanderbehorde.sessionfinder.business.SessionFinder;
-import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
-import org.example.notifications.Helper;
-import org.openqa.selenium.PageLoadStrategy;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.example.auslanderbehorde.formfiller.model.FormInputs;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import sun.misc.Signal;
-import sun.misc.SignalHandler;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +19,7 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
 
 
-        List<FormInputs> formInputs = generateForms();
+        //List<FormInputs> formInputs = generateForms();
 
 /*
         for (FormInputs formInput: formInputs) {
@@ -47,8 +37,8 @@ public class Main {
         //SessionInfo sessionInfo = sessionFinder.findAndGetSession();
         //Thread.sleep(40000);
 
-        FormFillerBAL formFillerBAL = new FormFillerBAL(new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD), null , remoteWebDriver);
-        formFillerBAL.startScanning();
+        FormFillerBAL formFillerBAL = new FormFillerBAL(new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD, "name", "lastname", "yilmazn.aslan@gmail.com"), null , remoteWebDriver);
+                formFillerBAL.startScanning();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             logger.info("Shutdown hook ran!");
@@ -62,22 +52,21 @@ public class Main {
         ThreadMonitor threadMonitor = new ThreadMonitor();
         threadMonitor.startMonitoring();
 
-        while(true){
+        while (true) {
             Thread.sleep(1000);
         }
     }
 
-    public static List<FormInputs> generateForms(){
+    public static List<FormInputs> generateForms() {
         List<FormInputs> result = new ArrayList<>();
-        for (EconomicActivityVisaDeEnum ecoVisa: EconomicActivityVisaDeEnum.values()) {
-                result.add(new FormInputs("163", "1", "2", ecoVisa));
+        for (EconomicActivityVisaDeEnum ecoVisa : EconomicActivityVisaDeEnum.values()) {
+            result.add(new FormInputs("163", "1", "2", ecoVisa, "name", "lastname", "yilmazn.aslan@gmail.com"));
         }
         return result;
     }
 
 
-
-    private static void  cleanDrivers(){
+    private static void cleanDrivers() {
 
     }
 }

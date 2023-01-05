@@ -70,11 +70,11 @@ public class AppointmentFinder {
 //            makeCall(myPhoneNumber);
 //            sendSMS(myPhoneNumber, url);
             int i = 0;
-            while(i<120){
+            while(i<1){
                 url = driver.getCurrentUrl();
                 logger.info( String.format("Found a place. URL: %s", url));
-                FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "_timeslot_"+i);
-                FormFillerUtils.saveScreenshot(driver, "_timeslot_"+i);
+                FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "timeslot_"+i);
+                FormFillerUtils.saveScreenshot(driver, "timeslot_"+i);
                 i = i +1;
                 Thread.sleep(100);
             }

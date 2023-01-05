@@ -1,16 +1,16 @@
 package org.example.auslanderbehorde.formfiller.business;
 
-import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
+import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
 
 import static org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum.BLUECARD;
@@ -21,15 +21,18 @@ class FormFillerBALTest {
 
     String url_DE = "file:".concat(path_DE);
 
-    WebDriver driver;
-    FormInputs formInputs = new FormInputs("turkey", "1", "0", BLUECARD);
+    //    @Mock
+    SessionInfo sessionInfo;
+
+    RemoteWebDriver webDriver;
+    FormInputs formInputs = new FormInputs("turkey", "1", "0", BLUECARD, name, lastname, emailAddress);
     FormFillerBAL underTest;
 
     @BeforeEach
     void initDriver() {
         ChromeOptions options = new ChromeOptions();
         //options.addArguments("--headless");
-        this.driver = new ChromeDriver(options);
+        this.webDriver = new ChromeDriver(options);
         //this.underTest = new FormFillerBAL(formInputs, driver);
     }
 
@@ -38,8 +41,8 @@ class FormFillerBALTest {
         // GIVEN
 
         // WHEN
-        FormFillerBAL formFillerBAL = new FormFillerBAL(new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD));
-        formFillerBAL.startScanning();
+        FormFillerBAL formFillerBAL = new FormFillerBAL(formInputs, sessionInfo, webDriver);
+        // formFillerBAL.startScanning();
         // THEN
 
     }
@@ -50,9 +53,9 @@ class FormFillerBALTest {
         String expectedTime = "09:30";
 
         // WHEN
-        driver.get(url_DE);
+        webDriver.get(url_DE);
         //underTest.handleSelectingTimeslot();
-        WebElement webElement = driver.findElement(By.name("dd_zeiten"));
+        WebElement webElement = webDriver.findElement(By.name("dd_zeiten"));
 
         // THEN
         Select select = new Select(webElement);
@@ -68,8 +71,8 @@ class FormFillerBALTest {
         String url = "file:".concat(path);
 
         // WHEN
-        driver.get(url);
-        underTest = new FormFillerBAL(formInputs);
+        webDriver.get(url);
+        underTest = new FormFillerBAL(formInputs, sessionInfo, webDriver);
         boolean actualResult;
         try {
             actualResult = underTest.isCalenderOpened();
@@ -86,8 +89,8 @@ class FormFillerBALTest {
         // GIVEN
 
         // WHEN
-        driver.get(url_DE);
-        underTest = new FormFillerBAL(formInputs);
+        webDriver.get(url_DE);
+        underTest = new FormFillerBAL(formInputs, sessionInfo, webDriver);
         boolean actualResult;
         try {
             actualResult = underTest.isCalenderOpened();

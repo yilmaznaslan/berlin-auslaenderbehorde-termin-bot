@@ -118,7 +118,7 @@ public class FormFillerUtils {
         return element;
     }
 
-    public static void clickToElement(WebElement element, String elementDescription) throws InteractionFailedException {
+    public static void clickToElement(WebElement element, String elementDescription) throws InteractionFailedException, InterruptedException {
         if (element == null) {
             logger.warn("Element:{} is null, Process: Click can not be continued", elementDescription);
             return;
@@ -128,11 +128,11 @@ public class FormFillerUtils {
             try {
                 element.click();
                 logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, "Successful");
-                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
             } catch (Exception e) {
                 //logger.warn("Element: {}. Process: Click, Result: Failed. Exception: ", elementDescription, e);
             }
+            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
             i++;
         }
         if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
@@ -141,7 +141,7 @@ public class FormFillerUtils {
         }
     }
 
-    public static void selectOptionByValue(WebElement element, String elementDescription, String optionValue) throws InteractionFailedException {
+    public static void selectOptionByValue(WebElement element, String elementDescription, String optionValue) throws InteractionFailedException, InterruptedException {
         if (element == null) {
             logger.warn("Element:{} is null, Process: Select can not be continued", elementDescription);
             return;
@@ -154,11 +154,11 @@ public class FormFillerUtils {
                 WebElement option = select.getFirstSelectedOption();
                 String selectValue = option.getText();
                 logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
-                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
             } catch (Exception e) {
                 //logger.warn("Element: {}. Process: Select, Result: Failed Reason:{}", elementDescription, e.getMessage());
             }
+            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
             i++;
         }
         if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {

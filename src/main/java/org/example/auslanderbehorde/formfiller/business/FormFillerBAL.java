@@ -131,15 +131,11 @@ public class FormFillerBAL extends TimerTask {
         driver.get(targetUrl);
     }
 
-    private void selectCitizenshipValue() throws InterruptedException, ElementNotFoundTimeoutException {
+    private void selectCitizenshipValue() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementName = COUNTRY.getId();
         String elementDescription = COUNTRY.name();
         WebElement element = FormFillerUtils.getElementById(elementName, elementDescription, driver);
-        Select select = new Select(element);
-        select.selectByValue(citizenshipValue);
-        WebElement option = select.getFirstSelectedOption();
-        String selectValue = option.getText();
-        logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
+        FormFillerUtils.selectOptionByValue(element, elementDescription, citizenshipValue);
     }
 
     private void selectApplicantsCount() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
