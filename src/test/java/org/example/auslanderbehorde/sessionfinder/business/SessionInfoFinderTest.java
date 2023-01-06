@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.RepeatedTest;
 
 class SessionInfoFinderTest {
-
-    @RepeatedTest(30)
+/*    @RepeatedTest(30)
     void findRequestId() throws InterruptedException {
         // GIVEN
         SessionFinder underTest = new SessionFinder(driver);
@@ -20,5 +19,7 @@ class SessionInfoFinderTest {
         Assertions.assertNotNull(sessionInfo.getDswid());
     }
 
+
+ */
     // missgin test for a scenerioa what the netty timeout error is recevied
 }

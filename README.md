@@ -15,6 +15,7 @@ curl https://chromedriver.storage.googleapis.com/108.0.5359.71/chromedriver_mac6
 unzip chromedriver_mac64.zip
 
 rm chromedriver_mac64.zip
+cp chromedriver /usr/local/bin
 
 #### Linux
 

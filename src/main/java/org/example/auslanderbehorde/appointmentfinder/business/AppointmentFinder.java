@@ -3,14 +3,14 @@ package org.example.auslanderbehorde.appointmentfinder.business;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.formfiller.business.FormFillerUtils;
+import org.example.auslanderbehorde.formfiller.business.Section4InformationFormFillerBAL;
 import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessEnum;
 import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessResultEnum;
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
-import org.openqa.selenium.WebDriver;
+import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
 
 import java.io.IOException;
@@ -18,8 +18,6 @@ import java.util.List;
 
 import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.logInfo;
 import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.TIME_SLOT;
-import static org.example.notifications.TwilioAdapter.makeCall;
-import static org.example.notifications.TwilioAdapter.sendSMS;
 
 public class AppointmentFinder {
 
@@ -28,9 +26,9 @@ public class AppointmentFinder {
     public static int foundAppointmentCount = 0;
     public static int handledAppointmentCount = 0;
 
-    private final WebDriver driver;
+    private RemoteWebDriver driver;
 
-    public AppointmentFinder(WebDriver webDriver) {
+    public AppointmentFinder(RemoteWebDriver webDriver) {
         this.driver = webDriver;
     }
 
@@ -49,7 +47,7 @@ public class AppointmentFinder {
         }
     }
 
-    public void handleSelectingTimeslot() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException, IOException {
+    public void handleSelectingTimeslot() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
         String elementId = TIME_SLOT.getId();
         String elementDescription = TIME_SLOT.name();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
@@ -61,7 +59,7 @@ public class AppointmentFinder {
             select.selectByIndex(0);
             logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, SeleniumProcessResultEnum.SUCCESSFUL.name(), "Value: " + selectValue);
             Thread.sleep(1000);
-            clickNextButton();
+            sendForm();
             Thread.sleep(5000);
             String url = driver.getCurrentUrl();
             logger.info( String.format("Found a place. URL: %s", url));
@@ -78,11 +76,21 @@ public class AppointmentFinder {
                 i = i +1;
                 Thread.sleep(100);
             }
-
+            String firstName = "firstName";
+            String lastName = "lastname";
+            String email = "yilmazn.aslan@gmail.com";
+            String birthdate = "12.03.1993";
+            Section4FormInputs form = new Section4FormInputs(firstName, lastName, email, birthdate, true);
+            Section4InformationFormFillerBAL section4InformationFormFillerBAL = new Section4InformationFormFillerBAL(form, driver);
+            section4InformationFormFillerBAL.fillAndSendForm();
+            logger.info( String.format("Found a place. URL: %s", url));
+            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "timeslot_"+i);
+            FormFillerUtils.saveScreenshot(driver, "personalinfo_"+i);
+            driver=section4InformationFormFillerBAL.getDriver();
         }
     }
 
-    protected void clickNextButton() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
+    protected void sendForm() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementId = "applicationForm:managedForm:proceed";
         String elementDescription = "weiter button".toUpperCase();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
@@ -110,13 +118,6 @@ public class AppointmentFinder {
             return false;
         }
         return true;
-    }
-
-    private WebDriver initDriverWithHead() {
-        logger.info("Initializing driver");
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--disable-logging");
-        return new ChromeDriver(options);
     }
 
 }

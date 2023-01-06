@@ -8,18 +8,12 @@ public class FormInputs {
     private final String applicationsNumber;
     private final String familyStatus;
     private final VisaEnum visaEnum;
-    private final String name;
-    private final String lastname;
-    private final String emailAddress;
 
-    public FormInputs(String citizenshipValue, String applicationsNumber, String familyStatus, VisaEnum visaEnum, String name, String lastname, String emailAddress) {
+    public FormInputs(String citizenshipValue, String applicationsNumber, String familyStatus, VisaEnum visaEnum) {
         this.citizenshipValue = citizenshipValue;
         this.applicationsNumber = applicationsNumber;
         this.familyStatus = familyStatus;
         this.visaEnum = visaEnum;
-        this.name = name;
-        this.lastname = lastname;
-        this.emailAddress = emailAddress;
     }
 
     public String getCitizenshipValue() {
@@ -38,15 +32,4 @@ public class FormInputs {
         return visaEnum;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public String getEmailAddress() {
-        return emailAddress;
-    }
 }

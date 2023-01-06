@@ -37,7 +37,7 @@ public class Main {
         //SessionInfo sessionInfo = sessionFinder.findAndGetSession();
         //Thread.sleep(40000);
 
-        FormFillerBAL formFillerBAL = new FormFillerBAL(new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD, "name", "lastname", "yilmazn.aslan@gmail.com"), null , remoteWebDriver);
+        FormFillerBAL formFillerBAL = new FormFillerBAL(new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD), null , remoteWebDriver);
                 formFillerBAL.startScanning();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -60,7 +60,7 @@ public class Main {
     public static List<FormInputs> generateForms() {
         List<FormInputs> result = new ArrayList<>();
         for (EconomicActivityVisaDeEnum ecoVisa : EconomicActivityVisaDeEnum.values()) {
-            result.add(new FormInputs("163", "1", "2", ecoVisa, "name", "lastname", "yilmazn.aslan@gmail.com"));
+            result.add(new FormInputs("163", "1", "2", ecoVisa ));
         }
         return result;
     }

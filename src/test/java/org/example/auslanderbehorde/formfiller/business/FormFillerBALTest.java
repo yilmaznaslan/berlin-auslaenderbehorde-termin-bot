@@ -25,7 +25,7 @@ class FormFillerBALTest {
     SessionInfo sessionInfo;
 
     RemoteWebDriver webDriver;
-    FormInputs formInputs = new FormInputs("turkey", "1", "0", BLUECARD, name, lastname, emailAddress);
+    FormInputs formInputs = new FormInputs("turkey", "1", "0", BLUECARD);
     FormFillerBAL underTest;
 
     @BeforeEach

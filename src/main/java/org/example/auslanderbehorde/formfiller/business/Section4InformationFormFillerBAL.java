@@ -2,18 +2,15 @@ package org.example.auslanderbehorde.formfiller.business;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessEnum;
-import org.example.auslanderbehorde.formfiller.enums.VisaEnum;
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
-import org.example.auslanderbehorde.formfiller.model.FormInputs;
-import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
+import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.Select;
 
 import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.logInfo;
 import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.*;
+import static org.example.auslanderbehorde.formfiller.enums.Section4FormParameterEnum.*;
 
 /**
  * Business Access Layer for filling the Section 4: Angaben
@@ -21,106 +18,83 @@ import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.*;
 public class Section4InformationFormFillerBAL{
 
     private final Logger logger = LogManager.getLogger(Section4InformationFormFillerBAL.class);
-
-    private final String nameValue;
-    private final String lastnameValue;
+    private final String firstName;
+    private final String lastName;
     private final String emailAddress;
-    private final VisaEnum visaEnum;
-
-    private SessionInfo sessionInfo;
-    private static int searchCount = 0;
-    private static int succesfullyFormSentCount = 0;
+    private final String birthdate;
+    private final boolean isResidencePermitPresent;
 
     private RemoteWebDriver driver;
 
-    public Section4InformationFormFillerBAL(FormInputs formInputs, SessionInfo sessionInfo, RemoteWebDriver remoteWebDriver) {
-        this.sessionInfo = sessionInfo;
+    public Section4InformationFormFillerBAL(Section4FormInputs formInputs, RemoteWebDriver remoteWebDriver) {
         this.driver = remoteWebDriver;
-        this.nameValue = formInputs.getName();
-        this.lastnameValue = formInputs.getLastname();
+        this.firstName = formInputs.getName();
+        this.lastName = formInputs.getLastname();
         this.emailAddress = formInputs.getEmailAddress();
-        this.visaEnum = formInputs.getVisaEnum();
+        this.birthdate = formInputs.getBirthdate();
+        this.isResidencePermitPresent = formInputs.isResidencePermitPresent();
     }
 
-    private void selectCitizenshipValue() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementName = COUNTRY.getId();
-        String elementDescription = COUNTRY.name();
-        WebElement element = FormFillerUtils.getElementById(elementName, elementDescription, driver);
-        Select select = new Select(element);
-        select.selectByValue(nameValue);
-        WebElement option = select.getFirstSelectedOption();
-        String selectValue = option.getText();
-        logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
+    public void fillAndSendForm() throws ElementNotFoundTimeoutException, InteractionFailedException, InterruptedException {
+        fillForm();
+        sendForm();
     }
 
-    private void selectApplicantsCount() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
-        String elementId = APPLICANT_COUNT.getId();
-        String elementDescription = APPLICANT_COUNT.name();
+    protected void enterFirstName() throws InterruptedException, ElementNotFoundTimeoutException{
+        String elementId = FIRSTNAME.getId();
+        String elementDescription = FIRSTNAME.name();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        FormFillerUtils.selectOptionByValue(element, elementDescription, lastnameValue);
-        //Select select = new Select(element);
-        //select.selectByValue(applicantNumber);
-        //WebElement option = select.getFirstSelectedOption();
-        //String selectValue = option.getText();
-        //logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
+        element.sendKeys(firstName);
     }
 
-    private void selectFamilyStatus() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
-        String elementId = FAMILY_STATUS.getId();
-        String elementDescription = FAMILY_STATUS.name();
+    protected void enterLastName() throws InterruptedException, ElementNotFoundTimeoutException{
+        String elementId = LASTNAME.getId();
+        String elementDescription = LASTNAME.name();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        FormFillerUtils.selectOptionByValue(element, elementDescription, emailAddress);
-        //Select select = new Select(element);
-        //select.selectByValue(familyStatus);
-        //WebElement option = select.getFirstSelectedOption();
-        //String selectValue = option.getText();
-        // logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
+        element.sendKeys(lastName);
     }
 
-    private void clickServiceType() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
-        String elementXPath = "//*[@id=\"xi-div-30\"]/div[1]/label/p";
-        String elementDescription = "serviceType".toUpperCase();
-        WebElement element = FormFillerUtils.getElementByXPath(elementXPath, elementDescription, driver);
-        FormFillerUtils.clickToElement(element, elementDescription);
-        //element.click();
-        //logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());
+    protected void enterEmail() throws InterruptedException, ElementNotFoundTimeoutException{
+        String elementId = EMAIL.getId();
+        String elementDescription = EMAIL.name();
+        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
+        element.sendKeys(emailAddress);
     }
 
-    private void clickVisaGroup() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
-        String elementXpath = "//*[@id=\"inner-163-0-1\"]/div/div[3]/label";
-        String elementDescription = "visaGroup".toUpperCase();
-        WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
-        FormFillerUtils.clickToElement(element, elementDescription);
-        //element.click();
-        //logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());
+    protected void enterBirthdate() throws InterruptedException, ElementNotFoundTimeoutException{
+        String elementId = BIRTHDATE.getId();
+        String elementDescription = BIRTHDATE.name();
+        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
+        element.sendKeys(birthdate);
     }
 
-    private void clickToVisa() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
-        String elementId = visaEnum.getId();
-        String elementDescription = visaEnum.getDataTag0();
+    protected void selectResidencePermit() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
+        String elementId = RESIDENCE_PERMIT.getId();
+        String elementDescription = RESIDENCE_PERMIT.getName();
+        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
+        if(isResidencePermitPresent){
+            FormFillerUtils.selectOptionByValue(element, elementDescription, "1");
+        }else{
+            FormFillerUtils.selectOptionByValue(element, elementDescription, "0");
+        }
+    }
+
+    protected void sendForm() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
+        String elementId = "applicationForm:managedForm:proceed";
+        String elementDescription = "weiter button".toUpperCase();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
         //element.click();
         //logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());
     }
 
-    private void sendForm() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
-        String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
-        String elementDescription = "clickButton".toUpperCase();
-        WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
-        FormFillerUtils.clickToElement(element, elementDescription);
-        //element.click();
-        //logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());
-    }
-
-    private void fillForm() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
+    protected void fillForm() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
         logger.info("Starting to fill the section 4 form: Angaben");
-        selectCitizenshipValue();
-        selectApplicantsCount();
-        selectFamilyStatus();
-        clickServiceType();
-        clickVisaGroup();
-        clickToVisa();
+        enterFirstName();
+        enterLastName();
+        enterBirthdate();
+        enterEmail();
+        selectResidencePermit();
     }
 
     public RemoteWebDriver getDriver() {
