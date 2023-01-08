@@ -61,7 +61,7 @@ public class SessionFinder {
                     extractDswidAndDsrid(queryStr);
                 }
             } catch (MalformedURLException e) {
-                // This happens randomly. No need to handle
+                // This happens randomly. No need to handle about:blank
                 //logger.error("Wrong url. Reason: ", e);
                 //FormFillerUtils.saveScreenshot(driver, "malformedurl");
                 continue;

@@ -1,9 +1,7 @@
-package org.example.auslanderbehorde.appointmentfinder.business;
+package org.example.auslanderbehorde.formfiller.business;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.formfiller.business.FormFillerUtils;
-import org.example.auslanderbehorde.formfiller.business.Section4InformationFormFillerBAL;
 import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessEnum;
 import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessResultEnum;
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
@@ -19,16 +17,16 @@ import java.util.List;
 import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.logInfo;
 import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.TIME_SLOT;
 
-public class AppointmentFinder {
+public class Section3AppointmentSelection {
 
-    private final Logger logger = LogManager.getLogger(AppointmentFinder.class);
+    private final Logger logger = LogManager.getLogger(Section3AppointmentSelection.class);
 
     public static int foundAppointmentCount = 0;
     public static int handledAppointmentCount = 0;
 
     private RemoteWebDriver driver;
 
-    public AppointmentFinder(RemoteWebDriver webDriver) {
+    public Section3AppointmentSelection(RemoteWebDriver webDriver) {
         this.driver = webDriver;
     }
 

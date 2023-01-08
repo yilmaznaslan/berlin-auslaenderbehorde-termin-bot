@@ -17,7 +17,7 @@ import static org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisa
 
 class FormFillerBALTest {
 
-    String path_DE = FormFillerBAL.class.getClassLoader().getResource("org/example/form/business/dateSelection_DE.html").getPath();
+    String path_DE = Section2ServiceSelection.class.getClassLoader().getResource("org/example/form/business/dateSelection_DE.html").getPath();
 
     String url_DE = "file:".concat(path_DE);
 
@@ -26,7 +26,7 @@ class FormFillerBALTest {
 
     RemoteWebDriver webDriver;
     FormInputs formInputs = new FormInputs("turkey", "1", "0", BLUECARD);
-    FormFillerBAL underTest;
+    Section2ServiceSelection underTest;
 
     @BeforeEach
     void initDriver() {
@@ -41,7 +41,7 @@ class FormFillerBALTest {
         // GIVEN
 
         // WHEN
-        FormFillerBAL formFillerBAL = new FormFillerBAL(formInputs, sessionInfo, webDriver);
+        Section2ServiceSelection section2ServiceSelection = new Section2ServiceSelection(formInputs, sessionInfo, webDriver);
         // formFillerBAL.startScanning();
         // THEN
 
@@ -67,12 +67,12 @@ class FormFillerBALTest {
     @Test
     void ASSERT_THAT_appointmentSelection_is_not_captured_WHEN_isAppointmentSelectionPageOpened_is_called() {
         // GIVEN
-        String path = FormFillerBAL.class.getClassLoader().getResource("page_dateSelection2022-12-23_08:11:45.html").getPath();
+        String path = Section2ServiceSelection.class.getClassLoader().getResource("page_dateSelection2022-12-23_08:11:45.html").getPath();
         String url = "file:".concat(path);
 
         // WHEN
         webDriver.get(url);
-        underTest = new FormFillerBAL(formInputs, sessionInfo, webDriver);
+        underTest = new Section2ServiceSelection(formInputs, sessionInfo, webDriver);
         boolean actualResult;
         try {
             actualResult = underTest.isCalenderOpened();
@@ -90,7 +90,7 @@ class FormFillerBALTest {
 
         // WHEN
         webDriver.get(url_DE);
-        underTest = new FormFillerBAL(formInputs, sessionInfo, webDriver);
+        underTest = new Section2ServiceSelection(formInputs, sessionInfo, webDriver);
         boolean actualResult;
         try {
             actualResult = underTest.isCalenderOpened();

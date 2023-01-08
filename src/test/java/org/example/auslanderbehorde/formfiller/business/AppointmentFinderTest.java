@@ -1,6 +1,5 @@
 package org.example.auslanderbehorde.formfiller.business;
 
-import org.example.auslanderbehorde.appointmentfinder.business.AppointmentFinder;
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.junit.jupiter.api.Assertions;
@@ -17,19 +16,19 @@ import java.io.IOException;
 
 class AppointmentFinderTest {
 
-    String path_DE = FormFillerBAL.class.getClassLoader().getResource("org/example/form/business/dateSelection_DE.html").getPath();
+    String path_DE = Section2ServiceSelection.class.getClassLoader().getResource("org/example/form/business/dateSelection_DE.html").getPath();
 
     String url_DE = "file:".concat(path_DE);
 
-    WebDriver driver;
-    AppointmentFinder underTest;
+    static ChromeDriver driver;
+    Section3AppointmentSelection underTest;
 
     @BeforeEach
     void initDriver() {
         ChromeOptions options = new ChromeOptions();
         //options.addArguments("--headless");
         this.driver = new ChromeDriver(options);
-        this.underTest = new AppointmentFinder(driver);
+        this.underTest = new Section3AppointmentSelection(driver);
     }
 
     @Test

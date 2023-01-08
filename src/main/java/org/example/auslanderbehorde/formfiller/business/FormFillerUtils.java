@@ -193,7 +193,7 @@ public class FormFillerUtils {
 
     }
     public static void saveSourceCodeToFile(String content, String suffix) {
-        String filePath = FormFillerBAL.class.getResource("/").getPath();
+        String filePath = Section2ServiceSelection.class.getResource("/").getPath();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String dateAsStr = dtf.format(now);
@@ -215,7 +215,7 @@ public class FormFillerUtils {
         LocalDateTime now = LocalDateTime.now();
         String dateAsStr = dtf.format(now);
         File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-        String filePath = FormFillerBAL.class.getResource("/").getPath();
+        String filePath = Section2ServiceSelection.class.getResource("/").getPath();
         try {
             FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + suffix + "_" + dateAsStr + ".png"));
         } catch (IOException e) {

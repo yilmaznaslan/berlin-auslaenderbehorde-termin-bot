@@ -2,7 +2,7 @@ package org.example;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.formfiller.business.FormFillerBAL;
+import org.example.auslanderbehorde.formfiller.business.Section2ServiceSelection;
 import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum;
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -37,13 +37,13 @@ public class Main {
         //SessionInfo sessionInfo = sessionFinder.findAndGetSession();
         //Thread.sleep(40000);
 
-        FormFillerBAL formFillerBAL = new FormFillerBAL(new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD), null , remoteWebDriver);
-                formFillerBAL.startScanning();
+        Section2ServiceSelection section2ServiceSelection = new Section2ServiceSelection(new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD), null , remoteWebDriver);
+                section2ServiceSelection.startScanning();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             logger.info("Shutdown hook ran!");
-            formFillerBAL.cancel();
-            formFillerBAL.getDriver().quit();
+            section2ServiceSelection.cancel();
+            section2ServiceSelection.getDriver().quit();
             logger.info("quitted the driver");
             remoteWebDriver.quit();
         }

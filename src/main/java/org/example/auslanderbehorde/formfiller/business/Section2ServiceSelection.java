@@ -4,7 +4,6 @@ import okhttp3.*;
 import okio.ByteString;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.appointmentfinder.business.AppointmentFinder;
 import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessEnum;
 import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessResultEnum;
 import org.example.auslanderbehorde.formfiller.enums.VisaEnum;
@@ -18,15 +17,14 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.Select;
 
 import java.io.IOException;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static org.example.auslanderbehorde.appointmentfinder.business.AppointmentFinder.foundAppointmentCount;
-import static org.example.auslanderbehorde.appointmentfinder.business.AppointmentFinder.handledAppointmentCount;
+import static org.example.auslanderbehorde.formfiller.business.Section3AppointmentSelection.foundAppointmentCount;
+import static org.example.auslanderbehorde.formfiller.business.Section3AppointmentSelection.handledAppointmentCount;
 import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
 import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.logInfo;
 import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.*;
@@ -34,9 +32,9 @@ import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.*;
 /**
  * Business Access Layer for filling the form
  */
-public class FormFillerBAL extends TimerTask {
+public class Section2ServiceSelection extends TimerTask {
 
-    private final Logger logger = LogManager.getLogger(FormFillerBAL.class);
+    private final Logger logger = LogManager.getLogger(Section2ServiceSelection.class);
     public static final int FORM_REFRESH_PERIOD_MILLISECONDS = 1000;
 
     private final String citizenshipValue;
@@ -57,7 +55,7 @@ public class FormFillerBAL extends TimerTask {
         timer.scheduleAtFixedRate(this, 2000, FORM_REFRESH_PERIOD_MILLISECONDS);
     }
 
-    public FormFillerBAL(FormInputs formInputs, SessionInfo sessionInfo, RemoteWebDriver remoteWebDriver) {
+    public Section2ServiceSelection(FormInputs formInputs, SessionInfo sessionInfo, RemoteWebDriver remoteWebDriver) {
         this.sessionInfo = sessionInfo;
         this.driver = remoteWebDriver;
         this.citizenshipValue = formInputs.getCitizenshipValue();
@@ -103,8 +101,8 @@ public class FormFillerBAL extends TimerTask {
             if (isCalenderOpened()) {
                 succesfullyFormSentCount++;
                 Thread.sleep(1000);
-                AppointmentFinder appointmentFinder = new AppointmentFinder(driver);
-                appointmentFinder.handleFindingAppointment();
+                Section3AppointmentSelection section3AppointmentSelection = new Section3AppointmentSelection(driver);
+                section3AppointmentSelection.handleFindingAppointment();
             }
             clickToSelectService();
             searchCount++;

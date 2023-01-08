@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 
 class Section4InformationFormFillerBALTest {
 
-    String path_DE = FormFillerBAL.class.getClassLoader().getResource("page_timeslot_0_2023-01-05_06:10:23.html").getPath();
+    String path_DE = Section2ServiceSelection.class.getClassLoader().getResource("page_timeslot_0_2023-01-05_06:10:23.html").getPath();
     String url_DE = "file:".concat(path_DE);
     String firstName = "firstName";
     String lastName = "lastname";
