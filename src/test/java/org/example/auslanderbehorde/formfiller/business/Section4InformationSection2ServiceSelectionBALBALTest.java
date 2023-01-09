@@ -13,7 +13,7 @@ import static org.example.auslanderbehorde.formfiller.enums.Section4FormParamete
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-class Section4InformationFormFillerBALTest {
+class Section4InformationSection2ServiceSelectionBALBALTest {
 
     String path_DE = Section2ServiceSelection.class.getClassLoader().getResource("page_timeslot_0_2023-01-05_06:10:23.html").getPath();
     String url_DE = "file:".concat(path_DE);
@@ -40,7 +40,7 @@ class Section4InformationFormFillerBALTest {
     void ASSERT_THAT_firstName_is_entered_WHEN_enterFirstName_is_called() throws ElementNotFoundTimeoutException, InterruptedException {
         // GIVEN
         driver.get(url_DE);
-        Section4InformationFormFillerBAL formFiller = new Section4InformationFormFillerBAL(form, driver);
+        Section4DetailsBAL formFiller = new Section4DetailsBAL(form, driver);
 
         // WHEN
         formFiller.enterFirstName();
@@ -57,7 +57,7 @@ class Section4InformationFormFillerBALTest {
         // GIVEN
         driver.get(url_DE);
 
-        Section4InformationFormFillerBAL formFiller = new Section4InformationFormFillerBAL(form, driver);
+        Section4DetailsBAL formFiller = new Section4DetailsBAL(form, driver);
 
         // WHEN
         formFiller.enterLastName();
@@ -75,7 +75,7 @@ class Section4InformationFormFillerBALTest {
         // GIVEN
         driver.get(url_DE);
 
-        Section4InformationFormFillerBAL formFiller = new Section4InformationFormFillerBAL(form, driver);
+        Section4DetailsBAL formFiller = new Section4DetailsBAL(form, driver);
 
         // WHEN
         formFiller.enterEmail();
@@ -92,7 +92,7 @@ class Section4InformationFormFillerBALTest {
     void ASSERT_THAT_birthdate_is_entered_WHEN_enterBirthdate_is_called() throws ElementNotFoundTimeoutException, InterruptedException {
         // GIVEN
         driver.get(url_DE);
-        Section4InformationFormFillerBAL formFiller = new Section4InformationFormFillerBAL(form, driver);
+        Section4DetailsBAL formFiller = new Section4DetailsBAL(form, driver);
 
         // WHEN
         formFiller.enterBirthdate();
@@ -109,7 +109,7 @@ class Section4InformationFormFillerBALTest {
     void ASSERT_THAT_residencePermit_is_selected_true_WHEN_selectResidencePermit_is_called_GIVEN_residencePermit_exist() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
         // GIVEN
         driver.get(url_DE);
-        Section4InformationFormFillerBAL formFiller = new Section4InformationFormFillerBAL(form, driver);
+        Section4DetailsBAL formFiller = new Section4DetailsBAL(form, driver);
 
         // WHEN
         formFiller.selectResidencePermit();
@@ -130,7 +130,7 @@ class Section4InformationFormFillerBALTest {
         // GIVEN
         driver.get(url_DE);
         Section4FormInputs form = new Section4FormInputs(firstName, lastName, email, birthdate, false);
-        Section4InformationFormFillerBAL formFiller = new Section4InformationFormFillerBAL(form, driver);
+        Section4DetailsBAL formFiller = new Section4DetailsBAL(form, driver);
 
         // WHEN
         formFiller.selectResidencePermit();
@@ -150,7 +150,7 @@ class Section4InformationFormFillerBALTest {
     void ASSERT_THAT_form_is_sent_WHEN_sendForm_is_called_GIVEN_form_is_filled() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
         // GIVEN
         driver.get(url_DE);
-        Section4InformationFormFillerBAL formFiller = new Section4InformationFormFillerBAL(form, driver);
+        Section4DetailsBAL formFiller = new Section4DetailsBAL(form, driver);
         formFiller.fillForm();
 
         // WHEN
@@ -166,7 +166,7 @@ class Section4InformationFormFillerBALTest {
         driver.get(url_DE);
 
         // WHEN
-        Section4InformationFormFillerBAL spiedFormFiller = spy(new Section4InformationFormFillerBAL(form, driver));
+        Section4DetailsBAL spiedFormFiller = spy(new Section4DetailsBAL(form, driver));
         spiedFormFiller.fillAndSendForm();
 
         // THEN

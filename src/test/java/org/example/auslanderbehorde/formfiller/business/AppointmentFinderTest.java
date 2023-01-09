@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -21,14 +20,14 @@ class AppointmentFinderTest {
     String url_DE = "file:".concat(path_DE);
 
     static ChromeDriver driver;
-    Section3AppointmentSelection underTest;
+    Section3DateSelectionBAL underTest;
 
     @BeforeEach
     void initDriver() {
         ChromeOptions options = new ChromeOptions();
         //options.addArguments("--headless");
         this.driver = new ChromeDriver(options);
-        this.underTest = new Section3AppointmentSelection(driver);
+        this.underTest = new Section3DateSelectionBAL(driver);
     }
 
     @Test

@@ -17,16 +17,16 @@ import java.util.List;
 import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.logInfo;
 import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.TIME_SLOT;
 
-public class Section3AppointmentSelection {
+public class Section3DateSelectionBAL {
 
-    private final Logger logger = LogManager.getLogger(Section3AppointmentSelection.class);
+    private final Logger logger = LogManager.getLogger(Section3DateSelectionBAL.class);
 
     public static int foundAppointmentCount = 0;
     public static int handledAppointmentCount = 0;
 
     private RemoteWebDriver driver;
 
-    public Section3AppointmentSelection(RemoteWebDriver webDriver) {
+    public Section3DateSelectionBAL(RemoteWebDriver webDriver) {
         this.driver = webDriver;
     }
 
@@ -79,12 +79,12 @@ public class Section3AppointmentSelection {
             String email = "yilmazn.aslan@gmail.com";
             String birthdate = "12.03.1993";
             Section4FormInputs form = new Section4FormInputs(firstName, lastName, email, birthdate, true);
-            Section4InformationFormFillerBAL section4InformationFormFillerBAL = new Section4InformationFormFillerBAL(form, driver);
-            section4InformationFormFillerBAL.fillAndSendForm();
+            Section4DetailsBAL section4DetailsBAL = new Section4DetailsBAL(form, driver);
+            section4DetailsBAL.fillAndSendForm();
             logger.info( String.format("Found a place. URL: %s", url));
             FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "timeslot_"+i);
             FormFillerUtils.saveScreenshot(driver, "personalinfo_"+i);
-            driver=section4InformationFormFillerBAL.getDriver();
+            driver= section4DetailsBAL.getDriver();
         }
     }
 

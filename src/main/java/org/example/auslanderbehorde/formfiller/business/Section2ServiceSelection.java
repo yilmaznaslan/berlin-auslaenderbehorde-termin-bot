@@ -23,8 +23,8 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static org.example.auslanderbehorde.formfiller.business.Section3AppointmentSelection.foundAppointmentCount;
-import static org.example.auslanderbehorde.formfiller.business.Section3AppointmentSelection.handledAppointmentCount;
+import static org.example.auslanderbehorde.formfiller.business.Section3DateSelectionBAL.foundAppointmentCount;
+import static org.example.auslanderbehorde.formfiller.business.Section3DateSelectionBAL.handledAppointmentCount;
 import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
 import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.logInfo;
 import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.*;
@@ -55,8 +55,7 @@ public class Section2ServiceSelection extends TimerTask {
         timer.scheduleAtFixedRate(this, 2000, FORM_REFRESH_PERIOD_MILLISECONDS);
     }
 
-    public Section2ServiceSelection(FormInputs formInputs, SessionInfo sessionInfo, RemoteWebDriver remoteWebDriver) {
-        this.sessionInfo = sessionInfo;
+    public Section2ServiceSelection(FormInputs formInputs, RemoteWebDriver remoteWebDriver) {
         this.driver = remoteWebDriver;
         this.citizenshipValue = formInputs.getCitizenshipValue();
         this.applicantNumber = formInputs.getApplicationsNumber();
@@ -101,8 +100,8 @@ public class Section2ServiceSelection extends TimerTask {
             if (isCalenderOpened()) {
                 succesfullyFormSentCount++;
                 Thread.sleep(1000);
-                Section3AppointmentSelection section3AppointmentSelection = new Section3AppointmentSelection(driver);
-                section3AppointmentSelection.handleFindingAppointment();
+                Section3DateSelectionBAL section3DateSelectionBAL = new Section3DateSelectionBAL(driver);
+                section3DateSelectionBAL.handleFindingAppointment();
             }
             clickToSelectService();
             searchCount++;

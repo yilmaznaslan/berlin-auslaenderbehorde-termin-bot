@@ -18,7 +18,6 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException {
 
-
         //List<FormInputs> formInputs = generateForms();
 
 /*
@@ -33,12 +32,8 @@ public class Main {
         }
 */
         RemoteWebDriver remoteWebDriver = initDriverHeadless();
-        //SessionFinder sessionFinder = new SessionFinder(remoteWebDriver);
-        //SessionInfo sessionInfo = sessionFinder.findAndGetSession();
-        //Thread.sleep(40000);
-
-        Section2ServiceSelection section2ServiceSelection = new Section2ServiceSelection(new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD), null , remoteWebDriver);
-                section2ServiceSelection.startScanning();
+        Section2ServiceSelection section2ServiceSelection = new Section2ServiceSelection(new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD), remoteWebDriver);
+        section2ServiceSelection.startScanning();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             logger.info("Shutdown hook ran!");
@@ -60,7 +55,7 @@ public class Main {
     public static List<FormInputs> generateForms() {
         List<FormInputs> result = new ArrayList<>();
         for (EconomicActivityVisaDeEnum ecoVisa : EconomicActivityVisaDeEnum.values()) {
-            result.add(new FormInputs("163", "1", "2", ecoVisa ));
+            result.add(new FormInputs("163", "1", "2", ecoVisa));
         }
         return result;
     }

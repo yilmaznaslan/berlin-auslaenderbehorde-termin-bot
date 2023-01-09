@@ -15,7 +15,7 @@ import org.openqa.selenium.support.ui.Select;
 
 import static org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum.BLUECARD;
 
-class FormFillerBALTest {
+class Section2ServiceSelectionBALBALTest {
 
     String path_DE = Section2ServiceSelection.class.getClassLoader().getResource("org/example/form/business/dateSelection_DE.html").getPath();
 
@@ -41,7 +41,7 @@ class FormFillerBALTest {
         // GIVEN
 
         // WHEN
-        Section2ServiceSelection section2ServiceSelection = new Section2ServiceSelection(formInputs, sessionInfo, webDriver);
+        Section2ServiceSelection section2ServiceSelection = new Section2ServiceSelection(formInputs, webDriver);
         // formFillerBAL.startScanning();
         // THEN
 
@@ -72,7 +72,7 @@ class FormFillerBALTest {
 
         // WHEN
         webDriver.get(url);
-        underTest = new Section2ServiceSelection(formInputs, sessionInfo, webDriver);
+        underTest = new Section2ServiceSelection(formInputs, webDriver);
         boolean actualResult;
         try {
             actualResult = underTest.isCalenderOpened();
@@ -90,7 +90,7 @@ class FormFillerBALTest {
 
         // WHEN
         webDriver.get(url_DE);
-        underTest = new Section2ServiceSelection(formInputs, sessionInfo, webDriver);
+        underTest = new Section2ServiceSelection(formInputs, webDriver);
         boolean actualResult;
         try {
             actualResult = underTest.isCalenderOpened();

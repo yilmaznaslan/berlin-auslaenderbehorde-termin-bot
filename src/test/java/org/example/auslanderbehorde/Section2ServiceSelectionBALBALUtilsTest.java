@@ -13,10 +13,10 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.IOException;
 
-class FormFillerBALUtilsTest {
+class Section2ServiceSelectionBALBALUtilsTest {
 
-    String path_EN = FormFillerBALUtilsTest.class.getClassLoader().getResource("org/example/TerminbuchenServicewahl.html").getPath();
-    String path_DE = FormFillerBALUtilsTest.class.getClassLoader().getResource("org/example/TerminbuchenServicewahl_DE.html").getPath();
+    String path_EN = Section2ServiceSelectionBALBALUtilsTest.class.getClassLoader().getResource("org/example/TerminbuchenServicewahl.html").getPath();
+    String path_DE = Section2ServiceSelectionBALBALUtilsTest.class.getClassLoader().getResource("org/example/TerminbuchenServicewahl_DE.html").getPath();
 
     String url_EN = "file:".concat(path_EN);
     String url_DE = "file:".concat(path_DE);

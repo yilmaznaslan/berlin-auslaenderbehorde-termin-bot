@@ -9,15 +9,14 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.logInfo;
-import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.*;
 import static org.example.auslanderbehorde.formfiller.enums.Section4FormParameterEnum.*;
 
 /**
  * Business Access Layer for filling the Section 4: Angaben
  */
-public class Section4InformationFormFillerBAL{
+public class Section4DetailsBAL {
 
-    private final Logger logger = LogManager.getLogger(Section4InformationFormFillerBAL.class);
+    private final Logger logger = LogManager.getLogger(Section4DetailsBAL.class);
     private final String firstName;
     private final String lastName;
     private final String emailAddress;
@@ -26,7 +25,7 @@ public class Section4InformationFormFillerBAL{
 
     private RemoteWebDriver driver;
 
-    public Section4InformationFormFillerBAL(Section4FormInputs formInputs, RemoteWebDriver remoteWebDriver) {
+    public Section4DetailsBAL(Section4FormInputs formInputs, RemoteWebDriver remoteWebDriver) {
         this.driver = remoteWebDriver;
         this.firstName = formInputs.getName();
         this.lastName = formInputs.getLastname();
