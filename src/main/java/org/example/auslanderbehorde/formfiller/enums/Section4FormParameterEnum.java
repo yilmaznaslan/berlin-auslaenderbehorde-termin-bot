@@ -6,7 +6,9 @@ public enum Section4FormParameterEnum {
     LASTNAME("xi-tf-4", "antragsteller_nname"),
     BIRTHDATE("xi-tf-5", "antragsteller_gebDatum"),
     EMAIL("xi-tf-6", "antragsteller_email" ),
-    RESIDENCE_PERMIT("xi-sel-2", "sel_aufenthaltserlaubnis");
+    RESIDENCE_PERMIT("xi-sel-2", "sel_aufenthaltserlaubnis"),
+    RESIDENCE_PERMIT_NUMBER("xi-tf-7", "antragsteller_nrAufenthaltserlaubnis");
+
     private final String id;
     private final String name;
 

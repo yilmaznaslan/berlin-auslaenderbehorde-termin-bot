@@ -45,7 +45,6 @@ public class FormFillerUtils {
         if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
             throw new ElementNotFoundTimeoutException(elementDescription);
-
         }
         return element;
     }

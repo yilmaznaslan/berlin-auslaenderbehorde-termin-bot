@@ -17,7 +17,7 @@ public class SessionFinder {
 
     private SessionInfo sessionInfo = new SessionInfo();
     private final Logger logger = LogManager.getLogger(SessionFinder.class);
-    private final int requestLimit = 40;
+    private final int requestLimit = 1000;
     int requestCount = 0;
     private RemoteWebDriver driver;
 

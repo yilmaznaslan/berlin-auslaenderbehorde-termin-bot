@@ -6,6 +6,7 @@ import org.example.auslanderbehorde.formfiller.enums.VisaEnum;
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
+import org.example.notifications.Helper;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -40,7 +41,6 @@ public class Section2ServiceSelectionBAL {
     public void fillAndSendForm() throws ElementNotFoundTimeoutException, InteractionFailedException, InterruptedException {
         fillForm();
         sendForm();
-
     }
 
     private void selectCitizenshipValue() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {

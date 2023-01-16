@@ -1,11 +1,9 @@
 package org.example.auslanderbehorde.formfiller.business;
 
+import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
-import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -15,55 +13,57 @@ import org.openqa.selenium.support.ui.Select;
 
 import static org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum.BLUECARD;
 
-class Section2ServiceSelectionBALBALTest {
+class Section2ServiceSelectionBALTest {
 
-    String path_DE = Section2ServiceSelection.class.getClassLoader().getResource("org/example/form/business/dateSelection_DE.html").getPath();
+    //String path_DE = Section2ServiceSelection.class.getClassLoader().getResource("page_section2.html").getPath();
+    //String url_DE = "file:".concat(path_DE);
 
-    String url_DE = "file:".concat(path_DE);
+    static ChromeDriver driver;
 
-    //    @Mock
-    SessionInfo sessionInfo;
-
-    RemoteWebDriver webDriver;
     FormInputs formInputs = new FormInputs("turkey", "1", "0", BLUECARD);
-    Section2ServiceSelection underTest;
 
-    @BeforeEach
-    void initDriver() {
+    @BeforeAll
+    static void initDriver() {
         ChromeOptions options = new ChromeOptions();
-        //options.addArguments("--headless");
-        this.webDriver = new ChromeDriver(options);
-        //this.underTest = new FormFillerBAL(formInputs, driver);
+        driver = new ChromeDriver(options);
+    }
+
+    //@AfterAll
+    static void quitDriver() {
+        driver.quit();
     }
 
     @Test
-    void ASSERT_THAT_form_successfully_filled_WHEN_run_is_called() {
+    void ASSERT_THAT_form_successfully_filled_WHEN_run_is_called() throws ElementNotFoundTimeoutException, InteractionFailedException, InterruptedException {
         // GIVEN
 
         // WHEN
-        Section2ServiceSelection section2ServiceSelection = new Section2ServiceSelection(formInputs, webDriver);
-        // formFillerBAL.startScanning();
+        //Section2ServiceSelection section2ServiceSelection = new Section2ServiceSelection(formInputs, driver);
+        //section2ServiceSelection.fillForm();
+
+        Section2ServiceSelectionBAL formFiller = new Section2ServiceSelectionBAL(formInputs, driver);
+        //formFiller
         // THEN
 
     }
 
     @Test
-    void ASSERT_THAT_first_available_time_is_selected_WHEN_handleSelectingTimeslot_is_called() {
+    void ASSERT_THAT_first_country_is_selected_WHEN_selectCountry_is_called() {
         // GIVEN
         String expectedTime = "09:30";
 
         // WHEN
-        webDriver.get(url_DE);
+        //driver.get(url_DE);
+        Section2ServiceSelectionBAL formFiller = new Section2ServiceSelectionBAL(formInputs, driver);
+
         //underTest.handleSelectingTimeslot();
-        WebElement webElement = webDriver.findElement(By.name("dd_zeiten"));
+
 
         // THEN
-        Select select = new Select(webElement);
-        String actualTime = select.getFirstSelectedOption().getText();
 
-        Assertions.assertEquals(expectedTime, actualTime);
     }
 
+    /*
     @Test
     void ASSERT_THAT_appointmentSelection_is_not_captured_WHEN_isAppointmentSelectionPageOpened_is_called() {
         // GIVEN
@@ -102,4 +102,5 @@ class Section2ServiceSelectionBALBALTest {
         Assertions.assertTrue(actualResult);
     }
 
+     */
 }

@@ -4,8 +4,6 @@ import okhttp3.*;
 import okio.ByteString;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessEnum;
-import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessResultEnum;
 import org.example.auslanderbehorde.formfiller.enums.VisaEnum;
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
@@ -13,7 +11,6 @@ import org.example.auslanderbehorde.formfiller.model.FormInputs;
 import org.example.auslanderbehorde.sessionfinder.business.SessionFinder;
 import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
 import org.example.notifications.Helper;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -25,8 +22,6 @@ import java.util.TimerTask;
 
 import static org.example.auslanderbehorde.formfiller.business.Section3DateSelectionBAL.foundAppointmentCount;
 import static org.example.auslanderbehorde.formfiller.business.Section3DateSelectionBAL.handledAppointmentCount;
-import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
-import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.logInfo;
 import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.*;
 
 /**
@@ -97,12 +92,11 @@ public class Section2ServiceSelection extends TimerTask {
  */
             sendForm();
 
-            if (isCalenderOpened()) {
-                succesfullyFormSentCount++;
-                Thread.sleep(1000);
-                Section3DateSelectionBAL section3DateSelectionBAL = new Section3DateSelectionBAL(driver);
-                section3DateSelectionBAL.handleFindingAppointment();
-            }
+            Section3DateSelectionBAL section3DateSelectionBAL = new Section3DateSelectionBAL(driver);
+            succesfullyFormSentCount++;
+            Thread.sleep(1000);
+            section3DateSelectionBAL.fillAndSendForm();
+
             clickToSelectService();
             searchCount++;
             String msg = String.format("Completed search count: %s. SuccessfullyFormSenCount:%s, HandledAppoi.Count:%s, Found count: %s", searchCount, succesfullyFormSentCount, handledAppointmentCount, foundAppointmentCount);
@@ -205,41 +199,6 @@ public class Section2ServiceSelection extends TimerTask {
         //logger.info("Clicked to dismiss");
     }
 
-    protected boolean isCalenderOpened() throws InteractionFailedException {
-        String stageXPath = ".//ul/li[2]/span";
-        String elementDescription = "activeSectionTab".toUpperCase();
-        int i = 1;
-        String stageText;
-        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            try {
-                WebElement element = FormFillerUtils.getElementByXPath(stageXPath, elementDescription, driver);
-                stageText = element.getText();
-                logInfo(elementDescription, SeleniumProcessEnum.GETTING_TEXT, SeleniumProcessResultEnum.SUCCESSFUL.name(), String.format("Value: %s", stageText));
-                String asd = "//*[@id=\"xi-div-1\"]/div[3]";
-                try {
-                    String elementDescription1 = "calender".toUpperCase();
-                    WebElement calender = FormFillerUtils.getElementByXPathCalender(asd, elementDescription1, driver);
-                    FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "dateSelection_in");
-                    FormFillerUtils.saveScreenshot(driver, "dateSelection_in");
-                    return true;
-                    //return stageText.contains("Terminauswahl") && calender.isDisplayed();
-                } catch (ElementNotFoundTimeoutException e) {
-                    return false;
-                }
-
-            } catch (StaleElementReferenceException | InterruptedException | ElementNotFoundTimeoutException e) {
-                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_TEXT.name(), SeleniumProcessResultEnum.FAILED.name(), e);
-            }
-            i++;
-        }
-        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed. Reason: Couldn't get the element within timeout", elementDescription);
-            throw new InteractionFailedException(elementDescription);
-
-        }
-        return false;
-    }
-
     private double getRemainingTime() {
         String elementXpath = "//*[@id=\"progressBar\"]/div";
         String elementDescription = "remainingTime".toUpperCase();
@@ -287,9 +246,8 @@ public class Section2ServiceSelection extends TimerTask {
         }
     }
 
-    private void fillForm() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
+    protected void fillForm() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
         logger.info("Starting to fill the form");
-        getFormPage(sessionInfo.getRequestId(), sessionInfo.getDswid(), sessionInfo.getDsrid());
         selectCitizenshipValue();
         selectApplicantsCount();
         selectFamilyStatus();

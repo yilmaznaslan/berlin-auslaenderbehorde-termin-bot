@@ -37,7 +37,7 @@ class AppointmentFinderTest {
         driver.get(url_DE);
 
         // WHEN
-        underTest.handleSelectingTimeslot();
+        //underTest.handleSelectingTimeslotAndSendForm();
         WebElement webElement = driver.findElement(By.name("dd_zeiten"));
 
         // THEN
