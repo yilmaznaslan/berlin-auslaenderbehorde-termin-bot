@@ -10,7 +10,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 class Section5ReservationBALTest {
 
-    String path_DE = Section2ServiceSelection.class.getClassLoader().getResource("page_after_step4_sendform_21_2023-01-16_12:45:02.html").getPath();
+    String path_DE = Section5ReservationBALTest.class.getClassLoader().getResource("page_after_step4_sendform_21_2023-01-16_12:45:02.html").getPath();
     String url_DE = "file:".concat(path_DE);
     static ChromeDriver driver;
 

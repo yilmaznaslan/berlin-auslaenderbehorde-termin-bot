@@ -14,13 +14,12 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static org.example.auslanderbehorde.formfiller.business.Section2ServiceSelection.FORM_REFRESH_PERIOD_MILLISECONDS;
-
 public class TerminFinder extends TimerTask {
 
     private final Logger logger = LogManager.getLogger(TerminFinder.class);
     private final Section4FormInputs section4FormInputs;
     private final FormInputs formInputs;
+    private final long FORM_REFRESH_PERIOD_MILLISECONDS = 1000;
     private RemoteWebDriver driver;
     private String currentWindowHandle;
     private SessionInfo sessionInfo;
@@ -120,5 +119,9 @@ public class TerminFinder extends TimerTask {
         logger.info(String.format("Getting the URL: %s", targetUrl));
         currentWindowHandle = driver.getWindowHandle();
         driver.get(targetUrl);
+    }
+
+    public RemoteWebDriver getDriver() {
+        return driver;
     }
 }

@@ -15,7 +15,7 @@ import java.io.IOException;
 
 class AppointmentFinderTest {
 
-    String path_DE = Section2ServiceSelection.class.getClassLoader().getResource("org/example/form/business/dateSelection_DE.html").getPath();
+    String path_DE = AppointmentFinderTest.class.getClassLoader().getResource("org/example/form/business/dateSelection_DE.html").getPath();
 
     String url_DE = "file:".concat(path_DE);
 

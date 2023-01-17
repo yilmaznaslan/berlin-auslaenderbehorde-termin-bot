@@ -15,8 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TerminFinderTest {
 
-    String path_DE = Section2ServiceSelection.class.getClassLoader().getResource("org/example/form/business/dateSelection_DE.html").getPath();
-    String url_DE = "file:".concat(path_DE);
     static ChromeDriver driver;
     FormInputs formInputs = new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD);
     String firstName = "firstName";
