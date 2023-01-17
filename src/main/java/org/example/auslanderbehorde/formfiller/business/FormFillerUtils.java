@@ -166,31 +166,6 @@ public class FormFillerUtils {
         }
     }
 
-    public static void selectOptionByIndex(WebElement element, String elementDescription, int index) {
-        if (element == null) {
-            logger.warn("Element:{} is null, process can not be continued", elementDescription);
-            return;
-        }
-        int i = 0;
-        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
-            try {
-                Select select = new Select(element);
-                List<WebElement> availableHours = select.getOptions();
-                String selectValue = availableHours.get(index).getText();
-                select.selectByIndex(index);
-                logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, SeleniumProcessResultEnum.SUCCESSFUL.name(), "Value: " + selectValue);
-                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-                break;
-            } catch (Exception e) {
-                logger.warn("Element: {}. Process: Select, Result: Failed Reason:{}", elementDescription, e.getMessage());
-            }
-            i++;
-        }
-        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
-            logger.warn("Element: {}. Process: Select, Result: Failed Reason: Couldn't select within timeout", elementDescription);
-        }
-
-    }
     public static void saveSourceCodeToFile(String content, String suffix) {
         String filePath = FormFillerUtils.class.getResource("/").getPath();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
@@ -246,30 +221,12 @@ public class FormFillerUtils {
         ThreadContext.clearAll();
     }
 
-    public static void logWarn(String elementDescription, String process, String status, Throwable throwable) {
-        ThreadContext.put("formId", String.valueOf(formId));
-        ThreadContext.put("elementDescription", elementDescription);
-        ThreadContext.put("seleniumProcess", process);
-        ThreadContext.put("seleniumStatus", status);
-        logger.warn(String.format("Element: %s, Process:%s, Status:%s ", elementDescription, process, status), throwable);
-        ThreadContext.clearAll();
-    }
-
     public static void logWarn(String elementDescription, String process, String status, String msg) {
         ThreadContext.put("formId", String.valueOf(formId));
         ThreadContext.put("elementDescription", elementDescription);
         ThreadContext.put("seleniumProcess", process);
         ThreadContext.put("seleniumStatus", status);
         logger.warn(String.format("Element: %s, Process:%s, Status:%s Msg:%s", elementDescription, process, status, msg));
-        ThreadContext.clearAll();
-    }
-
-    public static void logWarn(String elementDescription, String process, String status, String msg, Throwable e) {
-        ThreadContext.put("formId", String.valueOf(formId));
-        ThreadContext.put("elementDescription", elementDescription);
-        ThreadContext.put("seleniumProcess", process);
-        ThreadContext.put("seleniumStatus", status);
-        logger.warn(String.format("Element: %s, Process:%s, Status:%s Msg:%s", elementDescription, process, status, msg), e);
         ThreadContext.clearAll();
     }
 }

@@ -34,6 +34,8 @@ public class Section3DateSelectionBAL {
     public void fillAndSendForm() throws InteractionFailedException, ElementNotFoundTimeoutException, IOException, InterruptedException {
         if(isCalenderOpened()){
             handleFindingDate();
+            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "section3_aftersend");
+            FormFillerUtils.saveScreenshot(driver, "section3_aftersend");
         }
         throw new InteractionFailedException("elementDescription");
     }

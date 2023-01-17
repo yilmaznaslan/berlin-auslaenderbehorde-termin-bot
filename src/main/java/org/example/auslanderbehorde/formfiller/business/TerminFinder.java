@@ -59,18 +59,15 @@ public class TerminFinder extends TimerTask {
         } catch (Exception e) {
             logger.info("Exception occurred during handling section 2, quitting.");
             return;
-            // init the whole process
         }
 
         // Section 3
         try {
             Section3DateSelectionBAL section3DateSelectionBAL = new Section3DateSelectionBAL(driver);
             section3DateSelectionBAL.fillAndSendForm();
-
         } catch (Exception e) {
             logger.info("Exception occurred during handling section 3, quitting.");
             return;
-            // init the whole process
         }
 
         // Section 4
@@ -81,7 +78,6 @@ public class TerminFinder extends TimerTask {
         } catch (Exception e) {
             logger.info("Exception occurred during handling section 4, quitting.");
             return;
-            // init the whole process
         }
 
         // Section 5
@@ -89,10 +85,12 @@ public class TerminFinder extends TimerTask {
             Section5ReservationBAL section5ReservationBAL = new Section5ReservationBAL(driver);
             section5ReservationBAL.sendForm();
             driver = section5ReservationBAL.getDriver();
+            driver.quit();
+            timer.cancel();
+            return;
         } catch (Exception e) {
             logger.info("Exception occurred during handling section 5, quitting.");
             return;
-            // init the whole process
         }
 
     }
