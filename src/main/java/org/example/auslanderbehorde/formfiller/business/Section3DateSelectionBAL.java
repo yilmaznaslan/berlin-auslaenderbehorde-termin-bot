@@ -125,11 +125,13 @@ public class Section3DateSelectionBAL {
                 if(stageText.equals("Terminauswahl")){
                     return true;
                 }
-                if(stageText.equals("Serviswahl")){
+                if(stageText.equals("Servicewahl")){
                     return false;
                 }
                 logInfo(elementDescription, SeleniumProcessEnum.GETTING_TEXT, SeleniumProcessResultEnum.SUCCESSFUL.name(), String.format("Value: %s", stageText));
+                /*
                 String asd = "//*[@id=\"xi-div-1\"]/div[3]";
+
                 try {
                     String elementDescription1 = "calender".toUpperCase();
                     WebElement calender = FormFillerUtils.getElementByXPathCalender(asd, elementDescription1, driver);
@@ -140,7 +142,7 @@ public class Section3DateSelectionBAL {
                 } catch (ElementNotFoundTimeoutException e) {
                     return false;
                 }
-
+                */
             } catch (StaleElementReferenceException | InterruptedException | ElementNotFoundTimeoutException e) {
                 //logWarn(elementDescription, SeleniumProcessEnum.GETTING_TEXT.name(), SeleniumProcessResultEnum.FAILED.name(), e);
             }

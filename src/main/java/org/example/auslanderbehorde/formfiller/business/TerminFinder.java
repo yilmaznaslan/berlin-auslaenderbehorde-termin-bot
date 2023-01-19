@@ -7,6 +7,7 @@ import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
 import org.example.auslanderbehorde.sessionfinder.business.SessionFinder;
 import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
 import org.example.notifications.Helper;
+import org.openqa.selenium.NoSuchSessionException;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -38,17 +39,15 @@ public class TerminFinder extends TimerTask {
 
     public void run() {
         // Section 1
-        int initSessionTryCount = 0;
         try {
-            while (true) {
-                initSessionTryCount++;
-                initNewSessionInfo();
-                break;
-            }
+            initNewSessionInfo();
+        } catch (NoSuchSessionException e) {
+            logger.error("No such session exception occurred. Creating new Session.");
+            driver = DriverManager.initDriverHeadless();
         } catch (Exception e) {
-            logger.error("Session initialization had failed. initSessionTryCount: {} Exception: ", initSessionTryCount, e);
+            logger.error("Error in initializing a new session. Exception: ",  e);
             driver.quit();
-            driver = Helper.initDriverHeadless();
+            driver = DriverManager.initDriverHeadless();
         }
 
         // Section 2

@@ -3,7 +3,6 @@ package org.example.auslanderbehorde.sessionfinder.business;
 import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.formfiller.business.FormFillerUtils;
 import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
 import org.example.notifications.Helper;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -12,6 +11,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static org.example.auslanderbehorde.formfiller.business.DriverManager.initDriverHeadless;
 
 public class SessionFinder {
 
@@ -22,7 +24,6 @@ public class SessionFinder {
     private RemoteWebDriver driver;
 
     public SessionFinder(RemoteWebDriver driver) {
-
         this.driver = driver;
     }
 
@@ -48,7 +49,7 @@ public class SessionFinder {
             } catch (Exception e) {
                 logger.error("Some error occurred during getting a session info using the driver", e);
                 driver.quit();
-                driver = Helper.initDriverHeadless();
+                driver = initDriverHeadless();
                 getMainPage();
             }
 
@@ -109,6 +110,9 @@ public class SessionFinder {
     private void activateRequestId(String requestId) {
         while (true) {
             OkHttpClient client = new OkHttpClient().newBuilder()
+                    .connectTimeout(90, TimeUnit.SECONDS)
+                    .readTimeout(90, TimeUnit.SECONDS)
+                    .writeTimeout(90, TimeUnit.SECONDS)
                     .build();
             RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
                     .addFormDataPart("hello", "myfriend")
@@ -136,9 +140,13 @@ public class SessionFinder {
             try {
                 logger.info("Sending request to activate the requestId");
                 Response response = client.newCall(request).execute();
-                logger.info("ResponseCode: " + response.code());
+                Integer responseCode = response.code();
+                logger.info("ResponseCode: {}", responseCode);
                 response.close();
-                break;
+                if(responseCode.equals(200)){
+                    break;
+                }
+
             } catch (Exception e) {
                 logger.error("Executing  request failed", e);
             }

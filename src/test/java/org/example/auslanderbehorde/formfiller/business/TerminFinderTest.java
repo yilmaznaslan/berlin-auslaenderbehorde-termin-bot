@@ -6,12 +6,14 @@ import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.NoSuchSessionException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class TerminFinderTest {
 
@@ -41,12 +43,20 @@ class TerminFinderTest {
         // GIVEN
         //driver.get(url_DE);
 
-        TerminFinder terminFinder = new TerminFinder(section4FormInputs, formInputs, driver);
+
+        TerminFinder terminFinder = spy(new TerminFinder(section4FormInputs, formInputs, driver));
+
+        doThrow(new NoSuchSessionException("")).when(terminFinder).run();
 
         // WHEN
         terminFinder.run();
 
         // THEN
+       // verify(terminFinder).
 
+    }
+
+    @Test
+    void run() {
     }
 }
