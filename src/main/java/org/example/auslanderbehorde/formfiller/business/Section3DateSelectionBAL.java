@@ -32,12 +32,9 @@ public class Section3DateSelectionBAL {
     }
 
     public void fillAndSendForm() throws InteractionFailedException, ElementNotFoundTimeoutException, IOException, InterruptedException {
-        if(isCalenderOpened()){
-            handleFindingDate();
-            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "section3_aftersend");
-            FormFillerUtils.saveScreenshot(driver, "section3_aftersend");
-        }
-        throw new InteractionFailedException("elementDescription");
+        handleFindingDate();
+        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "section3_aftersend");
+        FormFillerUtils.saveScreenshot(driver, "section3_aftersend");
     }
 
     private void handleFindingDate() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException, IOException {
@@ -113,7 +110,7 @@ public class Section3DateSelectionBAL {
         return true;
     }
 
-    private boolean isCalenderOpened() throws InteractionFailedException {
+    public boolean isCalenderOpened() throws InteractionFailedException {
         String stageXPath = ".//ul/li[2]/span";
         String elementDescription = "activeSectionTab".toUpperCase();
         int i = 1;
@@ -122,13 +119,13 @@ public class Section3DateSelectionBAL {
             try {
                 WebElement element = FormFillerUtils.getElementByXPath(stageXPath, elementDescription, driver);
                 stageText = element.getText();
-                if(stageText.equals("Terminauswahl")){
+                logInfo(elementDescription, SeleniumProcessEnum.GETTING_TEXT, SeleniumProcessResultEnum.SUCCESSFUL.name(), String.format("Value: %s", stageText));
+                if (stageText.equals("Terminauswahl")) {
                     return true;
                 }
-                if(stageText.equals("Servicewahl")){
+                if (stageText.equals("Servicewahl")) {
                     return false;
                 }
-                logInfo(elementDescription, SeleniumProcessEnum.GETTING_TEXT, SeleniumProcessResultEnum.SUCCESSFUL.name(), String.format("Value: %s", stageText));
                 /*
                 String asd = "//*[@id=\"xi-div-1\"]/div[3]";
 
@@ -151,8 +148,11 @@ public class Section3DateSelectionBAL {
         if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             logger.warn("Element: {}. Process: Getting by elementXPath. Result: Failed. Reason: Couldn't get the element within timeout", elementDescription);
             throw new InteractionFailedException(elementDescription);
-
         }
         return false;
+    }
+
+    public RemoteWebDriver getDriver() {
+        return driver;
     }
 }

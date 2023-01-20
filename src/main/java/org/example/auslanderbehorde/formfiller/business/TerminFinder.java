@@ -63,7 +63,13 @@ public class TerminFinder extends TimerTask {
         // Section 3
         try {
             Section3DateSelectionBAL section3DateSelectionBAL = new Section3DateSelectionBAL(driver);
-            section3DateSelectionBAL.fillAndSendForm();
+            if(section3DateSelectionBAL.isCalenderOpened()){
+                section3DateSelectionBAL.fillAndSendForm();
+                driver = section3DateSelectionBAL.getDriver();
+            }else{
+                logger.info("Page section 3 is not openned, quitting.");
+                return;
+            }
         } catch (Exception e) {
             logger.info("Exception occurred during handling section 3, quitting.");
             return;
