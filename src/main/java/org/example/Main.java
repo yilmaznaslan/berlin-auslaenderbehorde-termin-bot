@@ -7,6 +7,8 @@ import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum;
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
 import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +16,13 @@ import java.util.Optional;
 
 import static org.example.auslanderbehorde.formfiller.business.DriverManager.initDriverHeadless;
 
-
+@SpringBootApplication
 public class Main {
 
     public static final Logger logger = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) throws InterruptedException {
+        SpringApplication.run(Main.class, args);
 
         //List<FormInputs> formInputs = generateForms();
 
@@ -34,7 +37,6 @@ public class Main {
             formFiller.startScanning();
         }
 */
-        RemoteWebDriver remoteWebDriver = initDriverHeadless();
         FormInputs formInputs = new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD);
         String firstName = "firstName";
         String lastName = "lastname";
@@ -43,13 +45,14 @@ public class Main {
         String residencePermitId = "ABCSD12333";
         Section4FormInputs section4FormInputs = new Section4FormInputs(firstName, lastName, email, birthdate, false, Optional.of(residencePermitId));
 
-
+        RemoteWebDriver remoteWebDriver = initDriverHeadless();
         TerminFinder terminFinder = new TerminFinder(section4FormInputs, formInputs, remoteWebDriver);
         terminFinder.startScanning();
 
         ThreadMonitor threadMonitor = new ThreadMonitor();
         threadMonitor.startMonitoring();
 
+        /*
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             logger.info("Shutdown hook ran!");
             terminFinder.cancel();
@@ -59,9 +62,15 @@ public class Main {
         }
         ));
 
+         */
+
+
+        /*
         while (true) {
             Thread.sleep(1000);
         }
+
+         */
     }
 
     public static List<FormInputs> generateForms() {
