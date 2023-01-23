@@ -41,13 +41,10 @@ public class TerminFinder extends TimerTask {
         // Section 1
         try {
             initNewSessionInfo();
-        } catch (NoSuchSessionException e) {
-            logger.error("No such session exception occurred. Creating new Session.");
-            driver = DriverManager.initDriverHeadless();
         } catch (Exception e) {
             logger.error("Error in initializing a new session. Exception: ",  e);
-            driver.quit();
             driver = DriverManager.initDriverHeadless();
+            return;
         }
 
         // Section 2

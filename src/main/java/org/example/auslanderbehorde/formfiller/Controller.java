@@ -1,8 +1,8 @@
 package org.example.auslanderbehorde.formfiller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.example.auslanderbehorde.formfiller.model.FormInputs;
+import org.example.auslanderbehorde.formfiller.model.FormInputsTO;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -15,6 +15,11 @@ public class Controller {
     public String greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
         return String.format(template, name, counter.incrementAndGet()
         );
+    }
+
+    @PostMapping("/termin")
+    public void greeting(@RequestBody FormInputsTO formInputTO) {
+        System.out.println(formInputTO.toString());
     }
 
 }
