@@ -75,7 +75,8 @@ public class Section2ServiceSelectionBAL {
     }
 
     private void clickServiceType() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
-        String elementXPath = "//*[@id=\"xi-div-30\"]/div[1]/label/p";
+        String elementXPath = "//*[@id=\"xi-div-30\"]/div[2]/label/p";
+//        String elementXPath = "//*[@id=\"xi-div-30\"]/div[1]/label/p";
         String elementDescription = "serviceType".toUpperCase();
         WebElement element = FormFillerUtils.getElementByXPath(elementXPath, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
@@ -85,6 +86,8 @@ public class Section2ServiceSelectionBAL {
 
     private void clickVisaGroup() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementXpath = "//*[@id=\"inner-163-0-1\"]/div/div[3]/label";
+        elementXpath = "//*[@id=\"inner-163-0-2\"]/div/div[1]/label";
+        String elementId = "//*[@id=\"SERVICEWAHL_DE_163-0-2-3\"]";
         String elementDescription = "visaGroup".toUpperCase();
         WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);

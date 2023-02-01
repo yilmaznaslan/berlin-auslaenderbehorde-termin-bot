@@ -1,6 +1,6 @@
 package org.example.auslanderbehorde.formfiller.enums;
 
-public enum EducationalPurposeVisaEnum {
+public enum EducationalPurposeVisaEnum implements VisaEnum  {
     LANGUAGE_COURSE ("SERVICEWAHL_EN123-0-1-3-324289", "Residence permit for attending a language course (sect. 16f para. 1)"),
     IN_SERVICE_TRAINING ("SERVICEWAHL_EN123-0-1-3-329337", "Residence permit for in-service training (sect. 16a)"),
     STUDY_PREPARATION ("SERVICEWAHL_EN123-0-1-3-305156", "Residence permit for study preparation (sect. 16b para. 1)"),

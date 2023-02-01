@@ -123,23 +123,11 @@ public class Section3DateSelectionBAL {
                 if (stageText.equals("Terminauswahl")) {
                     return true;
                 }
-                if (stageText.equals("Servicewahl")) {
+                if (stageText.equals("Servicewahl") && !isCalenderFound()) {
                     return false;
                 }
-                /*
-                String asd = "//*[@id=\"xi-div-1\"]/div[3]";
 
-                try {
-                    String elementDescription1 = "calender".toUpperCase();
-                    WebElement calender = FormFillerUtils.getElementByXPathCalender(asd, elementDescription1, driver);
-                    FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "dateSelection_in");
-                    FormFillerUtils.saveScreenshot(driver, "dateSelection_in");
-                    return true;
-                    //return stageText.contains("Terminauswahl") && calender.isDisplayed();
-                } catch (ElementNotFoundTimeoutException e) {
-                    return false;
-                }
-                */
+
             } catch (StaleElementReferenceException | InterruptedException | ElementNotFoundTimeoutException e) {
                 //logWarn(elementDescription, SeleniumProcessEnum.GETTING_TEXT.name(), SeleniumProcessResultEnum.FAILED.name(), e);
             }
@@ -154,5 +142,21 @@ public class Section3DateSelectionBAL {
 
     public RemoteWebDriver getDriver() {
         return driver;
+    }
+
+    private boolean isCalenderFound(){
+        try {
+            String asd = "//*[@id=\"xi-div-1\"]/div[3]";
+            String elementDescription1 = "calender".toUpperCase();
+            WebElement calender = FormFillerUtils.getElementByXPathCalender(asd, elementDescription1, driver);
+            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "dateSelection_in");
+            FormFillerUtils.saveScreenshot(driver, "dateSelection_in");
+            return true;
+            //return stageText.contains("Terminauswahl") && calender.isDisplayed();
+        } catch (ElementNotFoundTimeoutException e) {
+            return false;
+        } catch (InterruptedException e) {
+            return false;
+        }
     }
 }

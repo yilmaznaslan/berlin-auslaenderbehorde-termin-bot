@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.formfiller.business.TerminFinder;
 import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum;
+import org.example.auslanderbehorde.formfiller.enums.ResidencePermitExtensionEducationalPurposeVisaEnum_DE;
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
 import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -37,13 +38,13 @@ public class Main {
             formFiller.startScanning();
         }
 */
-        FormInputs formInputs = new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD);
-        String firstName = "firstName";
-        String lastName = "lastname";
+        FormInputs formInputs = new FormInputs("163", "1", "2", ResidencePermitExtensionEducationalPurposeVisaEnum_DE.PURPOSE_OF_STUDYING);
+        String firstName = "Gizem";
+        String lastName = "Sacihan";
         String email = "yilmazn.aslan@gmail.com";
-        String birthdate = "12.03.1993";
-        String residencePermitId = "ABCSD12333";
-        Section4FormInputs section4FormInputs = new Section4FormInputs(firstName, lastName, email, birthdate, false, Optional.of(residencePermitId));
+        String birthdate = "16.01.1994";
+        String residencePermitId = "D42643052";
+        Section4FormInputs section4FormInputs = new Section4FormInputs(firstName, lastName, email, birthdate, true, Optional.of(residencePermitId));
 
         RemoteWebDriver remoteWebDriver = initDriverHeadless();
         TerminFinder terminFinder = new TerminFinder(section4FormInputs, formInputs, remoteWebDriver);

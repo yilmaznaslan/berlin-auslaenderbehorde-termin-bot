@@ -73,12 +73,16 @@ public class TerminFinder extends TimerTask {
         }
 
         // Section 4
+        Section4DetailsBAL section4DetailsBAL = new Section4DetailsBAL(section4FormInputs, driver);
         try {
-            Section4DetailsBAL section4DetailsBAL = new Section4DetailsBAL(section4FormInputs, driver);
             section4DetailsBAL.fillAndSendForm();
             driver = section4DetailsBAL.getDriver();
         } catch (Exception e) {
-            logger.info("Exception occurred during handling section 4, quitting.");
+            logger.info("Exception occurred during handling section 4, quitting.", e);
+            driver = section4DetailsBAL.getDriver();
+            String fileName = section4DetailsBAL.getClass().getName()+"_exception";
+            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), fileName);
+            FormFillerUtils.saveScreenshot(driver, fileName);
             return;
         }
 

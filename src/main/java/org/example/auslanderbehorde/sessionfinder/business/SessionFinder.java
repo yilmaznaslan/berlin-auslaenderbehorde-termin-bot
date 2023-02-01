@@ -48,7 +48,7 @@ public class SessionFinder {
                 logger.debug(String.format("Iteration: %s, CurrentURL: %s", requestCount, urlAfterRedirect));
             } catch (Exception e) {
                 logger.error("Some error occurred during getting a session info using the driver", e);
-                driver.quit();
+                //driver.quit();
                 driver = initDriverHeadless();
                 getMainPage();
             }
