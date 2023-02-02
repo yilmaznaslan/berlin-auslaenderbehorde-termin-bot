@@ -8,8 +8,8 @@ import org.example.auslanderbehorde.formfiller.enums.ResidencePermitExtensionEdu
 import org.example.auslanderbehorde.formfiller.model.FormInputs;
 import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+//import org.springframework.boot.SpringApplication;
+//import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +17,13 @@ import java.util.Optional;
 
 import static org.example.auslanderbehorde.formfiller.business.DriverManager.initDriverHeadless;
 
-@SpringBootApplication
+//@SpringBootApplication
 public class Main {
 
     public static final Logger logger = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) throws InterruptedException {
-        SpringApplication.run(Main.class, args);
+        //SpringApplication.run(Main.class, args);
 
         //List<FormInputs> formInputs = generateForms();
 
