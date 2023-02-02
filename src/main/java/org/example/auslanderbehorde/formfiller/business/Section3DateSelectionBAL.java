@@ -41,8 +41,8 @@ public class Section3DateSelectionBAL {
         handledAppointmentCount++;
         String elementDescription = "DateSelection".toUpperCase();
         String cssSelector = "[data-handler=selectDay]";
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "dateSelection");
-        FormFillerUtils.saveScreenshot(driver, "dateSelection");
+        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "section3_dateSelection");
+        FormFillerUtils.saveScreenshot(driver, "section3_dateSelection");
         WebElement element = FormFillerUtils.getElementByCssSelector(cssSelector, elementDescription, driver);
         if (isDateVerified(element)) {
             logger.info("Date is verified");
