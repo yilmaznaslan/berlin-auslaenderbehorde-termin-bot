@@ -1,6 +1,8 @@
 package org.example.auslanderbehorde.formfiller.enums;
 
-public enum EconomicActivityVisaDeEnum implements VisaEnum {
+import org.example.auslanderbehorde.formfiller.intercaces.Visa;
+
+public enum EconomicActivityVisaDe implements Visa {
     BLUECARD("SERVICEWAHL_DE163-0-1-1-324659", "EU Blue Card / Blaue Karte EU (sect. 18b para. 2)"),
     FREELANCE("SERVICEWAHL_DE163-0-1-1-328332", "Residence permit for a freelance employment - Issuance (sect. 21 para. 5)"),
     LONG_TERM_EU_MEMBER("SERVICEWAHL_DE163-0-1-1-325475", "Residence permit for foreigners with a long-term residence in an EU member state (sect. 38a)"),
@@ -11,7 +13,7 @@ public enum EconomicActivityVisaDeEnum implements VisaEnum {
     private final String id;
     private final String dataTag0;
 
-    EconomicActivityVisaDeEnum(String id, String dataTag0) {
+    EconomicActivityVisaDe(String id, String dataTag0) {
         this.id = id;
         this.dataTag0 = dataTag0;
     }

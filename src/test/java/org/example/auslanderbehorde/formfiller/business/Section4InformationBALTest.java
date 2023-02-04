@@ -14,6 +14,7 @@ import java.util.Optional;
 import static org.example.auslanderbehorde.formfiller.enums.Section4FormParameterEnum.*;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+
 /*
 class Section4InformationBALTest {
 
@@ -195,5 +196,4 @@ class Section4InformationBALTest {
         verify(spiedFormFiller).sendForm();
     }
 }
-
- */
+*/

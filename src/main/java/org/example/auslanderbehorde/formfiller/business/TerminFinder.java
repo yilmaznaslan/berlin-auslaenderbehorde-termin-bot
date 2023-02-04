@@ -2,12 +2,10 @@ package org.example.auslanderbehorde.formfiller.business;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.formfiller.model.FormInputs;
+import org.example.auslanderbehorde.formfiller.model.Section2FormInputs;
 import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
 import org.example.auslanderbehorde.sessionfinder.business.SessionFinder;
 import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
-import org.example.notifications.Helper;
-import org.openqa.selenium.NoSuchSessionException;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -19,16 +17,16 @@ public class TerminFinder extends TimerTask {
 
     private final Logger logger = LogManager.getLogger(TerminFinder.class);
     private final Section4FormInputs section4FormInputs;
-    private final FormInputs formInputs;
+    private final Section2FormInputs section2FormInputs;
     private final long FORM_REFRESH_PERIOD_MILLISECONDS = 1000;
     private RemoteWebDriver driver;
     private String currentWindowHandle;
     private SessionInfo sessionInfo;
     private final Timer timer = new Timer(true);
 
-    public TerminFinder(Section4FormInputs section4FormInputs, FormInputs formInputs, RemoteWebDriver driver) {
+    public TerminFinder(Section4FormInputs section4FormInputs, Section2FormInputs section2FormInputs, RemoteWebDriver driver) {
         this.section4FormInputs = section4FormInputs;
-        this.formInputs = formInputs;
+        this.section2FormInputs = section2FormInputs;
         this.driver = driver;
     }
 
@@ -54,7 +52,7 @@ public class TerminFinder extends TimerTask {
 
         // Section 2
         try {
-            Section2ServiceSelectionBAL section2ServiceSelectionBAL = new Section2ServiceSelectionBAL(formInputs, driver);
+            Section2ServiceSelectionBAL section2ServiceSelectionBAL = new Section2ServiceSelectionBAL(section2FormInputs, driver);
             section2ServiceSelectionBAL.fillAndSendForm();
             driver = section2ServiceSelectionBAL.getDriver();
         } catch (Exception e) {
@@ -78,14 +76,14 @@ public class TerminFinder extends TimerTask {
         }
 
         // Section 4
-        Section4DetailsBAL section4DetailsBAL = new Section4DetailsBAL(section4FormInputs, driver);
+        Section4Filler section4Filler = new Section4Filler(section4FormInputs, driver);
         try {
-            section4DetailsBAL.fillAndSendForm();
-            driver = section4DetailsBAL.getDriver();
+            section4Filler.fillAndSendForm();
+            driver = section4Filler.getDriver();
         } catch (Exception e) {
             logger.info("Exception occurred during handling section 4, quitting.", e);
-            driver = section4DetailsBAL.getDriver();
-            String fileName = section4DetailsBAL.getClass().getName()+"_exception";
+            driver = section4Filler.getDriver();
+            String fileName = section4Filler.getClass().getSimpleName()+"_exception";
             FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), fileName);
             FormFillerUtils.saveScreenshot(driver, fileName);
             return;

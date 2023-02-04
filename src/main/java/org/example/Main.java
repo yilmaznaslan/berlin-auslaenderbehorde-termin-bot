@@ -3,9 +3,10 @@ package org.example;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.formfiller.business.TerminFinder;
-import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum;
-import org.example.auslanderbehorde.formfiller.enums.ResidencePermitExtensionEducationalPurposeVisaEnum_DE;
-import org.example.auslanderbehorde.formfiller.model.FormInputs;
+import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDe;
+import org.example.auslanderbehorde.formfiller.enums.VisaExtensionForEducationalPurposeVisaEnum_DE;
+import org.example.auslanderbehorde.formfiller.enums.ServiceType;
+import org.example.auslanderbehorde.formfiller.model.Section2FormInputs;
 import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
 import org.openqa.selenium.remote.RemoteWebDriver;
 //import org.springframework.boot.SpringApplication;
@@ -38,16 +39,19 @@ public class Main {
             formFiller.startScanning();
         }
 */
-        FormInputs formInputs = new FormInputs("163", "1", "2", ResidencePermitExtensionEducationalPurposeVisaEnum_DE.PURPOSE_OF_STUDYING);
-        String firstName = "Gizem";
-        String lastName = "Sacihan";
+        Section2FormInputs section2FormInputs = new Section2FormInputs("163", "1", "2", ServiceType.EXTEND_A_RESIDENCE_TITLE, VisaExtensionForEducationalPurposeVisaEnum_DE.PURPOSE_OF_STUDYING);
+        String firstName = "firstname";
+        String lastName = "lastname";
         String email = "yilmazn.aslan@gmail.com";
-        String birthdate = "16.01.1994";
-        String residencePermitId = "D42643052";
-        Section4FormInputs section4FormInputs = new Section4FormInputs(firstName, lastName, email, birthdate, true, Optional.of(residencePermitId));
+        String birthdate = "11.11.1993";
+        Optional<String> residencePermitId = Optional.of("D12123123");
+        Optional<Boolean> isPresent = Optional.empty();
+
+        Section4FormInputs section4FormInputs = new Section4FormInputs(firstName, lastName, email, birthdate, isPresent, residencePermitId, ServiceType.EXTEND_A_RESIDENCE_TITLE);
+
 
         RemoteWebDriver remoteWebDriver = initDriverHeadless();
-        TerminFinder terminFinder = new TerminFinder(section4FormInputs, formInputs, remoteWebDriver);
+        TerminFinder terminFinder = new TerminFinder(section4FormInputs, section2FormInputs, remoteWebDriver);
         terminFinder.startScanning();
 
         ThreadMonitor threadMonitor = new ThreadMonitor();
@@ -66,20 +70,23 @@ public class Main {
          */
 
 
-        /*
+
         while (true) {
             Thread.sleep(1000);
         }
 
-         */
+
     }
 
-    public static List<FormInputs> generateForms() {
-        List<FormInputs> result = new ArrayList<>();
-        for (EconomicActivityVisaDeEnum ecoVisa : EconomicActivityVisaDeEnum.values()) {
-            result.add(new FormInputs("163", "1", "2", ecoVisa));
+    /*
+    public static List<Section2FormInputs> generateForms() {
+        List<Section2FormInputs> result = new ArrayList<>();
+        for (EconomicActivityVisaDe ecoVisa : EconomicActivityVisaDe.values()) {
+            result.add(new Section2FormInputs("163", "1", "2", serviceType, ecoVisa));
         }
         return result;
     }
+
+     */
 
 }

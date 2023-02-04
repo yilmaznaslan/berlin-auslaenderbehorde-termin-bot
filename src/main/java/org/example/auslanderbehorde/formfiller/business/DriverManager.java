@@ -19,6 +19,8 @@ public class DriverManager {
     private String currentWindowHandle;
 
     public static RemoteWebDriver initDriverHeadless() {
+        String seleniumDriverHost = System.getenv("SELENIUM_GRID_HOST");
+        logger.info("Connecting to selenium host: {}", seleniumDriverHost);
         logger.info("Initializing driver");
         ChromeOptions options = new ChromeOptions();
         options.setPageLoadStrategy(PageLoadStrategy.NONE);
@@ -36,7 +38,7 @@ public class DriverManager {
         //chromeOptions.addArguments("--headless");
         //int freePort = findFreePort();
         //chromeOptions.addArguments("--remote-debugging-port=" + freePort);
-        String remoteUrl = "http://localhost:4444/wd/hub";
+        String remoteUrl = "http://"+ seleniumDriverHost+":4444/wd/hub";
         try {
             driver = new RemoteWebDriver(new URL(remoteUrl), options);
             logger.info("Driver is initialized.");

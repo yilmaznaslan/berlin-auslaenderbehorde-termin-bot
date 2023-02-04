@@ -63,7 +63,7 @@
             <AppenderRef ref="Console"/>
             <!-- <AppenderRef ref="infoLogFile"/>     -->
             <!-- <AppenderRef ref="infoLogFileJson"/> -->
-            <AppenderRef ref="elasticsearch"/>
+            <!--  <AppenderRef ref="elasticsearch"/> -->
         </Root>
 
     </Loggers>

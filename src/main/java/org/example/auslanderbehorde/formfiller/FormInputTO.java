@@ -1,13 +1,12 @@
 package org.example.auslanderbehorde.formfiller;
 
-import org.example.auslanderbehorde.formfiller.model.FormInputs;
+import org.example.auslanderbehorde.formfiller.model.Section2FormInputs;
 import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
 
-public record FormInputTO(FormInputs formInputs,
+public record FormInputTO(Section2FormInputs section2FormInputs,
                           Section4FormInputs section4FormInputs) {
-    @Override
-    public FormInputs formInputs() {
-        return formInputs;
+    public Section2FormInputs section2FormInputs() {
+        return section2FormInputs;
     }
 
     @Override

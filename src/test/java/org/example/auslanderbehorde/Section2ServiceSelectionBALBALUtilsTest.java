@@ -2,7 +2,7 @@ package org.example.auslanderbehorde;
 
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.business.FormFillerUtils;
-import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum;
+import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDe;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -85,7 +85,7 @@ class Section2ServiceSelectionBALBALUtilsTest {
     @Test
     void ASSERT_THAT_element_is_returned_WHEN_getById_is_called_GIVEN_THAT_current_page_is_servicewahl_DE() throws ElementNotFoundTimeoutException, InterruptedException {
         // GIVEN
-        String id = EconomicActivityVisaDeEnum.BLUECARD.getId();
+        String id = EconomicActivityVisaDe.BLUECARD.getId();
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
@@ -96,7 +96,7 @@ class Section2ServiceSelectionBALBALUtilsTest {
         WebElement element = FormFillerUtils.getElementById(id, "", asd);
 
         // THEN
-        String label = EconomicActivityVisaDeEnum.BLUECARD.getDataTag0();
+        String label = EconomicActivityVisaDe.BLUECARD.getDataTag0();
         Assertions.assertEquals(label, element.getAttribute("data-tag0"));
     }
 }

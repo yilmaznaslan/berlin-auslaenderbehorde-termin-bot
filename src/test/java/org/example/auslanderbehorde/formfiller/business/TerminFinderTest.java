@@ -1,9 +1,8 @@
 package org.example.auslanderbehorde.formfiller.business;
 
-import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum;
-import org.example.auslanderbehorde.formfiller.model.FormInputs;
+import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDe;
+import org.example.auslanderbehorde.formfiller.model.Section2FormInputs;
 import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.NoSuchSessionException;
@@ -12,19 +11,18 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class TerminFinderTest {
 
     static ChromeDriver driver;
-    FormInputs formInputs = new FormInputs("163", "1", "2", EconomicActivityVisaDeEnum.BLUECARD);
+    Section2FormInputs section2FormInputs = new Section2FormInputs("163", "1", "2", serviceType, EconomicActivityVisaDe.BLUECARD);
     String firstName = "firstName";
     String lastName = "lastname";
     String email = "yilmazn.aslan@gmail.com";
     String birthdate = "12.03.1993";
     String residencePermitId = "ABCSD12333";
-    Section4FormInputs section4FormInputs = new Section4FormInputs(firstName, lastName, email, birthdate, false, Optional.of(residencePermitId));
+    Section4FormInputs section4FormInputs = new Section4FormInputs(firstName, lastName, email, birthdate, false, Optional.of(residencePermitId), serviceType);
 
 
     @BeforeAll
@@ -44,7 +42,7 @@ class TerminFinderTest {
         //driver.get(url_DE);
 
 
-        TerminFinder terminFinder = spy(new TerminFinder(section4FormInputs, formInputs, driver));
+        TerminFinder terminFinder = spy(new TerminFinder(section4FormInputs, section2FormInputs, driver));
 
         doThrow(new NoSuchSessionException("")).when(terminFinder).run();
 

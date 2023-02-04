@@ -2,11 +2,10 @@ package org.example.auslanderbehorde.formfiller.business;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.formfiller.enums.VisaEnum;
+import org.example.auslanderbehorde.formfiller.intercaces.Visa;
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
-import org.example.auslanderbehorde.formfiller.model.FormInputs;
-import org.example.notifications.Helper;
+import org.example.auslanderbehorde.formfiller.model.Section2FormInputs;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -23,19 +22,19 @@ public class Section2ServiceSelectionBAL {
     private final String citizenshipValue;
     private final String applicantNumber;
     private final String familyStatus;
-    private final VisaEnum visaEnum;
+    private final Visa visa;
 
     private static int searchCount = 0;
     private static int succesfullyFormSentCount = 0;
 
     private RemoteWebDriver driver;
 
-    public Section2ServiceSelectionBAL(FormInputs formInputs, RemoteWebDriver remoteWebDriver) {
+    public Section2ServiceSelectionBAL(Section2FormInputs section2FormInputs, RemoteWebDriver remoteWebDriver) {
         this.driver = remoteWebDriver;
-        this.citizenshipValue = formInputs.getCitizenshipValue();
-        this.applicantNumber = formInputs.getApplicationsNumber();
-        this.familyStatus = formInputs.getFamilyStatus();
-        this.visaEnum = formInputs.getVisaEnum();
+        this.citizenshipValue = section2FormInputs.getCitizenshipValue();
+        this.applicantNumber = section2FormInputs.getApplicationsNumber();
+        this.familyStatus = section2FormInputs.getFamilyStatus();
+        this.visa = section2FormInputs.getVisaEnum();
     }
 
     public void fillAndSendForm() throws ElementNotFoundTimeoutException, InteractionFailedException, InterruptedException {
@@ -96,8 +95,8 @@ public class Section2ServiceSelectionBAL {
     }
 
     private void clickToVisa() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
-        String elementId = visaEnum.getId();
-        String elementDescription = visaEnum.getDataTag0();
+        String elementId = visa.getId();
+        String elementDescription = visa.getDataTag0();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
         //element.click();

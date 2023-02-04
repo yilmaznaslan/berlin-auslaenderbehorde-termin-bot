@@ -2,16 +2,12 @@ package org.example.auslanderbehorde.formfiller.business;
 
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
-import org.example.auslanderbehorde.formfiller.model.FormInputs;
+import org.example.auslanderbehorde.formfiller.model.Section2FormInputs;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.Select;
 
-import static org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDeEnum.BLUECARD;
+import static org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDe.BLUECARD;
 
 class Section2ServiceSelectionBALTest {
 
@@ -20,7 +16,7 @@ class Section2ServiceSelectionBALTest {
 
     static ChromeDriver driver;
 
-    FormInputs formInputs = new FormInputs("turkey", "1", "0", BLUECARD);
+    Section2FormInputs section2FormInputs = new Section2FormInputs("turkey", "1", "0", serviceType, BLUECARD);
 
     @BeforeAll
     static void initDriver() {
@@ -41,7 +37,7 @@ class Section2ServiceSelectionBALTest {
         //Section2ServiceSelection section2ServiceSelection = new Section2ServiceSelection(formInputs, driver);
         //section2ServiceSelection.fillForm();
 
-        Section2ServiceSelectionBAL formFiller = new Section2ServiceSelectionBAL(formInputs, driver);
+        Section2ServiceSelectionBAL formFiller = new Section2ServiceSelectionBAL(section2FormInputs, driver);
         //formFiller
         // THEN
 
@@ -54,7 +50,7 @@ class Section2ServiceSelectionBALTest {
 
         // WHEN
         //driver.get(url_DE);
-        Section2ServiceSelectionBAL formFiller = new Section2ServiceSelectionBAL(formInputs, driver);
+        Section2ServiceSelectionBAL formFiller = new Section2ServiceSelectionBAL(section2FormInputs, driver);
 
         //underTest.handleSelectingTimeslot();
 

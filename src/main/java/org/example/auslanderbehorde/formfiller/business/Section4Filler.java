@@ -2,6 +2,7 @@ package org.example.auslanderbehorde.formfiller.business;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.example.auslanderbehorde.formfiller.enums.ServiceType;
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
@@ -15,33 +16,57 @@ import static org.example.auslanderbehorde.formfiller.enums.Section4FormParamete
 /**
  * Business Access Layer for filling the Section 4: Angaben
  */
-public class Section4DetailsBAL {
+public class Section4Filler {
 
-    private final Logger logger = LogManager.getLogger(Section4DetailsBAL.class);
+    private final Logger logger = LogManager.getLogger(Section4Filler.class);
     private final String firstName;
     private final String lastName;
     private final String emailAddress;
     private final String birthdate;
-    private final boolean isResidencePermitPresent;
+    private final Optional<Boolean> isResidencePermitPresent;
     private final Optional<String> residencePermitId;
+    private final ServiceType serviceType;
+    private final RemoteWebDriver driver;
 
-    private RemoteWebDriver driver;
-
-    public Section4DetailsBAL(Section4FormInputs formInputs, RemoteWebDriver remoteWebDriver) {
+    public Section4Filler(Section4FormInputs formInputs, RemoteWebDriver remoteWebDriver) {
+        this.serviceType = formInputs.getServiceType();
         this.residencePermitId = formInputs.getResidencePermitId();
         this.driver = remoteWebDriver;
         this.firstName = formInputs.getName();
         this.lastName = formInputs.getLastname();
         this.emailAddress = formInputs.getEmailAddress();
         this.birthdate = formInputs.getBirthdate();
-        this.isResidencePermitPresent = formInputs.isResidencePermitPresent();
+        this.isResidencePermitPresent = formInputs.getIsResidencePermitPresent();
     }
 
     public void fillAndSendForm() throws ElementNotFoundTimeoutException, InteractionFailedException, InterruptedException {
+        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName());
+        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName());
+
         fillForm();
         sendForm();
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "section4_aftersend");
-        FormFillerUtils.saveScreenshot(driver, "section4_aftersend");
+
+        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName() + "_aftersend");
+        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName() + "_aftersend");
+    }
+
+    protected void fillForm() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
+        logger.info("Starting to fill the section 4 form: Angaben, for servicetype: {}",  serviceType);
+        enterFirstName();
+        enterLastName();
+        enterBirthdate();
+        enterEmail();
+
+        if (serviceType.equals(ServiceType.EXTEND_A_RESIDENCE_TITLE)) {
+            enterResidencePermitId();
+        }
+
+        if (serviceType.equals(ServiceType.APPLY_FOR_A_RESIDENCE_TITLE)) {
+            selectResidencePermit();
+        }
+
+        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName() + "_after_filling");
+        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName() + "_after_filling");
     }
 
     protected void enterFirstName() throws InterruptedException, ElementNotFoundTimeoutException {
@@ -73,17 +98,18 @@ public class Section4DetailsBAL {
     }
 
     protected void enterResidencePermitId() throws ElementNotFoundTimeoutException, InterruptedException {
+        logger.info("Entering the residence permit id");
         String elementId = RESIDENCE_PERMIT_NUMBER.getId();
         String elementDescription = RESIDENCE_PERMIT_NUMBER.name();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        element.sendKeys(residencePermitId.orElse("ABCSD123"));
+        element.sendKeys(residencePermitId.get());
     }
 
     protected void selectResidencePermit() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementId = RESIDENCE_PERMIT.getId();
         String elementDescription = RESIDENCE_PERMIT.getName();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        if (isResidencePermitPresent) {
+        if (isResidencePermitPresent.get()) {
             FormFillerUtils.selectOptionByValue(element, elementDescription, "1");
             enterResidencePermitId();
         } else {
@@ -98,16 +124,6 @@ public class Section4DetailsBAL {
         FormFillerUtils.clickToElement(element, elementDescription);
     }
 
-    protected void fillForm() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
-        logger.info("Starting to fill the section 4 form: Angaben");
-        enterFirstName();
-        enterLastName();
-        enterBirthdate();
-        enterEmail();
-        selectResidencePermit();
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "step4_fillform_");
-        FormFillerUtils.saveScreenshot(driver, "step4_fillform_");
-    }
 
     public RemoteWebDriver getDriver() {
         return this.driver;
