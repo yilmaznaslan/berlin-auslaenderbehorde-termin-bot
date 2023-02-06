@@ -2,7 +2,7 @@ package org.example.auslanderbehorde;
 
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.business.FormFillerUtils;
-import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDe;
+import org.example.auslanderbehorde.formfiller.enums.applyforavisa.EconomicActivityVisaDe;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

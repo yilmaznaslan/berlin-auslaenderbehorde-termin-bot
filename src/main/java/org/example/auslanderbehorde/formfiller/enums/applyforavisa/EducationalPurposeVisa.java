@@ -1,4 +1,4 @@
-package org.example.auslanderbehorde.formfiller.enums;
+package org.example.auslanderbehorde.formfiller.enums.applyforavisa;
 
 import org.example.auslanderbehorde.formfiller.intercaces.Visa;
 

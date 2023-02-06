@@ -1,6 +1,6 @@
 package org.example.auslanderbehorde.formfiller.business;
 
-import org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDe;
+import org.example.auslanderbehorde.formfiller.enums.applyforavisa.EconomicActivityVisaDe;
 import org.example.auslanderbehorde.formfiller.model.Section2FormInputs;
 import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
 import org.junit.jupiter.api.BeforeAll;

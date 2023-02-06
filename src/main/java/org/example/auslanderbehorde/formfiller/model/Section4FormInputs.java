@@ -2,6 +2,7 @@ package org.example.auslanderbehorde.formfiller.model;
 
 import org.example.auslanderbehorde.formfiller.enums.ServiceType;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class Section4FormInputs {
@@ -50,6 +51,32 @@ public class Section4FormInputs {
 
     public ServiceType getServiceType() {
         return serviceType;
+    }
+
+    @Override
+    public String toString() {
+        return "Section4FormInputs{" +
+                "name='" + name + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", emailAddress='" + emailAddress + '\'' +
+                ", birthdate='" + birthdate + '\'' +
+                ", isResidencePermitPresent=" + isResidencePermitPresent +
+                ", residencePermitId=" + residencePermitId +
+                ", serviceType=" + serviceType +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Section4FormInputs that = (Section4FormInputs) o;
+        return Objects.equals(name, that.name) && Objects.equals(lastname, that.lastname) && Objects.equals(emailAddress, that.emailAddress) && Objects.equals(birthdate, that.birthdate) && Objects.equals(isResidencePermitPresent, that.isResidencePermitPresent) && Objects.equals(residencePermitId, that.residencePermitId) && serviceType == that.serviceType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, lastname, emailAddress, birthdate, isResidencePermitPresent, residencePermitId, serviceType);
     }
 }
 

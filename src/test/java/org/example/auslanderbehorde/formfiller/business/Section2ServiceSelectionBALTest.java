@@ -7,7 +7,7 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import static org.example.auslanderbehorde.formfiller.enums.EconomicActivityVisaDe.BLUECARD;
+import static org.example.auslanderbehorde.formfiller.enums.applyforavisa.EconomicActivityVisaDe.BLUECARD;
 
 class Section2ServiceSelectionBALTest {
 
