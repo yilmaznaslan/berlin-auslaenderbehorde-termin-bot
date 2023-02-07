@@ -45,6 +45,7 @@ public class TerminFinder extends TimerTask {
                 driver = DriverManager.initDriverHeadless();
             } catch (Exception ex){
                 logger.error("Failed to initialize the driver. Reason: ", e);
+                driver.quit();
                 return;
             }
             return;

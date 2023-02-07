@@ -58,7 +58,7 @@ public class Section4Filler {
         enterEmail();
 
         if (serviceType.equals(ServiceType.EXTEND_A_RESIDENCE_TITLE)) {
-            enterResidencePermitId();
+            enterResidencePermitId(RESIDENCE_PERMIT_NUMBER_EXTENSION.getId());
         }
 
         if (serviceType.equals(ServiceType.APPLY_FOR_A_RESIDENCE_TITLE)) {
@@ -97,9 +97,8 @@ public class Section4Filler {
         element.sendKeys(birthdate);
     }
 
-    protected void enterResidencePermitId() throws ElementNotFoundTimeoutException, InterruptedException {
+    protected void enterResidencePermitId(String elementId) throws ElementNotFoundTimeoutException, InterruptedException {
         logger.info("Entering the residence permit id");
-        String elementId = RESIDENCE_PERMIT_NUMBER.getId();
         String elementDescription = RESIDENCE_PERMIT_NUMBER.name();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         element.sendKeys(residencePermitId.get());
@@ -111,7 +110,7 @@ public class Section4Filler {
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         if (isResidencePermitPresent.get()) {
             FormFillerUtils.selectOptionByValue(element, elementDescription, "1");
-            enterResidencePermitId();
+            enterResidencePermitId(RESIDENCE_PERMIT_NUMBER.getId());
         } else {
             FormFillerUtils.selectOptionByValue(element, elementDescription, "0");
         }
