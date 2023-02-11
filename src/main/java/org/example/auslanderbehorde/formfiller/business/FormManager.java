@@ -81,8 +81,8 @@ public class FormManager {
 
         if (isFormVerified(section4FormInputs_2)) {
             RemoteWebDriver remoteWebDriver = initDriverHeadless();
-            TerminFinder terminFinder_2 = new TerminFinder(section4FormInputs_2, section2FormInputs_2, remoteWebDriver);
-            terminFinder_2.startScanning();
+            //TerminFinder terminFinder_2 = new TerminFinder(section4FormInputs_2, section2FormInputs_2, remoteWebDriver);
+            //terminFinder_2.startScanning();
         }
     }
 

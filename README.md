@@ -2,28 +2,37 @@
 
 ## AWS EC2 Setup
 
-- Running the selenium in *t3.nano* failed.   Price: *$0.0052*
-- Running the selenium in *t2.medium* worked! Price  *$0.0464*
-- t3a.micro worked ->
+[ - ] *t3.nano* failed.   Price: *$0.0052*
+
+- [-] Running the selenium in *t2.medium* worked! Price  *$0.0464*
+- t3a.micro worked only for selenium and finder. Not for elastic
+
+- [x] **t3a.small**: Works
+
+- t4g.micro was not available
+
+
+Other recommandations
+- t4g.small
+- t4g.medium
 
 ![](ec2_price.png)
 
-1) Install docker and setup
-`sudo yum update -y && sudo yum install docker -y && sudo service docker start && sudo usermod -a -G docker ec2-user`
-`sudo systemctl start docker`
 
-2) Create a network in docker
-```
-docker network create termin
-```
-   
 
 ## How to dockerize
 
 
 `docker build --tag 'yilmaznaslan/berlinterminfinder:latest' .`
 
+docker build --tag yilmaznaslan/berlinterminfinder:latest --file DockerFileForDebian
+
+docker build -t yilmaznaslan/berlinterminfinder:pi -f DockerfileForDebian .
+
 `docker push yilmaznaslan/berlinterminfinder:latest`
+
+`docker push yilmaznaslan/berlinterminfinder:pi`
+
 
 `sudo docker run --name termifinder --network=termin yilmaznaslan/berlinterminfinder:latest`
 
