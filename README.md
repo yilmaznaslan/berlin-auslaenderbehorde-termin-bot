@@ -4,7 +4,9 @@ This application uses Selenium library to automate the process of getting an app
 Instead of notifying the person like other solutions, this application automatically **books** for you the requested *Termin* 
 
 ## How to run
-- [ ] Create   
+- [ ] Fill the *asd.json* file with your personal information
+  - Write the visa type according to the enum
+- Run the application in terminal by `./gradlew run`.
 
 ## How to deploy using AWS EC2 
 
