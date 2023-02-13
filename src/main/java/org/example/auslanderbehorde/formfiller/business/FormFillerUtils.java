@@ -37,7 +37,7 @@ public class FormFillerUtils {
                 Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
             } catch (Exception e) {
-                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
             }
             Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
             i++;
@@ -104,7 +104,7 @@ public class FormFillerUtils {
                 Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
             } catch (Exception e) {
-                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
             }
             Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
             i++;

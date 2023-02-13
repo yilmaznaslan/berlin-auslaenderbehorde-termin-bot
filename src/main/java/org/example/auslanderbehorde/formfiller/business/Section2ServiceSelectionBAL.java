@@ -80,7 +80,7 @@ public class Section2ServiceSelectionBAL {
         WebElement element = FormFillerUtils.getElementByXPath(elementXPath, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
         //element.click();
-        //logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());
+        //logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.firstName());
     }
 
     private void clickVisaGroup() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
@@ -91,7 +91,7 @@ public class Section2ServiceSelectionBAL {
         WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
         //element.click();
-        //logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());
+        //logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.firstName());
     }
 
     private void clickToVisa() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
@@ -100,7 +100,7 @@ public class Section2ServiceSelectionBAL {
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
         //element.click();
-        //logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());
+        //logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.firstName());
     }
 
     private void sendForm() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
@@ -109,7 +109,7 @@ public class Section2ServiceSelectionBAL {
         WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
         //element.click();
-        //logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.name());
+        //logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SeleniumProcessResultEnum.SUCCESSFUL.firstName());
         searchCount++;
         String msg = String.format("Completed search count: %s. SuccessfullyFormSenCount:%s, HandledAppoi.Count:%s, Found count: %s", searchCount, succesfullyFormSentCount, handledAppointmentCount, foundAppointmentCount);
         logger.info(msg);

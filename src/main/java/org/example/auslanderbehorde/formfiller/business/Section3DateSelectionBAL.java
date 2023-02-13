@@ -129,7 +129,7 @@ public class Section3DateSelectionBAL {
 
 
             } catch (StaleElementReferenceException | InterruptedException | ElementNotFoundTimeoutException e) {
-                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_TEXT.name(), SeleniumProcessResultEnum.FAILED.name(), e);
+                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_TEXT.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), e);
             }
             i++;
         }

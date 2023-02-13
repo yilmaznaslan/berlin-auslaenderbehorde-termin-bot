@@ -4,7 +4,6 @@ import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
-import org.example.notifications.Helper;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
@@ -143,7 +142,7 @@ public class SessionFinder {
                 Integer responseCode = response.code();
                 logger.info("ResponseCode: {}", responseCode);
                 response.close();
-                if(responseCode.equals(200)){
+                if (responseCode.equals(200)) {
                     break;
                 }
 

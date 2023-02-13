@@ -12,8 +12,8 @@ public class Controller {
     private final AtomicLong counter = new AtomicLong();
 
     @GetMapping("/search")
-    public String greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
-        return String.format(template, name, counter.incrementAndGet()
+    public String greeting(@RequestParam(value = "firstName", defaultValue = "World") String firstName) {
+        return String.format(template, firstName, counter.incrementAndGet()
         );
     }
 

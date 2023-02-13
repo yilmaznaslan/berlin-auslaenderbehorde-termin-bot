@@ -56,8 +56,8 @@ public class Section4FormInputs {
     @Override
     public String toString() {
         return "Section4FormInputs{" +
-                "name='" + name + '\'' +
-                ", lastname='" + lastname + '\'' +
+                "firstName='" + name + '\'' +
+                ", lastName='" + lastname + '\'' +
                 ", emailAddress='" + emailAddress + '\'' +
                 ", birthdate='" + birthdate + '\'' +
                 ", isResidencePermitPresent=" + isResidencePermitPresent +

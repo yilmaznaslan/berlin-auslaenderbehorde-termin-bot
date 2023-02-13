@@ -3,9 +3,9 @@ package org.example;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.formfiller.model.PersonalInfoDTO;
+import org.example.auslanderbehorde.formfiller.model.ResidenceTitleInfoDTO;
 
-import static org.example.auslanderbehorde.formfiller.business.FormManager.createDummyPersonalInfoDTA;
-import static org.example.auslanderbehorde.formfiller.business.FormManager.startForm;
+import static org.example.auslanderbehorde.formfiller.business.FormManager.*;
 
 //@SpringBootApplication
 public class Main {
@@ -14,7 +14,8 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         //SpringApplication.run(Main.class, args);
         PersonalInfoDTO personalInfoDTO = createDummyPersonalInfoDTA();
-        startForm(personalInfoDTO);
+        ResidenceTitleInfoDTO residenceTitleInfoDTO = readVisaInfo();
+        startForm(personalInfoDTO, residenceTitleInfoDTO);
         ThreadMonitor threadMonitor = new ThreadMonitor();
         threadMonitor.startMonitoring();
         while (true) {

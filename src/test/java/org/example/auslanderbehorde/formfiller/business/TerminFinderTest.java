@@ -18,7 +18,7 @@ class TerminFinderTest {
     static ChromeDriver driver;
     Section2FormInputs section2FormInputs = new Section2FormInputs("163", "1", "2", serviceType, EconomicActivityVisaDe.BLUECARD);
     String firstName = "firstName";
-    String lastName = "lastname";
+    String lastName = "lastName";
     String email = "yilmazn.aslan@gmail.com";
     String birthdate = "12.03.1993";
     String residencePermitId = "ABCSD12333";

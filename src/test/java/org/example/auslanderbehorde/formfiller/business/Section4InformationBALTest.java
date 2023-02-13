@@ -21,7 +21,7 @@ class Section4InformationBALTest {
     String path_DE = Section2ServiceSelection.class.getClassLoader().getResource("page_timeslot_0_2023-01-05_06:10:23.html").getPath();
     String url_DE = "file:".concat(path_DE);
     String firstName = "firstName";
-    String lastName = "lastname";
+    String lastName = "lastName";
     String email = "yilmazn.aslan@gmail.com";
     String birthdate = "12.03.1993";
     String residencePermitId = "123JSE421";
@@ -51,7 +51,7 @@ class Section4InformationBALTest {
 
         // THEN
         String elementId = FIRSTNAME.getId();
-        String elementDescription = FIRSTNAME.name();
+        String elementDescription = FIRSTNAME.firstName();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         Assertions.assertEquals(firstName, element.getAttribute("value"));
     }
@@ -68,7 +68,7 @@ class Section4InformationBALTest {
 
         // THEN
         String elementId = LASTNAME.getId();
-        String elementDescription = LASTNAME.name();
+        String elementDescription = LASTNAME.firstName();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         Assertions.assertEquals(lastName, element.getAttribute("value"));
         ;
@@ -86,7 +86,7 @@ class Section4InformationBALTest {
 
         // THEN
         String elementId = EMAIL.getId();
-        String elementDescription = EMAIL.name();
+        String elementDescription = EMAIL.firstName();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         Assertions.assertEquals(email, element.getAttribute("value"));
         ;
@@ -103,7 +103,7 @@ class Section4InformationBALTest {
 
         // THEN
         String elementId = BIRTHDATE.getId();
-        String elementDescription = BIRTHDATE.name();
+        String elementDescription = BIRTHDATE.firstName();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         Assertions.assertEquals(birthdate, element.getAttribute("value"));
     }
@@ -119,7 +119,7 @@ class Section4InformationBALTest {
 
         // THEN
         String elementId = RESIDENCE_PERMIT.getId();
-        String elementDescription = RESIDENCE_PERMIT.name();
+        String elementDescription = RESIDENCE_PERMIT.firstName();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         Select select = new Select(element);
         WebElement option = select.getFirstSelectedOption();
@@ -141,7 +141,7 @@ class Section4InformationBALTest {
 
         // THEN
         String elementId = RESIDENCE_PERMIT_NUMBER.getId();
-        String elementDescription = RESIDENCE_PERMIT_NUMBER.name();
+        String elementDescription = RESIDENCE_PERMIT_NUMBER.firstName();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         Assertions.assertEquals(residencePermitId, element.getAttribute("value"));
 
@@ -159,7 +159,7 @@ class Section4InformationBALTest {
 
         // THEN
         String elementId = RESIDENCE_PERMIT.getId();
-        String elementDescription = RESIDENCE_PERMIT.name();
+        String elementDescription = RESIDENCE_PERMIT.firstName();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         Select select = new Select(element);
         WebElement option = select.getFirstSelectedOption();
