@@ -45,3 +45,8 @@ docker build -t yilmaznaslan/berlinterminfinder:pi -f DockerfileForDebian .
 
 
 docker exec -ti 18b3d6e1415b sh
+
+
+
+## TODO: Kubernetes setup
+`kubectl create -f infra/selenium-hub-deployment.yaml`
