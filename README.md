@@ -18,7 +18,7 @@ In order to run selenium server you will need to install docket first. See
 ## How to run
 - Fill the [personInfoDTO.Json](src/main/resources/personalInfoDTO.json) file with your personal information
 - Fill the [residenceTitleInfoDTO.Json](src/main/resources/residenTitleInfoDTO.json)
-  - You can also coyp paste from a template that matches your request
+  - You can also copy paste from a template that matches your request
 - Run the application in terminal by `./gradlew run`.
 
 ## How to deploy using AWS EC2 
