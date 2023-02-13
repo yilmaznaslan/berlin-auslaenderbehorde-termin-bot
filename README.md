@@ -4,8 +4,9 @@ This application uses Selenium library to automate the process of getting an app
 Instead of notifying the person like other solutions, this application automatically **books** for you the requested *Termin* 
 
 ## Prerequisite
-In order to run selenium server you will need to install docket first. See 
+- In order to run selenium server you will need to install docket first. See 
 [Get Docker](https://docs.docker.com/get-docker/) for more info.
+
 
 ## How to setup
 1. Run SeleniumHub 
@@ -17,23 +18,24 @@ In order to run selenium server you will need to install docket first. See
 
 ## How to run
 - Fill the [personInfoDTO.Json](src/main/resources/personalInfoDTO.json) file with your personal information
-- Fill the [residenceTitleInfoDTO.Json](src/main/resources/residenTitleInfoDTO.json)
-  - You can also copy paste from a template that matches your request
+- Fill the [residenceTitleInfoDTO.Json](src/main/resources/residentTitleInfoDTO.json) with your visa request.
+  - You can also copy-paste from a template that matches your request
+- Save the following environmental variables 
+  - `export SELENIUM_GRID_HOST='localhost'`
+  - `export ELASTICSEARCH_HOST='localhost'` [OPTIONAL]  
 - Run the application in terminal by `./gradlew run`.
+  - You will get the email from *LEA* once the bot booked the termin. 
+  - REMEMBER: Due to very limited number of available spots, you might need to run the script for a week !
 
-## How to deploy using AWS EC2 
+## TODO: How to deploy using AWS EC2 
 
-[ - ] *t3.nano* failed.   Price: *$0.0052*
-
+- [ ] *t3.nano* failed.   Price: *$0.0052*
 - [-] Running the selenium in *t2.medium* worked! Price  *$0.0464*
 - t3a.micro worked only for selenium and finder. Not for elastic
-
 - [x] **t3a.small**: Works
-
 - t4g.micro was not available
 
-
-Other recommandations
+Other recommendations
 - t4g.small
 - t4g.medium
 
@@ -42,24 +44,12 @@ Other recommandations
 docker exec -it 4c85e0506977 /bin/bash
 
 ## How to dockerize
+- First create a fatjar `./gradlew shadowJar`
+- Build the image `docker build --tag yilmaznaslan/berlinterminfinder:latest --file Dockerfile .`
+- Push the image to a docker registery `docker push yilmaznaslan/berlinterminfinder:latest`
 
-`docker build --tag 'yilmaznaslan/berlinterminfinder:latest' .`
-
-docker build --tag yilmaznaslan/berlinterminfinder:latest --file DockerFileForDebian
-
-docker build -t yilmaznaslan/berlinterminfinder:pi -f DockerfileForDebian .
-
-`docker push yilmaznaslan/berlinterminfinder:latest`
-
-`docker push yilmaznaslan/berlinterminfinder:pi`
-
-
-`sudo docker run --name termifinder --network=termin yilmaznaslan/berlinterminfinder:latest`
-
-
-docker exec -ti 18b3d6e1415b sh
-
-
+### Extra
+- Connect to the containers shell `docker exec -ti 18b3d6e1415b /bin/bash`
 
 ## TODO: Kubernetes setup
 `kubectl create -f infra/selenium-hub-deployment.yaml`
