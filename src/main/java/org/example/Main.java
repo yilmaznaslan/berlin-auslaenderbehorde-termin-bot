@@ -17,16 +17,6 @@ public class Main {
         startForm(personalInfoDTO);
         ThreadMonitor threadMonitor = new ThreadMonitor();
         threadMonitor.startMonitoring();
-        /*
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            logger.info("Shutdown hook ran!");
-            terminFinder.cancel();
-            terminFinder.getDriver().quit();
-            logger.info("quitted the driver");
-            remoteWebDriver.quit();
-        }
-        ));
-         */
         while (true) {
             Thread.sleep(1000);
         }
