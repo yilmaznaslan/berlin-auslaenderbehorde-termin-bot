@@ -1,5 +1,6 @@
 package org.example.auslanderbehorde.formfiller.business;
 
+import org.example.auslanderbehorde.formfiller.enums.ServiceType;
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.formfiller.model.Section2FormInputs;
@@ -16,7 +17,7 @@ class Section2ServiceSelectionBALTest {
 
     static ChromeDriver driver;
 
-    Section2FormInputs section2FormInputs = new Section2FormInputs("turkey", "1", "0", serviceType, BLUECARD);
+    Section2FormInputs section2FormInputs = new Section2FormInputs("turkey", "1", "0", ServiceType.APPLY_FOR_A_RESIDENCE_TITLE, BLUECARD);
 
     @BeforeAll
     static void initDriver() {

@@ -1,5 +1,6 @@
 package org.example.auslanderbehorde.formfiller.business;
 
+import org.example.auslanderbehorde.formfiller.enums.ServiceType;
 import org.example.auslanderbehorde.formfiller.enums.applyforavisa.EconomicActivityVisaDe;
 import org.example.auslanderbehorde.formfiller.model.Section2FormInputs;
 import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
@@ -16,13 +17,13 @@ import static org.mockito.Mockito.*;
 class TerminFinderTest {
 
     static ChromeDriver driver;
-    Section2FormInputs section2FormInputs = new Section2FormInputs("163", "1", "2", serviceType, EconomicActivityVisaDe.BLUECARD);
+    Section2FormInputs section2FormInputs = new Section2FormInputs("163", "1", "2", ServiceType.APPLY_FOR_A_RESIDENCE_TITLE, EconomicActivityVisaDe.BLUECARD);
     String firstName = "firstName";
     String lastName = "lastName";
     String email = "yilmazn.aslan@gmail.com";
     String birthdate = "12.03.1993";
     String residencePermitId = "ABCSD12333";
-    Section4FormInputs section4FormInputs = new Section4FormInputs(firstName, lastName, email, birthdate, false, Optional.of(residencePermitId), serviceType);
+    Section4FormInputs section4FormInputs = new Section4FormInputs(firstName, lastName, email, birthdate, Optional.of(false), Optional.of(residencePermitId), ServiceType.APPLY_FOR_A_RESIDENCE_TITLE);
 
 
     @BeforeAll
@@ -54,7 +55,5 @@ class TerminFinderTest {
 
     }
 
-    @Test
-    void run() {
-    }
+
 }

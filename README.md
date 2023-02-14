@@ -1,7 +1,8 @@
 # Berlin Termin Bot
 
 This application uses Selenium library to automate the process of getting an appointment in Berlin Ausländerbehörde.
-Instead of notifying the person like other solutions, this application automatically **books** for you the requested *Termin* 
+Instead of notifying the person like other solutions, this application automatically **books** for you the requested *Termin*
+
 
 ## Prerequisite
 - In order to run selenium server you will need to install docket first. See 
