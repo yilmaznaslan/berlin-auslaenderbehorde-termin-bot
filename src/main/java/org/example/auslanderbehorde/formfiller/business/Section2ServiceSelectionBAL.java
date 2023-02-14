@@ -46,7 +46,7 @@ public class Section2ServiceSelectionBAL {
         String elementName = COUNTRY.getId();
         String elementDescription = COUNTRY.name();
         WebElement element = FormFillerUtils.getElementById(elementName, elementDescription, driver);
-        FormFillerUtils.selectOptionByValue(element, elementDescription, citizenshipValue);
+        FormFillerUtils.selectOptionByVisibleText(element, elementDescription, citizenshipValue);
     }
 
     private void selectApplicantsCount() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
@@ -54,11 +54,6 @@ public class Section2ServiceSelectionBAL {
         String elementDescription = APPLICANT_COUNT.name();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         FormFillerUtils.selectOptionByValue(element, elementDescription, applicantNumber);
-        //Select select = new Select(element);
-        //select.selectByValue(applicantNumber);
-        //WebElement option = select.getFirstSelectedOption();
-        //String selectValue = option.getText();
-        //logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
     }
 
     private void selectFamilyStatus() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {

@@ -16,7 +16,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public class FormFillerUtils {
     private static final Logger logger = LogManager.getLogger(FormFillerUtils.class);
@@ -150,6 +149,33 @@ public class FormFillerUtils {
             try {
                 Select select = new Select(element);
                 select.selectByValue(optionValue);
+                WebElement option = select.getFirstSelectedOption();
+                String selectValue = option.getText();
+                logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
+                break;
+            } catch (Exception e) {
+                //logger.warn("Element: {}. Process: Select, Result: Failed Reason:{}", elementDescription, e.getMessage());
+            }
+            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+            i++;
+        }
+        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+            logWarn(elementDescription, SeleniumProcessEnum.SELECTING_OPTION.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            throw new InteractionFailedException("");
+        }
+    }
+
+    public static void selectOptionByVisibleText(WebElement element, String elementDescription, String optionValue) throws InteractionFailedException, InterruptedException {
+        if (element == null) {
+            logger.warn("Element:{} is null, Process: Select can not be continued", elementDescription);
+            return;
+        }
+        int i = 0;
+        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
+            try {
+                Select select = new Select(element);
+                select.selectByVisibleText(optionValue);
+                //select.selectByValue(optionValue);
                 WebElement option = select.getFirstSelectedOption();
                 String selectValue = option.getText();
                 logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
