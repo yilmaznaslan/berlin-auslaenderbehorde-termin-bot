@@ -1,24 +1,23 @@
-# Berlin Termin Bot
+# Berlin Auslaenderbehorde Termin Bot
 
 This application uses Selenium library to automate the process of getting an appointment in Berlin Ausländerbehörde.
 Instead of notifying the person like other solutions, this application automatically **books** for you the requested *Termin*
 
 
-## Prerequisite
-- In order to run selenium server you will need to install docket first. See 
-[Get Docker](https://docs.docker.com/get-docker/) for more info.
-
-
 ## How to setup
-1. Run SeleniumHub 
+1. In order to run selenium server you will need to install docket first. See [Get Docker](https://docs.docker.com/get-docker/) for more info.
+   - Create a network `docker network create termin`
+   
+2. Run SeleniumHub 
    - `source infra/init_seleniumgrid.sh`
 
-2. Run Elasticsearch(Optional) 
+3. Run Elasticsearch(Optional) 
    - `source infra/init_elasticsearch.sh`
    - If you don't need elasticsearch for log management, deactivate the elasticsearch appender in [log4j2.xml](src/main/resources/log4j2.xml)
 
 ## How to run
 - Fill the [personInfoDTO.Json](src/main/resources/personalInfoDTO.json) file with your personal information
+  - Write the Country value in German as displayed.![img](doc/countryName.png) 
 - Fill the [residenceTitleInfoDTO.Json](src/main/resources/residentTitleInfoDTO.json) with your visa request.
   - You can also copy-paste from a template that matches your request
 - Save the following environmental variables 
