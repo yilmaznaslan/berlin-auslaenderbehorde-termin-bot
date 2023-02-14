@@ -1,5 +1,5 @@
 echo "Starting the kibana"
-sudo docker run \
+docker run \
   --name kibana \
   --net termin \
   -p 5601:5601 \
