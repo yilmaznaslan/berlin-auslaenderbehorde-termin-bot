@@ -28,10 +28,9 @@
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
-        <RollingFile name="infoLogFileJson" fileName="${APP_LOG_ROOT}/search-info.json"
+        <!-- <RollingFile name="infoLogFileJson" fileName="${APP_LOG_ROOT}/search-info.json"
                      filePattern="${APP_LOG_ROOT}/search-info-%d{yyyy-MM-dd}-%i.json" >
             <JSONLayout compact="false" complete="true" eventEol="true" properties="true" stacktraceAsString="true" includeTimeMillis="true">
-                <!--  Project properties -->
                 <KeyValuePair key="seleniumProcess" value="${ctx:seleniumProcess}" />
                 <KeyValuePair key="formId" value="${ctx:formId}" />
             </JSONLayout>
@@ -39,7 +38,7 @@
                 <SizeBasedTriggeringPolicy size="195000KB" />
             </Policies>
             <DefaultRolloverStrategy max="10"/>
-        </RollingFile>
+        </RollingFile> -->
         <Http name="elasticsearch" url="${ELASTICSEARCH_URL}">
             <JSONLayout compact="true" complete="false" eventEol="true" properties="true" stacktraceAsString="true" includeTimeMillis="true">
                 <!--  Project properties -->
