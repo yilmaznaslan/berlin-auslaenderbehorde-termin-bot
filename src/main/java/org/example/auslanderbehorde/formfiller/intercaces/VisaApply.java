@@ -1,6 +1,6 @@
 package org.example.auslanderbehorde.formfiller.intercaces;
 
-public interface VisaApply extends Visa{
+public interface VisaApply extends Visa {
 
     String getId();
 

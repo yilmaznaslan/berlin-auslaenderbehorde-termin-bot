@@ -13,8 +13,8 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException {
         //SpringApplication.run(Main.class, args);
-        PersonalInfoDTO personalInfoDTO = createDummyPersonalInfoDTA();
-        ResidenceTitleInfoDTO residenceTitleInfoDTO = readVisaInfo();
+        PersonalInfoDTO personalInfoDTO = readPersonalInfoFromFile();
+        ResidenceTitleInfoDTO residenceTitleInfoDTO = readVisaInfoFromFile();
         startForm(personalInfoDTO, residenceTitleInfoDTO);
         ThreadMonitor threadMonitor = new ThreadMonitor();
         threadMonitor.startMonitoring();

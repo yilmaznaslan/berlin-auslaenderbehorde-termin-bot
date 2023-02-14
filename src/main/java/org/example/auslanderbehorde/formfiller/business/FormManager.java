@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.formfiller.enums.ServiceType;
 import org.example.auslanderbehorde.formfiller.enums.visaextension.VisaExtensionForEducationalPurposeVisaEnum_DE;
+import org.example.auslanderbehorde.formfiller.enums.applyforavisa.EconomicActivityVisaDe;
 import org.example.auslanderbehorde.formfiller.model.PersonalInfoDTO;
 import org.example.auslanderbehorde.formfiller.model.ResidenceTitleInfoDTO;
 import org.example.auslanderbehorde.formfiller.model.Section2FormInputs;
@@ -16,13 +17,12 @@ import java.io.InputStream;
 import java.util.Optional;
 
 import static org.example.auslanderbehorde.formfiller.business.DriverManager.initDriverHeadless;
-import static org.example.auslanderbehorde.formfiller.enums.applyforavisa.EconomicActivityVisaDe.BLUECARD;
 
 public class FormManager {
 
     public final static Logger logger = LogManager.getLogger(FormManager.class);
 
-    public static PersonalInfoDTO createDummyPersonalInfoDTA() {
+    public static PersonalInfoDTO readPersonalInfoFromFile() {
         ObjectMapper mapper = new ObjectMapper();
         InputStream is = PersonalInfoDTO.class.getResourceAsStream("/personalInfoDTO.json");
         try {
@@ -32,7 +32,7 @@ public class FormManager {
         }
     }
 
-    public static ResidenceTitleInfoDTO readVisaInfo(){
+    public static ResidenceTitleInfoDTO readVisaInfoFromFile(){
         ObjectMapper mapper = new ObjectMapper();
         InputStream is = ResidenceTitleInfoDTO.class.getResourceAsStream("/residentTitleInfoDTO.json");
         try {
@@ -55,7 +55,7 @@ public class FormManager {
                 personalInfoDTO.applicationsNumber(),
                 personalInfoDTO.familyStatus(),
                 residenceTitleInfoDTO.serviceType(),
-                BLUECARD);
+                EconomicActivityVisaDe.BLUECARD);
 
         Section4FormInputs section4FormInputs = new Section4FormInputs(
                 personalInfoDTO.firstName(),
@@ -89,7 +89,7 @@ public class FormManager {
     }
 
     public static boolean isFormVerified(Section4FormInputs formInputs) {
-        logger.info("Verifying form: {}", formInputs.toString());
+        logger.info("Verifying form: {}", formInputs);
         ServiceType serviceType = formInputs.getServiceType();
         Optional<Boolean> isResidencePermitPresent = formInputs.getIsResidencePermitPresent();
         Optional<String> residencePermitId = formInputs.getResidencePermitId();
