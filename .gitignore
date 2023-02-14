@@ -43,4 +43,5 @@ bin/
 /logs/
 /src/main/resources/scripts/work_mac_os.cer
 /.idea/
-/.idea/
+
+*.cer
