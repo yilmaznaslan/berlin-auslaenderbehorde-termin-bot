@@ -12,6 +12,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 public class TerminFinder extends TimerTask {
 
@@ -114,8 +115,8 @@ public class TerminFinder extends TimerTask {
         currentWindowHandle = sessionFinder.getDriver().getWindowHandle();
         Set<String> handle = driver.getWindowHandles();
         handle.forEach((asd) -> logger.info(String.format("Window handle: " + asd)));
-        logger.info(String.format("Closing the  window handle: %s", handle.stream().toList().get(0)));
-        driver.switchTo().window(handle.stream().toList().get(0)).close();
+        logger.info(String.format("Closing the  window handle: %s", handle.stream().collect(Collectors.toList()).get(0)));
+        driver.switchTo().window(handle.stream().collect(Collectors.toList()).get(0)).close();
         logger.info(String.format("Switching to window handle: %s", currentWindowHandle));
         driver.switchTo().window(currentWindowHandle);
         getFormPage(sessionInfo.getRequestId(), sessionInfo.getDswid(), sessionInfo.getDsrid());

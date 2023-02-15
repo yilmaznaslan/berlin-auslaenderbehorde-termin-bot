@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static org.example.auslanderbehorde.formfiller.business.DriverManager.initDriverHeadless;
 
@@ -91,8 +92,8 @@ public class SessionFinder {
 
     private void extractDswidAndDsrid(String queryStr) {
         List<String> queryStrings = List.of(queryStr.split("&"));
-        String dsrid = Arrays.stream(queryStrings.get(0).split("=")).toList().get(1);
-        String dswid = Arrays.stream(queryStrings.get(1).split("=")).toList().get(1);
+        String dsrid = Arrays.stream(queryStrings.get(0).split("=")).collect(Collectors.toList()).get(1);
+        String dswid = Arrays.stream(queryStrings.get(1).split("=")).collect(Collectors.toList()).get(1);
         this.sessionInfo = new SessionInfo(dswid, dsrid);
         logger.info(String.format("Dswid: %s, Dsrid: %s", dswid, dsrid));
     }
