@@ -44,34 +44,34 @@ public class FormManager {
 
     public static void startForm(PersonalInfoDTO personalInfoDTO, ResidenceTitleInfoDTO residenceTitleInfoDTO) {
         Section2FormInputs section2FormInputs = new Section2FormInputs(
-                personalInfoDTO.citizenshipValue(),
-                personalInfoDTO.applicationsNumber(),
-                personalInfoDTO.familyStatus(),
-                residenceTitleInfoDTO.serviceType(),
+                personalInfoDTO.getCitizenshipValue(),
+                personalInfoDTO.getApplicationsNumber(),
+                personalInfoDTO.getFamilyStatus(),
+                residenceTitleInfoDTO.getServiceType(),
                 VisaExtensionForEducationalPurposeVisaEnum_DE.PURPOSE_OF_STUDYING);
 
         Section2FormInputs section2FormInputs_2 = new Section2FormInputs(
-                personalInfoDTO.citizenshipValue(),
-                personalInfoDTO.applicationsNumber(),
-                personalInfoDTO.familyStatus(),
-                residenceTitleInfoDTO.serviceType(),
+                personalInfoDTO.getCitizenshipValue(),
+                personalInfoDTO.getApplicationsNumber(),
+                personalInfoDTO.getFamilyStatus(),
+                residenceTitleInfoDTO.getServiceType(),
                 EconomicActivityVisaDe.BLUECARD);
 
         Section4FormInputs section4FormInputs = new Section4FormInputs(
-                personalInfoDTO.firstName(),
-                personalInfoDTO.lastName(),
-                personalInfoDTO.emailAddress(),
-                personalInfoDTO.birthdate(),
+                personalInfoDTO.getFirstName(),
+                personalInfoDTO.getLastName(),
+                personalInfoDTO.getEmailAddress(),
+                personalInfoDTO.getBirthdate(),
                 Optional.empty(),
-                Optional.of(residenceTitleInfoDTO.residencePermitId()),
+                Optional.of(residenceTitleInfoDTO.getResidencePermitId()),
                 ServiceType.EXTEND_A_RESIDENCE_TITLE);
         Section4FormInputs section4FormInputs_2 = new Section4FormInputs(
-                personalInfoDTO.firstName(),
-                personalInfoDTO.lastName(),
-                personalInfoDTO.emailAddress(),
-                personalInfoDTO.birthdate(),
+                personalInfoDTO.getFirstName(),
+                personalInfoDTO.getLastName(),
+                personalInfoDTO.getEmailAddress(),
+                personalInfoDTO.getBirthdate(),
                 Optional.of(true),
-                Optional.of(residenceTitleInfoDTO.residencePermitId()),
+                Optional.of(residenceTitleInfoDTO.getResidencePermitId()),
                 ServiceType.APPLY_FOR_A_RESIDENCE_TITLE);
 
         if (isFormVerified(section4FormInputs)) {
