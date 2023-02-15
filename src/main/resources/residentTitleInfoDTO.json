@@ -1,5 +1,6 @@
 {
-  "isResidencePermitPresent":  null,
+  "isResidencePermitPresent":  true,
   "residencePermitId": "D12123123",
-  "serviceType": "EXTEND_A_RESIDENCE_TITLE"
+  "serviceType": "APPLY_FOR_A_RESIDENCE_TITLE",
+  "visaType": ""
 }

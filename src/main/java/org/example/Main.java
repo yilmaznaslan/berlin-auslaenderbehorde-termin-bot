@@ -15,7 +15,12 @@ public class Main {
         //SpringApplication.run(Main.class, args);
         PersonalInfoDTO personalInfoDTO = readPersonalInfoFromFile();
         ResidenceTitleInfoDTO residenceTitleInfoDTO = readVisaInfoFromFile();
-        startForm(personalInfoDTO, residenceTitleInfoDTO);
+        if(isResidenceTitleInfoVerified(residenceTitleInfoDTO)){
+            logger.info("Successfully validated form: {}", residenceTitleInfoDTO);
+            startForm(personalInfoDTO, residenceTitleInfoDTO);
+        }else{
+            logger.error("Failed validate form: {}", residenceTitleInfoDTO);
+        }
         ThreadMonitor threadMonitor = new ThreadMonitor();
         threadMonitor.startMonitoring();
         while (true) {

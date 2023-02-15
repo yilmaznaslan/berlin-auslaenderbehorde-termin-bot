@@ -23,8 +23,8 @@ public class Section4Filler {
     private final String lastName;
     private final String emailAddress;
     private final String birthdate;
-    private final Optional<Boolean> isResidencePermitPresent;
-    private final Optional<String> residencePermitId;
+    private final Boolean isResidencePermitPresent;
+    private final String residencePermitId;
     private final ServiceType serviceType;
     private final RemoteWebDriver driver;
 
@@ -36,7 +36,7 @@ public class Section4Filler {
         this.lastName = formInputs.getLastname();
         this.emailAddress = formInputs.getEmailAddress();
         this.birthdate = formInputs.getBirthdate();
-        this.isResidencePermitPresent = formInputs.getIsResidencePermitPresent();
+        this.isResidencePermitPresent = formInputs.getResidencePermitPresent();
     }
 
     public void fillAndSendForm() throws ElementNotFoundTimeoutException, InteractionFailedException, InterruptedException {
@@ -101,14 +101,14 @@ public class Section4Filler {
         logger.info("Entering the residence permit id");
         String elementDescription = RESIDENCE_PERMIT_NUMBER.name();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        element.sendKeys(residencePermitId.get());
+        element.sendKeys(residencePermitId);
     }
 
     protected void selectResidencePermit() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementId = RESIDENCE_PERMIT.getId();
         String elementDescription = RESIDENCE_PERMIT.getName();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        if (isResidencePermitPresent.get()) {
+        if (isResidencePermitPresent) {
             FormFillerUtils.selectOptionByValue(element, elementDescription, "1");
             enterResidencePermitId(RESIDENCE_PERMIT_NUMBER.getId());
         } else {

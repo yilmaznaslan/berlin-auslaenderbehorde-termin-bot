@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.formfiller.enums.ServiceType;
-import org.example.auslanderbehorde.formfiller.enums.visaextension.VisaExtensionForEducationalPurposeVisaEnum_DE;
 import org.example.auslanderbehorde.formfiller.enums.applyforavisa.EconomicActivityVisaDe;
+import org.example.auslanderbehorde.formfiller.enums.visaextension.VisaExtensionForEducationalPurposeVisaEnum_DE;
 import org.example.auslanderbehorde.formfiller.model.PersonalInfoDTO;
 import org.example.auslanderbehorde.formfiller.model.ResidenceTitleInfoDTO;
 import org.example.auslanderbehorde.formfiller.model.Section2FormInputs;
@@ -14,7 +14,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Optional;
 
 import static org.example.auslanderbehorde.formfiller.business.DriverManager.initDriverHeadless;
 
@@ -32,7 +31,7 @@ public class FormManager {
         }
     }
 
-    public static ResidenceTitleInfoDTO readVisaInfoFromFile(){
+    public static ResidenceTitleInfoDTO readVisaInfoFromFile() {
         ObjectMapper mapper = new ObjectMapper();
         InputStream is = ResidenceTitleInfoDTO.class.getResourceAsStream("/residentTitleInfoDTO.json");
         try {
@@ -42,7 +41,42 @@ public class FormManager {
         }
     }
 
+    public static boolean isResidenceTitleInfoVerified(ResidenceTitleInfoDTO residenceTitleInfoDTO) {
+        logger.info("Verifying form: {}", residenceTitleInfoDTO);
+        ServiceType serviceType = residenceTitleInfoDTO.getServiceType();
+        Boolean isResidencePermitPresent = residenceTitleInfoDTO.getResidencePermitPresent();
+        String residencePermitId = residenceTitleInfoDTO.getResidencePermitId();
+
+        if (serviceType.equals(ServiceType.APPLY_FOR_A_RESIDENCE_TITLE)) {
+            if (isResidencePermitPresent == null) {
+                return false;
+            }
+
+            if (isResidencePermitPresent && residencePermitId == null) {
+                return false;
+            }
+
+            if (!isResidencePermitPresent && residencePermitId != null) {
+                return false;
+            }
+        }
+
+        if (serviceType.equals(ServiceType.EXTEND_A_RESIDENCE_TITLE)) {
+            if (isResidencePermitPresent != null) {
+                return false;
+            }
+
+            if (residencePermitId == null) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public static void startForm(PersonalInfoDTO personalInfoDTO, ResidenceTitleInfoDTO residenceTitleInfoDTO) {
+
+
         Section2FormInputs section2FormInputs = new Section2FormInputs(
                 personalInfoDTO.getCitizenshipValue(),
                 personalInfoDTO.getApplicationsNumber(),
@@ -62,63 +96,29 @@ public class FormManager {
                 personalInfoDTO.getLastName(),
                 personalInfoDTO.getEmailAddress(),
                 personalInfoDTO.getBirthdate(),
-                Optional.empty(),
-                Optional.of(residenceTitleInfoDTO.getResidencePermitId()),
+                residenceTitleInfoDTO.getResidencePermitPresent(),
+                residenceTitleInfoDTO.getResidencePermitId(),
                 ServiceType.EXTEND_A_RESIDENCE_TITLE);
         Section4FormInputs section4FormInputs_2 = new Section4FormInputs(
                 personalInfoDTO.getFirstName(),
                 personalInfoDTO.getLastName(),
                 personalInfoDTO.getEmailAddress(),
                 personalInfoDTO.getBirthdate(),
-                Optional.of(true),
-                Optional.of(residenceTitleInfoDTO.getResidencePermitId()),
+                true,
+                residenceTitleInfoDTO.getResidencePermitId(),
                 ServiceType.APPLY_FOR_A_RESIDENCE_TITLE);
 
-        if (isFormVerified(section4FormInputs)) {
-            RemoteWebDriver remoteWebDriver = initDriverHeadless();
-            TerminFinder terminFinder = new TerminFinder(section4FormInputs, section2FormInputs, remoteWebDriver);
-            terminFinder.startScanning();
-        }
+
+        RemoteWebDriver remoteWebDriver = initDriverHeadless();
+        TerminFinder terminFinder = new TerminFinder(section4FormInputs, section2FormInputs, remoteWebDriver);
+        terminFinder.startScanning();
 
 
-        if (isFormVerified(section4FormInputs_2)) {
-            //RemoteWebDriver remoteWebDriver = initDriverHeadless();
-            //TerminFinder terminFinder_2 = new TerminFinder(section4FormInputs_2, section2FormInputs_2, remoteWebDriver);
-            //terminFinder_2.startScanning();
-        }
+        //RemoteWebDriver remoteWebDriver = initDriverHeadless();
+        //TerminFinder terminFinder_2 = new TerminFinder(section4FormInputs_2, section2FormInputs_2, remoteWebDriver);
+        //terminFinder_2.startScanning();
+
     }
 
-    public static boolean isFormVerified(Section4FormInputs formInputs) {
-        logger.info("Verifying form: {}", formInputs);
-        ServiceType serviceType = formInputs.getServiceType();
-        Optional<Boolean> isResidencePermitPresent = formInputs.getIsResidencePermitPresent();
-        Optional<String> residencePermitId = formInputs.getResidencePermitId();
-
-        if (serviceType.equals(ServiceType.APPLY_FOR_A_RESIDENCE_TITLE)) {
-            if (isResidencePermitPresent.isEmpty()) {
-                return false;
-            }
-
-            if (isResidencePermitPresent.get() && residencePermitId.isEmpty()) {
-                return false;
-            }
-
-            if (!isResidencePermitPresent.get() && residencePermitId.isPresent()) {
-                return false;
-            }
-        }
-
-        if (serviceType.equals(ServiceType.EXTEND_A_RESIDENCE_TITLE)) {
-            if (isResidencePermitPresent.isPresent()) {
-                return false;
-            }
-
-            if (residencePermitId.isEmpty()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
 
 }

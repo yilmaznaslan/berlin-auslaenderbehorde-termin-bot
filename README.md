@@ -3,6 +3,9 @@
 This application uses Selenium library to automate the process of getting an appointment in Berlin Ausländerbehörde.
 Instead of notifying the person like other solutions, this application automatically **books** for you the requested *Termin*
 
+## Supported Visa Services
+Currently, only **Apply for a residence title** and **Extend a residence title** services are supported;
+![](doc/supportedServices.png)
 
 ## How to setup
 1. In order to run selenium server you will need to install docket first. See [Get Docker](https://docs.docker.com/get-docker/) for more info.

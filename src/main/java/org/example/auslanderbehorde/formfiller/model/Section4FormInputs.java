@@ -11,11 +11,11 @@ public class Section4FormInputs {
     private final String lastname;
     private final String emailAddress;
     private final String birthdate;
-    private final Optional<Boolean> isResidencePermitPresent;
-    private final Optional<String> residencePermitId;
+    private final Boolean isResidencePermitPresent;
+    private final String residencePermitId;
     private final ServiceType serviceType;
 
-    public Section4FormInputs(String name, String lastname, String emailAddress, String birthdate, Optional<Boolean> isResidencePermitPresent, Optional<String> residencePermitId, ServiceType serviceType) {
+    public Section4FormInputs(String name, String lastname, String emailAddress, String birthdate, Boolean isResidencePermitPresent, String residencePermitId, ServiceType serviceType) {
         this.name = name;
         this.lastname = lastname;
         this.emailAddress = emailAddress;
@@ -41,11 +41,11 @@ public class Section4FormInputs {
         return birthdate;
     }
 
-    public Optional<Boolean> getIsResidencePermitPresent() {
+    public Boolean getResidencePermitPresent() {
         return isResidencePermitPresent;
     }
 
-    public Optional<String> getResidencePermitId() {
+    public String getResidencePermitId() {
         return residencePermitId;
     }
 
