@@ -6,12 +6,14 @@ Instead of notifying the person like other solutions, this application automatic
 
 ## How to setup
 1. In order to run selenium server you will need to install docket first. See [Get Docker](https://docs.docker.com/get-docker/) for more info.
-   - Create a network `docker network create termin`
+    
+2. Create a docker network 
+   - `docker network create termin`
    
-2. Run SeleniumHub 
+3. Start SeleniumHub server 
    - `source infra/init_seleniumgrid.sh`
 
-3. Run Elasticsearch(Optional) 
+4. Run Elasticsearch server[OPTIONAL]. 
    - `source infra/init_elasticsearch.sh`
    - If you don't need elasticsearch for log management, deactivate the elasticsearch appender in [log4j2.xml](src/main/resources/log4j2.xml)
 
