@@ -18,9 +18,9 @@ Instead of notifying the person like other solutions, this application automatic
 
 ## How to run
 - Fill the [personInfoDTO.Json](src/main/resources/PERSONAL_INFO_FORM_default.json) file with your personal information
-  - Write the Country value in German as displayed.![img](doc/countryName.png) 
+  - Write the Country value in German as displayed on the browser
 - Fill the [visaFormTO.Json](src/main/resources/APPLY_FOR_A_RESIDENCE_TITLE_default.json) with your visa request.
-  - You can also copy-paste from a template that matches your request
+  - You can also copy-paste from a template that matches your request. Or copy paste values as displayed in german language
 - Save the following environmental variables 
   - `export SELENIUM_GRID_HOST='localhost'`
   - `export ELASTICSEARCH_HOST='localhost'` [OPTIONAL]  
