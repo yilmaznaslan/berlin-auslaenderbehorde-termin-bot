@@ -2,7 +2,6 @@ package org.example.auslanderbehorde.formfiller.business;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.formfiller.enums.ServiceType;
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.formfiller.model.PersonalInfoFormTO;
@@ -56,7 +55,7 @@ public class Section4Filler {
         enterBirthdate();
         enterEmail();
 
-        if (serviceType.equals(ServiceType.EXTEND_A_RESIDENCE_TITLE)) {
+        if (serviceType.equals("Aufenthaltstitel - verlängern")) {
             enterResidencePermitId(RESIDENCE_PERMIT_NUMBER_EXTENSION.getId());
         }
 
