@@ -14,7 +14,7 @@ Instead of notifying the person like other solutions, this application automatic
 
 4. Run Elasticsearch server[OPTIONAL]. 
    - `source infra/init_elasticsearch.sh`
-   - If you don't need elasticsearch for log management, deactivate the elasticsearch appender in [log4j2.xml](src/main/resources/log4j2.xml)
+   - If you want elasticsearch for log management, activate the elasticsearch appender in [log4j2.xml](src/main/resources/log4j2.xml)
 
 ## How to run
 - Fill the [personInfoDTO.Json](src/main/resources/PERSONAL_INFO_FORM_default.json) file with your personal information
