@@ -2,8 +2,9 @@ package org.example.auslanderbehorde.formfiller.business;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.formfiller.model.Section2FormInputs;
+import org.example.auslanderbehorde.formfiller.model.PersonalInfoFormTO;
 import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
+import org.example.auslanderbehorde.formfiller.model.VisaFormTO;
 import org.example.auslanderbehorde.sessionfinder.business.SessionFinder;
 import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
 import org.openqa.selenium.WindowType;
@@ -18,16 +19,18 @@ public class TerminFinder extends TimerTask {
 
     private final Logger logger = LogManager.getLogger(TerminFinder.class);
     private final Section4FormInputs section4FormInputs;
-    private final Section2FormInputs section2FormInputs;
+    private final VisaFormTO visaFormTO;
+    private final PersonalInfoFormTO personalInfoFormTO;
     private final long FORM_REFRESH_PERIOD_MILLISECONDS = 1000;
     private RemoteWebDriver driver;
     private String currentWindowHandle;
     private SessionInfo sessionInfo;
     private final Timer timer = new Timer(true);
 
-    public TerminFinder(Section4FormInputs section4FormInputs, Section2FormInputs section2FormInputs, RemoteWebDriver driver) {
+    public TerminFinder(Section4FormInputs section4FormInputs, PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO, RemoteWebDriver driver) {
         this.section4FormInputs = section4FormInputs;
-        this.section2FormInputs = section2FormInputs;
+        this.personalInfoFormTO = personalInfoFormTO;
+        this.visaFormTO = visaFormTO;
         this.driver = driver;
     }
 
@@ -41,10 +44,10 @@ public class TerminFinder extends TimerTask {
         try {
             initNewSessionInfo();
         } catch (Exception e) {
-            logger.error("Error in initializing a new session. Exception: ",  e);
+            logger.error("Error in initializing a new session. Exception: ", e);
             try {
                 driver = DriverManager.initDriverHeadless();
-            } catch (Exception ex){
+            } catch (Exception ex) {
                 logger.error("Failed to initialize the driver. Quitting. Reason: ", ex);
                 driver.quit();
                 return;
@@ -54,21 +57,21 @@ public class TerminFinder extends TimerTask {
 
         // Section 2
         try {
-            Section2ServiceSelectionBAL section2ServiceSelectionBAL = new Section2ServiceSelectionBAL(section2FormInputs, driver);
+            Section2ServiceSelectionBAL section2ServiceSelectionBAL = new Section2ServiceSelectionBAL(visaFormTO, personalInfoFormTO, driver);
             section2ServiceSelectionBAL.fillAndSendForm();
             driver = section2ServiceSelectionBAL.getDriver();
         } catch (Exception e) {
-            logger.info("Exception occurred during handling section 2, quitting.");
+            logger.info("Exception occurred during handling section 2, quitting.", e);
             return;
         }
 
         // Section 3
         try {
             Section3DateSelectionBAL section3DateSelectionBAL = new Section3DateSelectionBAL(driver);
-            if(section3DateSelectionBAL.isCalenderOpened()){
+            if (section3DateSelectionBAL.isCalenderOpened()) {
                 section3DateSelectionBAL.fillAndSendForm();
                 driver = section3DateSelectionBAL.getDriver();
-            }else{
+            } else {
                 logger.info("Page section 3 is not openned, quitting.");
                 return;
             }
@@ -85,7 +88,7 @@ public class TerminFinder extends TimerTask {
         } catch (Exception e) {
             logger.info("Exception occurred during handling section 4, quitting.", e);
             driver = section4Filler.getDriver();
-            String fileName = section4Filler.getClass().getSimpleName()+"_exception";
+            String fileName = section4Filler.getClass().getSimpleName() + "_exception";
             FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), fileName);
             FormFillerUtils.saveScreenshot(driver, fileName);
             return;

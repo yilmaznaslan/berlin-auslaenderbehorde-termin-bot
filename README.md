@@ -3,7 +3,6 @@
 This application uses Selenium library to automate the process of getting an appointment in Berlin Ausländerbehörde.
 Instead of notifying the person like other solutions, this application automatically **books** for you the requested *Termin*
 
-
 ## How to setup
 1. In order to run selenium server you will need to install docket first. See [Get Docker](https://docs.docker.com/get-docker/) for more info.
     
@@ -18,9 +17,9 @@ Instead of notifying the person like other solutions, this application automatic
    - If you don't need elasticsearch for log management, deactivate the elasticsearch appender in [log4j2.xml](src/main/resources/log4j2.xml)
 
 ## How to run
-- Fill the [personInfoDTO.Json](src/main/resources/personalInfoDTO.json) file with your personal information
+- Fill the [personInfoDTO.Json](src/main/resources/PERSONAL_INFO_FORM_default.json) file with your personal information
   - Write the Country value in German as displayed.![img](doc/countryName.png) 
-- Fill the [residenceTitleInfoDTO.Json](src/main/resources/residentTitleInfoDTO.json) with your visa request.
+- Fill the [visaFormTO.Json](src/main/resources/APPLY_FOR_A_RESIDENCE_TITLE_default.json) with your visa request.
   - You can also copy-paste from a template that matches your request
 - Save the following environmental variables 
   - `export SELENIUM_GRID_HOST='localhost'`

@@ -1,6 +1,6 @@
 package org.example.auslanderbehorde.formfiller.model;
 
-public class PersonalInfoDTO {
+public class PersonalInfoFormTO {
     private String citizenshipValue;
     private String applicationsNumber;
     private String familyStatus;
@@ -9,10 +9,10 @@ public class PersonalInfoDTO {
     private String emailAddress;
     private String birthdate;
 
-    public PersonalInfoDTO() {
+    public PersonalInfoFormTO() {
     }
 
-    public PersonalInfoDTO(String citizenshipValue, String applicationsNumber, String familyStatus, String firstName, String lastName, String emailAddress, String birthdate) {
+    public PersonalInfoFormTO(String citizenshipValue, String applicationsNumber, String familyStatus, String firstName, String lastName, String emailAddress, String birthdate) {
         this.citizenshipValue = citizenshipValue;
         this.applicationsNumber = applicationsNumber;
         this.familyStatus = familyStatus;

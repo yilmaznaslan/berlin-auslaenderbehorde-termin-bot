@@ -1,5 +1,7 @@
 {
   "isResidencePermitPresent":  false,
   "residencePermitId": null,
-  "serviceType": "APPLY_FOR_A_RESIDENCE_TITLE"
+  "serviceType": "Aufenthaltstitel - beantragen",
+  "visaPurposeValue": "Studium und Ausbildung",
+  "visaLabelValue" : "Aufenthaltserlaubnis für eine Berufsausbildung (§ 16a)"
 }

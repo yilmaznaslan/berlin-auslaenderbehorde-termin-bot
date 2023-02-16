@@ -1,5 +1,7 @@
 {
-  "isResidencePermitPresent":  true,
-  "residencePermitId": "D12123123",
-  "serviceType": "APPLY_FOR_A_RESIDENCE_TITLE"
+  "isResidencePermitPresent":  false,
+  "residencePermitId": null,
+  "serviceType": "Aufenthaltstitel - beantragen",
+  "visaPurposeValue": "Erwerbstätigkeit",
+  "visaLabelValue" : "Blaue Karte EU (§ 18b Abs. 2)"
 }
