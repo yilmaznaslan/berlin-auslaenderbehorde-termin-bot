@@ -21,9 +21,9 @@ Currently, only **Apply for a residence title** and **Extend a residence title**
    - If you don't need elasticsearch for log management, deactivate the elasticsearch appender in [log4j2.xml](src/main/resources/log4j2.xml)
 
 ## How to run
-- Fill the [personInfoDTO.Json](src/main/resources/personalInfoDTO.json) file with your personal information
+- Fill the [personInfoDTO.Json](src/main/resources/personalInfoFormTO.json) file with your personal information
   - Write the Country value in German as displayed.![img](doc/countryName.png) 
-- Fill the [residenceTitleInfoDTO.Json](src/main/resources/residentTitleInfoDTO.json) with your visa request.
+- Fill the [visaFormTO.Json](src/main/resources/residentTitleInfoDTO.json) with your visa request.
   - You can also copy-paste from a template that matches your request
 - Save the following environmental variables 
   - `export SELENIUM_GRID_HOST='localhost'`

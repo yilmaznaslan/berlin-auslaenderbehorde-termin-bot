@@ -7,32 +7,28 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.IOException;
-import java.net.Socket;
 
 import static org.openqa.selenium.net.PortProber.findFreePort;
 
 class SessionFinderTest {
 
     @Test
-    void ASSERT_THAT__(){
+    void ASSERT_THAT__() {
         ChromeOptions chromeOptions = new ChromeOptions();
         int freePort = findFreePort();
         chromeOptions.addArguments("--remote-debugging-port=" + freePort);
 
         ChromeDriver driver = new ChromeDriver(chromeOptions);
-        String response = makeGetCall( "http://127.0.0.1:" + freePort  + "/json" );
+        String response = makeGetCall("http://127.0.0.1:" + freePort + "/json");
         String webSocketUrl = response.substring(response.indexOf("ws://127.0.0.1"), response.length() - 4);
-        WebSocket socket = makeSocketConnection( webSocketUrl );
-        socket.send( "{\"id\":1,\"method\":\"Network.enable\"}" );
+        WebSocket socket = makeSocketConnection(webSocketUrl);
+        socket.send("{\"id\":1,\"method\":\"Network.enable\"}");
     }
 
     private String makeGetCall(String s) {
-        OkHttpClient client = new OkHttpClient().newBuilder()
-                .build();
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
 
-        Request request = new Request.Builder()
-                .url(s)
-                .build();
+        Request request = new Request.Builder().url(s).build();
 
         try {
             Response response = client.newCall(request).execute();
@@ -42,13 +38,10 @@ class SessionFinderTest {
         }
     }
 
-    private WebSocket makeSocketConnection(String websocketUrl){
-        OkHttpClient client = new OkHttpClient().newBuilder()
-                .build();
+    private WebSocket makeSocketConnection(String websocketUrl) {
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
 
-        Request request = new Request.Builder()
-                .url(websocketUrl)
-                .build();
+        Request request = new Request.Builder().url(websocketUrl).build();
 
         EchoWebSocketListener listener = new EchoWebSocketListener();
 

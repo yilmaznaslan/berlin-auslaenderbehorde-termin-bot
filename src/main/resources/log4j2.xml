@@ -4,7 +4,7 @@
     <Properties>
         <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %p %C{1} %m%n</Property>
         <Property name="APP_LOG_ROOT">/Users/yilmaznaci.aslan/repositories/berlinTerminFinder/logs</Property>
-        <Property name="ELASTICSEARCH_URL">http://elasticsearch:9200/logs/_doc</Property>
+        <Property name="ELASTICSEARCH_URL">http://localhost:9200/logs/_doc</Property>
     </Properties>
 
     <Appenders>
@@ -57,7 +57,7 @@
             <AppenderRef ref="Console"/>
             <!-- <AppenderRef ref="infoLogFile"/>     -->
             <!-- <AppenderRef ref="infoLogFileJson"/> -->
-            <!-- <AppenderRef ref="elasticsearch"/> -->
+            <AppenderRef ref="elasticsearch"/>
         </Root>
 
     </Loggers>

@@ -4,12 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.formfiller.enums.ServiceType;
-import org.example.auslanderbehorde.formfiller.enums.applyforavisa.EconomicActivityVisaDe;
-import org.example.auslanderbehorde.formfiller.enums.visaextension.VisaExtensionForEducationalPurposeVisaEnum_DE;
-import org.example.auslanderbehorde.formfiller.model.PersonalInfoDTO;
-import org.example.auslanderbehorde.formfiller.model.ResidenceTitleInfoDTO;
-import org.example.auslanderbehorde.formfiller.model.Section2FormInputs;
+import org.example.auslanderbehorde.formfiller.model.PersonalInfoFormTO;
 import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
+import org.example.auslanderbehorde.formfiller.model.VisaFormTO;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.IOException;
@@ -21,33 +18,37 @@ public class FormManager {
 
     public final static Logger logger = LogManager.getLogger(FormManager.class);
 
-    public static PersonalInfoDTO readPersonalInfoFromFile() {
+    private FormManager() {
+
+    }
+
+    public static PersonalInfoFormTO readPersonalInfoFromFile() {
         ObjectMapper mapper = new ObjectMapper();
-        InputStream is = PersonalInfoDTO.class.getResourceAsStream("/personalInfoDTO.json");
+        InputStream is = PersonalInfoFormTO.class.getResourceAsStream("/PERSONAL_INFO_FORM_default.json");
         try {
-            return mapper.readValue(is, PersonalInfoDTO.class);
+            return mapper.readValue(is, PersonalInfoFormTO.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static ResidenceTitleInfoDTO readVisaInfoFromFile() {
+    public static VisaFormTO readVisaInfoFromFile() {
         ObjectMapper mapper = new ObjectMapper();
-        InputStream is = ResidenceTitleInfoDTO.class.getResourceAsStream("/residentTitleInfoDTO.json");
+        InputStream is = VisaFormTO.class.getResourceAsStream("/APPLY_FOR_A_RESIDENCE_TITLE_default.json");
         try {
-            return mapper.readValue(is, ResidenceTitleInfoDTO.class);
+            return mapper.readValue(is, VisaFormTO.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static boolean isResidenceTitleInfoVerified(ResidenceTitleInfoDTO residenceTitleInfoDTO) {
-        logger.info("Verifying form: {}", residenceTitleInfoDTO);
-        ServiceType serviceType = residenceTitleInfoDTO.getServiceType();
-        Boolean isResidencePermitPresent = residenceTitleInfoDTO.getResidencePermitPresent();
-        String residencePermitId = residenceTitleInfoDTO.getResidencePermitId();
+    public static boolean isResidenceTitleInfoVerified(VisaFormTO visaFormTO) {
+        logger.info("Verifying form: {}", visaFormTO);
+        String serviceType = visaFormTO.getServiceType();
+        Boolean isResidencePermitPresent = visaFormTO.getResidencePermitPresent();
+        String residencePermitId = visaFormTO.getResidencePermitId();
 
-        if (serviceType.equals(ServiceType.APPLY_FOR_A_RESIDENCE_TITLE)) {
+        if (serviceType.equals("Aufenthaltstitel - beantragen")) {
             if (isResidencePermitPresent == null) {
                 return false;
             }
@@ -61,7 +62,7 @@ public class FormManager {
             }
         }
 
-        if (serviceType.equals(ServiceType.EXTEND_A_RESIDENCE_TITLE)) {
+        if (serviceType.equals("Aufenthaltstitel - verlängern")) {
             if (isResidencePermitPresent != null) {
                 return false;
             }
@@ -74,49 +75,20 @@ public class FormManager {
         return true;
     }
 
-    public static void startForm(PersonalInfoDTO personalInfoDTO, ResidenceTitleInfoDTO residenceTitleInfoDTO) {
-
-
-        Section2FormInputs section2FormInputs = new Section2FormInputs(
-                personalInfoDTO.getCitizenshipValue(),
-                personalInfoDTO.getApplicationsNumber(),
-                personalInfoDTO.getFamilyStatus(),
-                residenceTitleInfoDTO.getServiceType(),
-                VisaExtensionForEducationalPurposeVisaEnum_DE.PURPOSE_OF_STUDYING);
-
-        Section2FormInputs section2FormInputs_2 = new Section2FormInputs(
-                personalInfoDTO.getCitizenshipValue(),
-                personalInfoDTO.getApplicationsNumber(),
-                personalInfoDTO.getFamilyStatus(),
-                residenceTitleInfoDTO.getServiceType(),
-                EconomicActivityVisaDe.BLUECARD);
+    public static void startForm(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO) {
 
         Section4FormInputs section4FormInputs = new Section4FormInputs(
-                personalInfoDTO.getFirstName(),
-                personalInfoDTO.getLastName(),
-                personalInfoDTO.getEmailAddress(),
-                personalInfoDTO.getBirthdate(),
-                residenceTitleInfoDTO.getResidencePermitPresent(),
-                residenceTitleInfoDTO.getResidencePermitId(),
+                personalInfoFormTO.getFirstName(),
+                personalInfoFormTO.getLastName(),
+                personalInfoFormTO.getEmailAddress(),
+                personalInfoFormTO.getBirthdate(),
+                visaFormTO.getResidencePermitPresent(),
+                visaFormTO.getResidencePermitId(),
                 ServiceType.EXTEND_A_RESIDENCE_TITLE);
-        Section4FormInputs section4FormInputs_2 = new Section4FormInputs(
-                personalInfoDTO.getFirstName(),
-                personalInfoDTO.getLastName(),
-                personalInfoDTO.getEmailAddress(),
-                personalInfoDTO.getBirthdate(),
-                true,
-                residenceTitleInfoDTO.getResidencePermitId(),
-                ServiceType.APPLY_FOR_A_RESIDENCE_TITLE);
-
 
         RemoteWebDriver remoteWebDriver = initDriverHeadless();
-        TerminFinder terminFinder = new TerminFinder(section4FormInputs, section2FormInputs, remoteWebDriver);
+        TerminFinder terminFinder = new TerminFinder(section4FormInputs, personalInfoFormTO, visaFormTO, remoteWebDriver);
         terminFinder.startScanning();
-
-
-        //RemoteWebDriver remoteWebDriver = initDriverHeadless();
-        //TerminFinder terminFinder_2 = new TerminFinder(section4FormInputs_2, section2FormInputs_2, remoteWebDriver);
-        //terminFinder_2.startScanning();
 
     }
 
