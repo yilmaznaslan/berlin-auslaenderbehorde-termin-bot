@@ -2,6 +2,6 @@
   "isResidencePermitPresent":  false,
   "residencePermitId": null,
   "serviceType": "Aufenthaltstitel - beantragen",
-  "visaPurposeValue": "Familiäre Gründe",
-  "visaLabelValue" : "Aufenthaltserlaubnis für Ehepartner, Eltern und Kinder von ausländischen Familienangehörigen (§§ 29-34)"
+  "visaPurposeValue": "Erwerbstätigkeit",
+  "visaLabelValue" : "Blaue Karte EU (§ 18b Abs. 2)"
 }
