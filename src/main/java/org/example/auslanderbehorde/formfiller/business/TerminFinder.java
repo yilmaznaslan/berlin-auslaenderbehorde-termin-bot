@@ -3,7 +3,6 @@ package org.example.auslanderbehorde.formfiller.business;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.formfiller.model.PersonalInfoFormTO;
-import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
 import org.example.auslanderbehorde.formfiller.model.VisaFormTO;
 import org.example.auslanderbehorde.sessionfinder.business.SessionFinder;
 import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
 public class TerminFinder extends TimerTask {
 
     private final Logger logger = LogManager.getLogger(TerminFinder.class);
-    private final Section4FormInputs section4FormInputs;
     private final VisaFormTO visaFormTO;
     private final PersonalInfoFormTO personalInfoFormTO;
     private final long FORM_REFRESH_PERIOD_MILLISECONDS = 1000;
@@ -27,8 +25,7 @@ public class TerminFinder extends TimerTask {
     private SessionInfo sessionInfo;
     private final Timer timer = new Timer(true);
 
-    public TerminFinder(Section4FormInputs section4FormInputs, PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO, RemoteWebDriver driver) {
-        this.section4FormInputs = section4FormInputs;
+    public TerminFinder(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO, RemoteWebDriver driver) {
         this.personalInfoFormTO = personalInfoFormTO;
         this.visaFormTO = visaFormTO;
         this.driver = driver;
@@ -81,7 +78,7 @@ public class TerminFinder extends TimerTask {
         }
 
         // Section 4
-        Section4Filler section4Filler = new Section4Filler(section4FormInputs, driver);
+        Section4Filler section4Filler = new Section4Filler(personalInfoFormTO, visaFormTO, driver);
         try {
             section4Filler.fillAndSendForm();
             driver = section4Filler.getDriver();

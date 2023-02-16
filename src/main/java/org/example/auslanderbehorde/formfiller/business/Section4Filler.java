@@ -5,11 +5,10 @@ import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.formfiller.enums.ServiceType;
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
-import org.example.auslanderbehorde.formfiller.model.Section4FormInputs;
+import org.example.auslanderbehorde.formfiller.model.PersonalInfoFormTO;
+import org.example.auslanderbehorde.formfiller.model.VisaFormTO;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
-
-import java.util.Optional;
 
 import static org.example.auslanderbehorde.formfiller.enums.Section4FormParameterEnum.*;
 
@@ -25,18 +24,18 @@ public class Section4Filler {
     private final String birthdate;
     private final Boolean isResidencePermitPresent;
     private final String residencePermitId;
-    private final ServiceType serviceType;
+    private final String serviceType;
     private final RemoteWebDriver driver;
 
-    public Section4Filler(Section4FormInputs formInputs, RemoteWebDriver remoteWebDriver) {
-        this.serviceType = formInputs.getServiceType();
-        this.residencePermitId = formInputs.getResidencePermitId();
+    public Section4Filler(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO, RemoteWebDriver remoteWebDriver) {
+        this.serviceType = visaFormTO.getServiceType();
+        this.residencePermitId = visaFormTO.getResidencePermitId();
         this.driver = remoteWebDriver;
-        this.firstName = formInputs.getName();
-        this.lastName = formInputs.getLastname();
-        this.emailAddress = formInputs.getEmailAddress();
-        this.birthdate = formInputs.getBirthdate();
-        this.isResidencePermitPresent = formInputs.getResidencePermitPresent();
+        this.firstName = personalInfoFormTO.getFirstName();
+        this.lastName = personalInfoFormTO.getLastName();
+        this.emailAddress = personalInfoFormTO.getEmailAddress();
+        this.birthdate = personalInfoFormTO.getBirthdate();
+        this.isResidencePermitPresent = visaFormTO.getResidencePermitPresent();
     }
 
     public void fillAndSendForm() throws ElementNotFoundTimeoutException, InteractionFailedException, InterruptedException {
@@ -51,7 +50,7 @@ public class Section4Filler {
     }
 
     protected void fillForm() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
-        logger.info("Starting to fill the section 4 form: Angaben, for servicetype: {}",  serviceType);
+        logger.info("Starting to fill the section 4 form: Angaben, for servicetype: {}", serviceType);
         enterFirstName();
         enterLastName();
         enterBirthdate();
@@ -61,7 +60,7 @@ public class Section4Filler {
             enterResidencePermitId(RESIDENCE_PERMIT_NUMBER_EXTENSION.getId());
         }
 
-        if (serviceType.equals(ServiceType.APPLY_FOR_A_RESIDENCE_TITLE)) {
+        if (serviceType.equals("Aufenthaltstitel - beantragen")) {
             selectResidencePermit();
         }
 
