@@ -22,22 +22,21 @@ public class Section2ServiceSelectionBAL {
     private final String citizenshipValue;
     private final String applicantNumber;
     private final String familyStatus;
-    private final String serviceType;
+    private final String serviceTypeLabelValue;
     private final String visaLabelValue;
-    private final String visaPurposeLabelText;
+    private final String visaPurposeLabelValue;
 
     private static int searchCount = 0;
-    private static int succesfullyFormSentCount = 0;
 
     private RemoteWebDriver driver;
 
     public Section2ServiceSelectionBAL(VisaFormTO visaFormTO, PersonalInfoFormTO personalInfoFormTO, RemoteWebDriver remoteWebDriver) {
-        this.visaPurposeLabelText = visaFormTO.getVisaPurposeValue();
+        this.visaPurposeLabelValue = visaFormTO.getVisaPurposeValue();
         this.driver = remoteWebDriver;
         this.citizenshipValue = personalInfoFormTO.getCitizenshipValue();
         this.applicantNumber = personalInfoFormTO.getApplicationsNumber();
         this.familyStatus = personalInfoFormTO.getFamilyStatus();
-        this.serviceType = visaFormTO.getServiceType();
+        this.serviceTypeLabelValue = visaFormTO.getServiceType();
         this.visaLabelValue = visaFormTO.getVisaLabelValue();
     }
 
@@ -67,17 +66,17 @@ public class Section2ServiceSelectionBAL {
         FormFillerUtils.selectOptionByValue(element, elementDescription, familyStatus);
     }
 
-    private void clickServiceType(String serviceTypeLabelValue) throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
+    private void clickServiceType() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         WebElement element = FormFillerUtils.getElementByLabelValue(serviceTypeLabelValue, serviceTypeLabelValue, driver);
         FormFillerUtils.clickToElement(element, serviceTypeLabelValue);
     }
 
-    private void clickVisaPurpose(String visaPurposeLabelValue) throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
+    private void clickVisaPurpose() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         WebElement element = FormFillerUtils.getElementByLabelValue(visaPurposeLabelValue, visaPurposeLabelValue, driver);
         FormFillerUtils.clickToElement(element, visaPurposeLabelValue);
     }
 
-    private void clickToVisa(String visaLabelValue) throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
+    private void clickToVisa() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         WebElement element = FormFillerUtils.getElementByLabelValue(visaLabelValue, visaLabelValue, driver);
         FormFillerUtils.clickToElement(element, visaLabelValue);
     }
@@ -88,7 +87,7 @@ public class Section2ServiceSelectionBAL {
         WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
         searchCount++;
-        String msg = String.format("Completed search count: %s. SuccessfullyFormSenCount:%s, HandledAppoi.Count:%s, Found count: %s", searchCount, succesfullyFormSentCount, handledAppointmentCount, foundAppointmentCount);
+        String msg = String.format("SuccessfullyFormSenCount:%s, HandledAppoi.Count:%s, Found count: %s", searchCount,  handledAppointmentCount, foundAppointmentCount);
         logger.info(msg);
     }
 
@@ -97,9 +96,9 @@ public class Section2ServiceSelectionBAL {
         selectCitizenshipValue();
         selectApplicantsCount();
         selectFamilyStatus();
-        clickServiceType(serviceType);
-        clickVisaPurpose(visaPurposeLabelText);
-        clickToVisa(visaLabelValue);
+        clickServiceType();
+        clickVisaPurpose();
+        clickToVisa();
     }
 
     public RemoteWebDriver getDriver() {
