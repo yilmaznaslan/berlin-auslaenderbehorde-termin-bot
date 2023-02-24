@@ -65,7 +65,7 @@ public class TerminFinder extends TimerTask {
         // Section 3
         try {
             Section3DateSelectionBAL section3DateSelectionBAL = new Section3DateSelectionBAL(driver);
-            if (section3DateSelectionBAL.isCalenderOpened()) {
+            if (section3DateSelectionBAL.isCalenderFound()) {
                 section3DateSelectionBAL.fillAndSendForm();
                 driver = section3DateSelectionBAL.getDriver();
             } else {
