@@ -123,10 +123,10 @@ public class Section3DateSelectionBAL {
                 if (stageText.equals("Terminauswahl")) {
                     return true;
                 }
-                if (stageText.equals("Servicewahl") && !isCalenderFound()) {
-                    return false;
-                }
 
+                if (isCalenderFound()){
+                    return true;
+                }
 
             } catch (StaleElementReferenceException | InterruptedException | ElementNotFoundTimeoutException e) {
                 //logWarn(elementDescription, SeleniumProcessEnum.GETTING_TEXT.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), e);
