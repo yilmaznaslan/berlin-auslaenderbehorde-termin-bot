@@ -46,10 +46,8 @@ Other recommendations
 
 docker exec -it 4c85e0506977 /bin/bash
 
-## How to dockerize
-- First create a fatjar `./gradlew shadowJar`
-- Build the image `docker build --tag yilmaznaslan/berlinterminfinder:release-1 --file Dockerfile .`
-- Push the image to a docker registery `docker push yilmaznaslan/berlinterminfinder:release-1`
+## How to ship
+- Run `source infra/build.sh`
 
 ### Extra
 - Connect to the containers shell `docker exec -ti 18b3d6e1415b /bin/bash`
