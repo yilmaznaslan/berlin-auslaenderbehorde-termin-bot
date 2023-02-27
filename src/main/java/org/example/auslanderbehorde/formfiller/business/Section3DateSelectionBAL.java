@@ -32,12 +32,15 @@ public class Section3DateSelectionBAL {
     }
 
     public void fillAndSendForm() throws InteractionFailedException, ElementNotFoundTimeoutException, IOException, InterruptedException {
+        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "section3");
+        FormFillerUtils.saveScreenshot(driver, "section3");
         handleFindingDate();
         FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "section3_aftersend");
         FormFillerUtils.saveScreenshot(driver, "section3_aftersend");
     }
 
     private void handleFindingDate() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException, IOException {
+        logger.info("Starting to find an appointment date");
         handledAppointmentCount++;
         String elementDescription = "DateSelection".toUpperCase();
         String cssSelector = "[data-handler=selectDay]";
