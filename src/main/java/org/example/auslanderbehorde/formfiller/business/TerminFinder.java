@@ -55,18 +55,22 @@ public class TerminFinder extends TimerTask {
         }
 
         // Section 2
+        Section2ServiceSelectionHandler section2ServiceSelectionHandler = new Section2ServiceSelectionHandler(visaFormTO, personalInfoFormTO, driver);
         try {
-            Section2ServiceSelectionHandler section2ServiceSelectionHandler = new Section2ServiceSelectionHandler(visaFormTO, personalInfoFormTO, driver);
             section2ServiceSelectionHandler.fillAndSendForm();
             driver = section2ServiceSelectionHandler.getDriver();
         } catch (Exception e) {
-            logger.info("Exception occurred during handling section 2, quitting.", e);
+            logger.error("Exception occurred during handling section 2, quitting.", e);
+            driver = section2ServiceSelectionHandler.getDriver();
+            String fileName = section2ServiceSelectionHandler.getClass().getSimpleName();
+            saveSourceCodeToFile(driver.getPageSource(), fileName, "exception");
+            FormFillerUtils.saveScreenshot(driver, fileName, "exception");
             return;
         }
 
         // Section 3
+        Section3DateSelectionHandler section3DateSelectionHandler = new Section3DateSelectionHandler(driver);
         try {
-            Section3DateSelectionHandler section3DateSelectionHandler = new Section3DateSelectionHandler(driver);
             if (section3DateSelectionHandler.isCalenderFound()) {
                 logger.info("Calender section is opened");
                 section3DateSelectionHandler.fillAndSendForm();
@@ -77,6 +81,10 @@ public class TerminFinder extends TimerTask {
             }
         } catch (Exception e) {
             logger.error("Exception occurred during handling section 3, quitting.", e);
+            driver = section3DateSelectionHandler.getDriver();
+            String fileName = section3DateSelectionHandler.getClass().getSimpleName();
+            saveSourceCodeToFile(driver.getPageSource(), fileName, "exception");
+            FormFillerUtils.saveScreenshot(driver, fileName, "exception");
             return;
         }
 
@@ -86,24 +94,28 @@ public class TerminFinder extends TimerTask {
             section4VisaFormHandler.fillAndSendForm();
             driver = section4VisaFormHandler.getDriver();
         } catch (Exception e) {
-            logger.info("Exception occurred during handling section 4, quitting.", e);
+            logger.error("Exception occurred during handling section 4, quitting.", e);
             driver = section4VisaFormHandler.getDriver();
-            String fileName = section4VisaFormHandler.getClass().getSimpleName() + "_exception";
-            saveSourceCodeToFile(driver.getPageSource(),Section4VisaFormHandler.class.getSimpleName(),fileName);
-            FormFillerUtils.saveScreenshot(driver, Section4VisaFormHandler.class.getSimpleName(), fileName);
+            String fileName = section4VisaFormHandler.getClass().getSimpleName();
+            saveSourceCodeToFile(driver.getPageSource(), fileName, "exception");
+            FormFillerUtils.saveScreenshot(driver, fileName, "exception");
             return;
         }
 
         // Section 5
+        Section5ReservationHandler section5ReservationHandler = new Section5ReservationHandler(driver);
         try {
-            Section5ReservationHandler section5ReservationHandler = new Section5ReservationHandler(driver);
             section5ReservationHandler.sendForm();
             driver = section5ReservationHandler.getDriver();
             driver.quit();
             timer.cancel();
             return;
         } catch (Exception e) {
-            logger.info("Exception occurred during handling section 5, quitting.");
+            logger.error("Exception occurred during handling section 5, quitting.");
+            driver = section5ReservationHandler.getDriver();
+            String fileName = section5ReservationHandler.getClass().getSimpleName();
+            saveSourceCodeToFile(driver.getPageSource(), fileName, "exception");
+            FormFillerUtils.saveScreenshot(driver, fileName, "exception");
             return;
         }
 
