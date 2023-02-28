@@ -7,17 +7,21 @@ Instead of notifying the person like other solutions, this application automatic
 
 ## How to setup
 1. In order to run selenium server you will need to install docket first. See [Get Docker](https://docs.docker.com/get-docker/) for more info.
-    
-2. Create a docker network 
+ 
+2. Make sure that JDK version in your machine is above > 11
+   - Check the java version `java --version`. 
+   - If it is below 11,  [install](https://docs.oracle.com/en/java/javase/11/install/installation-jdk-macos.html#GUID-2FE451B0-9572-4E38-A1A5-568B77B146DE) a newer version of java. After installation check again the version by `java --version` 
+
+3. Create a docker network 
    - `docker network create termin`
    
-3. Start SeleniumHub server 
+4. Start SeleniumHub server 
    - `source infra/init_seleniumgrid.sh`
 
-4. Run Elasticsearch server[OPTIONAL]. 
-   - `source infra/init_elasticsearch.sh`
-   - If you want elasticsearch for log management, activate the elasticsearch appender in [log4j2.xml](src/main/resources/log4j2.xml)
-
+5. *(OPTIONAL)* Run Elasticsearch server if you want elasticsearch for log management
+   - Start elasticsearch server `source infra/init_elasticsearch.sh`
+   - Activate the elasticsearch appender in [log4j2.xml](src/main/resources/log4j2.xml)
+   - Save the following environmental variable `export ELASTICSEARCH_HOST='localhost'`
 ## How to run
 - Fill the [personInfoDTO.Json](src/main/resources/PERSONAL_INFO_FORM_default.json) file with your personal information
   - Write the Country value in German as displayed on the browser
@@ -25,7 +29,7 @@ Instead of notifying the person like other solutions, this application automatic
   - You can also copy-paste from a template that matches your request. Or copy paste values as displayed in german language
 - Save the following environmental variables 
   - `export SELENIUM_GRID_HOST='localhost'`
-  - `export ELASTICSEARCH_HOST='localhost'` [OPTIONAL]  
+  
 - Run the application in terminal by `./gradlew run`.
   - You will get the email from *LEA* once the bot booked the termin. 
   - REMEMBER: Due to very limited number of available spots, you might need to run the script for a week !
