@@ -20,14 +20,14 @@ class AppointmentFinderTest {
     String url_DE = "file:".concat(path_DE);
 
     static ChromeDriver driver;
-    Section3DateSelectionBAL underTest;
+    Section3DateSelectionHandler underTest;
 
     @BeforeEach
     void initDriver() {
         ChromeOptions options = new ChromeOptions();
         //options.addArguments("--headless");
         this.driver = new ChromeDriver(options);
-        this.underTest = new Section3DateSelectionBAL(driver);
+        this.underTest = new Section3DateSelectionHandler(driver);
     }
 
     @Test

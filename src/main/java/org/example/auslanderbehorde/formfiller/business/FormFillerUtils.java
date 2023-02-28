@@ -1,5 +1,10 @@
 package org.example.auslanderbehorde.formfiller.business;
 
+import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -215,41 +220,65 @@ public class FormFillerUtils {
         }
     }
 
-    public static void saveSourceCodeToFile(String content, String suffix) {
-        String filePath = FormFillerUtils.class.getResource("/").getPath();
+    public static void saveSourceCodeToFile(String content, String pageDescriber, String suffix) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String dateAsStr = dtf.format(now);
-        File newTextFile = new File(filePath + "/page_" + suffix + "_" + dateAsStr + ".html");
+        String fileName = pageDescriber + "_" + dateAsStr + suffix + "_" + ".html";
+        logger.info("File name :{}", fileName);
+        String bucketName = "auslander-termin-files";
 
+        File file = new File(fileName);
         FileWriter fw;
         try {
-            fw = new FileWriter(newTextFile);
+            fw = new FileWriter(file);
             fw.write(content);
             fw.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            logger.error("Failed to write to file", e);
         }
-
+        try {
+            AmazonS3 client = AmazonS3ClientBuilder
+                    .standard()
+                    .withCredentials(new EnvironmentVariableCredentialsProvider())
+                    .withRegion(Regions.US_EAST_1)
+                    .build();
+            client.putObject(new PutObjectRequest(bucketName, fileName, file));
+        } catch (Exception e) {
+            logger.error("Error occurred during s3 operation", e);
+        }
     }
 
-    public static void saveScreenshot(WebDriver driver, String suffix) {
+    public static void saveScreenshot(WebDriver driver, String pageDescriber, String suffix) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String dateAsStr = dtf.format(now);
         File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-        String filePath = FormFillerUtils.class.getResource("/").getPath();
+        //String filePath = FormFillerUtils.class.getResource("/").getPath();
+        File file = null;
+        String s3FileName = pageDescriber + "_" + suffix + dateAsStr + ".png";
+
         try {
-            FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + suffix + "_" + dateAsStr + ".png"));
+            //File file = new File(filePAth +"/screenshot_" + suffix + "_" + dateAsStr + ".png");
+            file = new File(s3FileName);
+            FileUtils.copyFile(scrFile1, file);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            logger.error("Failed to write to file", e);
         }
 
-        /*
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        jse.executeScript("scroll(0, 1000);");
-        FileUtils.copyFile(scrFile1, new File(filePath + "/screenshot_" + suffix + dateAsStr + "_1.png"));
-         */
+        String bucketName = "auslander-termin-files";
+        try {
+            AmazonS3 client = AmazonS3ClientBuilder
+                    .standard()
+                    .withCredentials(new EnvironmentVariableCredentialsProvider())
+                    .withRegion(Regions.US_EAST_1)
+                    .build();
+            client.putObject(new PutObjectRequest(bucketName, s3FileName, file));
+        } catch (Exception e) {
+            logger.error("Error occurred during s3 operation", e);
+        }
+
+
     }
 
     public static void logInfo(String elementDescription, SeleniumProcessEnum process, String status) {
@@ -258,7 +287,7 @@ public class FormFillerUtils {
         ThreadContext.put("seleniumProcess", process.name());
         ThreadContext.put("seleniumStatus", status);
         logger.info(String.format("Element: %s, Process:%s, Status:%s", elementDescription, process, status));
-        //ThreadContext.clearAll();
+        ThreadContext.clearAll();
     }
 
     public static void logInfo(String elementDescription, SeleniumProcessEnum process, String status, String msg) {

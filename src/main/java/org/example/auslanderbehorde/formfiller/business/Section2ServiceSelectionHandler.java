@@ -9,16 +9,16 @@ import org.example.auslanderbehorde.formfiller.model.VisaFormTO;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import static org.example.auslanderbehorde.formfiller.business.Section3DateSelectionBAL.foundAppointmentCount;
-import static org.example.auslanderbehorde.formfiller.business.Section3DateSelectionBAL.handledAppointmentCount;
+import static org.example.auslanderbehorde.formfiller.business.Section3DateSelectionHandler.foundAppointmentCount;
+import static org.example.auslanderbehorde.formfiller.business.Section3DateSelectionHandler.handledAppointmentCount;
 import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.*;
 
 /**
  * Business Access Layer for filling the form
  */
-public class Section2ServiceSelectionBAL {
+public class Section2ServiceSelectionHandler {
 
-    private final Logger logger = LogManager.getLogger(Section2ServiceSelectionBAL.class);
+    private final Logger logger = LogManager.getLogger(Section2ServiceSelectionHandler.class);
     private final String citizenshipValue;
     private final String applicantNumber;
     private final String familyStatus;
@@ -30,7 +30,7 @@ public class Section2ServiceSelectionBAL {
 
     private RemoteWebDriver driver;
 
-    public Section2ServiceSelectionBAL(VisaFormTO visaFormTO, PersonalInfoFormTO personalInfoFormTO, RemoteWebDriver remoteWebDriver) {
+    public Section2ServiceSelectionHandler(VisaFormTO visaFormTO, PersonalInfoFormTO personalInfoFormTO, RemoteWebDriver remoteWebDriver) {
         this.visaPurposeLabelValue = visaFormTO.getVisaPurposeValue();
         this.driver = remoteWebDriver;
         this.citizenshipValue = personalInfoFormTO.getCitizenshipValue();

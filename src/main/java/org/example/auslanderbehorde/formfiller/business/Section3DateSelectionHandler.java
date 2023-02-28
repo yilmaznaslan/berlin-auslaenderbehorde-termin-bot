@@ -18,25 +18,25 @@ import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.T
 import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.logInfo;
 import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.TIME_SLOT;
 
-public class Section3DateSelectionBAL {
+public class Section3DateSelectionHandler {
 
-    private final Logger logger = LogManager.getLogger(Section3DateSelectionBAL.class);
+    private final Logger logger = LogManager.getLogger(Section3DateSelectionHandler.class);
 
     public static int foundAppointmentCount = 0;
     public static int handledAppointmentCount = 0;
 
     private RemoteWebDriver driver;
 
-    public Section3DateSelectionBAL(RemoteWebDriver webDriver) {
+    public Section3DateSelectionHandler(RemoteWebDriver webDriver) {
         this.driver = webDriver;
     }
 
     public void fillAndSendForm() throws InteractionFailedException, ElementNotFoundTimeoutException, IOException, InterruptedException {
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "section3");
-        FormFillerUtils.saveScreenshot(driver, "section3");
+        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "");
+        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "");
         handleFindingDate();
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "section3_aftersend");
-        FormFillerUtils.saveScreenshot(driver, "section3_aftersend");
+        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "after_send");
+        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "after_send");
     }
 
     private void handleFindingDate() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException, IOException {
@@ -44,8 +44,8 @@ public class Section3DateSelectionBAL {
         handledAppointmentCount++;
         String elementDescription = "DateSelection".toUpperCase();
         String cssSelector = "[data-handler=selectDay]";
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "section3_dateSelection");
-        FormFillerUtils.saveScreenshot(driver, "section3_dateSelection");
+        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "handling_date");
+        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(),"handling_Date");
         WebElement element = FormFillerUtils.getElementByCssSelector(cssSelector, elementDescription, driver);
         if (isDateVerified(element)) {
             logger.info("Date is verified");
@@ -73,11 +73,10 @@ public class Section3DateSelectionBAL {
             logger.info(String.format("Found a place. URL: %s", url));
             logger.info(String.format("Found Appointment count: %s", foundAppointmentCount));
 
-            int i = 0;
             url = driver.getCurrentUrl();
             logger.info(String.format("Found a place. URL: %s", url));
-            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "timeslot_" + i);
-            FormFillerUtils.saveScreenshot(driver, "timeslot_" + i);
+            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "timeslot");
+            FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "timeslot" );
             Thread.sleep(100);
 
         }
@@ -152,8 +151,8 @@ public class Section3DateSelectionBAL {
             String asd = "//*[@id=\"xi-div-1\"]/div[3]";
             String elementDescription1 = "calender".toUpperCase();
             WebElement calender = FormFillerUtils.getElementByXPathCalender(asd, elementDescription1, driver);
-            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "dateSelection_in");
-            FormFillerUtils.saveScreenshot(driver, "dateSelection_in");
+            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "dateSelection_in");
+            FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "dateSelection_in");
             return true;
             //return stageText.contains("Terminauswahl") && calender.isDisplayed();
         } catch (ElementNotFoundTimeoutException e) {

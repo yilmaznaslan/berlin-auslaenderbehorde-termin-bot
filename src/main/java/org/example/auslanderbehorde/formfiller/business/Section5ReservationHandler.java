@@ -11,13 +11,13 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 /**
  * Business Access Layer for filling the Section 5: Reservation
  */
-public class Section5ReservationBAL {
+public class Section5ReservationHandler {
 
-    private final Logger logger = LogManager.getLogger(Section5ReservationBAL.class);
+    private final Logger logger = LogManager.getLogger(Section5ReservationHandler.class);
 
     private RemoteWebDriver driver;
 
-    public Section5ReservationBAL(RemoteWebDriver remoteWebDriver) {
+    public Section5ReservationHandler(RemoteWebDriver remoteWebDriver) {
         this.driver = remoteWebDriver;
     }
 
@@ -27,8 +27,8 @@ public class Section5ReservationBAL {
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
         logger.info("BOOKED");
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "section5_aftersend");
-        FormFillerUtils.saveScreenshot(driver, "section5_aftersend");
+        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "aftersend");
+        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "aftersend");
     }
 
     public RemoteWebDriver getDriver() {

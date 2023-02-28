@@ -14,6 +14,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
+import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.saveSourceCodeToFile;
+
 public class TerminFinder extends TimerTask {
 
     private final Logger logger = LogManager.getLogger(TerminFinder.class);
@@ -54,9 +56,9 @@ public class TerminFinder extends TimerTask {
 
         // Section 2
         try {
-            Section2ServiceSelectionBAL section2ServiceSelectionBAL = new Section2ServiceSelectionBAL(visaFormTO, personalInfoFormTO, driver);
-            section2ServiceSelectionBAL.fillAndSendForm();
-            driver = section2ServiceSelectionBAL.getDriver();
+            Section2ServiceSelectionHandler section2ServiceSelectionHandler = new Section2ServiceSelectionHandler(visaFormTO, personalInfoFormTO, driver);
+            section2ServiceSelectionHandler.fillAndSendForm();
+            driver = section2ServiceSelectionHandler.getDriver();
         } catch (Exception e) {
             logger.info("Exception occurred during handling section 2, quitting.", e);
             return;
@@ -64,39 +66,39 @@ public class TerminFinder extends TimerTask {
 
         // Section 3
         try {
-            Section3DateSelectionBAL section3DateSelectionBAL = new Section3DateSelectionBAL(driver);
-            if (section3DateSelectionBAL.isCalenderFound()) {
+            Section3DateSelectionHandler section3DateSelectionHandler = new Section3DateSelectionHandler(driver);
+            if (section3DateSelectionHandler.isCalenderFound()) {
                 logger.info("Calender section is opened");
-                section3DateSelectionBAL.fillAndSendForm();
-                driver = section3DateSelectionBAL.getDriver();
+                section3DateSelectionHandler.fillAndSendForm();
+                driver = section3DateSelectionHandler.getDriver();
             } else {
                 logger.info("Page section 3 is not opened, quitting.");
                 return;
             }
         } catch (Exception e) {
-            logger.info("Exception occurred during handling section 3, quitting.", e);
+            logger.error("Exception occurred during handling section 3, quitting.", e);
             return;
         }
 
         // Section 4
-        Section4Filler section4Filler = new Section4Filler(personalInfoFormTO, visaFormTO, driver);
+        Section4VisaFormHandler section4VisaFormHandler = new Section4VisaFormHandler(personalInfoFormTO, visaFormTO, driver);
         try {
-            section4Filler.fillAndSendForm();
-            driver = section4Filler.getDriver();
+            section4VisaFormHandler.fillAndSendForm();
+            driver = section4VisaFormHandler.getDriver();
         } catch (Exception e) {
             logger.info("Exception occurred during handling section 4, quitting.", e);
-            driver = section4Filler.getDriver();
-            String fileName = section4Filler.getClass().getSimpleName() + "_exception";
-            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), fileName);
-            FormFillerUtils.saveScreenshot(driver, fileName);
+            driver = section4VisaFormHandler.getDriver();
+            String fileName = section4VisaFormHandler.getClass().getSimpleName() + "_exception";
+            saveSourceCodeToFile(driver.getPageSource(),Section4VisaFormHandler.class.getSimpleName(),fileName);
+            FormFillerUtils.saveScreenshot(driver, Section4VisaFormHandler.class.getSimpleName(), fileName);
             return;
         }
 
         // Section 5
         try {
-            Section5ReservationBAL section5ReservationBAL = new Section5ReservationBAL(driver);
-            section5ReservationBAL.sendForm();
-            driver = section5ReservationBAL.getDriver();
+            Section5ReservationHandler section5ReservationHandler = new Section5ReservationHandler(driver);
+            section5ReservationHandler.sendForm();
+            driver = section5ReservationHandler.getDriver();
             driver.quit();
             timer.cancel();
             return;

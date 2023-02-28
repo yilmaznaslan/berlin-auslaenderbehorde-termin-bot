@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-class Section5ReservationBALTest {
+class Section5ReservationHandlerTest {
 
-    String path_DE = Section5ReservationBALTest.class.getClassLoader().getResource("page_after_step4_sendform_21_2023-01-16_12:45:02.html").getPath();
+    String path_DE = Section5ReservationHandlerTest.class.getClassLoader().getResource("page_after_step4_sendform_21_2023-01-16_12:45:02.html").getPath();
     String url_DE = "file:".concat(path_DE);
     static ChromeDriver driver;
 
@@ -32,7 +32,7 @@ class Section5ReservationBALTest {
         // GIVEN
         driver.get(url_DE);
 
-        Section5ReservationBAL formFiller = new Section5ReservationBAL(driver);
+        Section5ReservationHandler formFiller = new Section5ReservationHandler(driver);
 
         // WHEN
         formFiller.sendForm();
