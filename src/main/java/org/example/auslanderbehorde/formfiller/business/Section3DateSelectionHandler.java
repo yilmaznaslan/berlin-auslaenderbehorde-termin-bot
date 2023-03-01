@@ -35,8 +35,6 @@ public class Section3DateSelectionHandler {
         FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "");
         FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "");
         handleFindingDate();
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "after_send");
-        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "after_send");
     }
 
     private void handleFindingDate() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException, IOException {
@@ -68,15 +66,13 @@ public class Section3DateSelectionHandler {
             logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, SeleniumProcessResultEnum.SUCCESSFUL.name(), "Value: " + selectValue);
             Thread.sleep(1000);
             sendForm();
+            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "after_send");
+            FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "after_send");
             Thread.sleep(5000);
             String url = driver.getCurrentUrl();
             logger.info(String.format("Found a place. URL: %s", url));
             logger.info(String.format("Found Appointment count: %s", foundAppointmentCount));
 
-            url = driver.getCurrentUrl();
-            logger.info(String.format("Found a place. URL: %s", url));
-            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "timeslot");
-            FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "timeslot" );
             Thread.sleep(100);
 
         }

@@ -224,7 +224,7 @@ public class FormFillerUtils {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String dateAsStr = dtf.format(now);
-        String fileName = pageDescriber + "_" + dateAsStr + suffix + "_" + ".html";
+        String fileName = pageDescriber + "_" + dateAsStr + "_" + suffix + ".html";
         logger.info("File name :{}", fileName);
         String bucketName = "auslander-termin-files";
 
@@ -256,7 +256,7 @@ public class FormFillerUtils {
         File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         //String filePath = FormFillerUtils.class.getResource("/").getPath();
         File file = null;
-        String s3FileName = pageDescriber + "_" + suffix + dateAsStr + ".png";
+        String s3FileName = pageDescriber + "_" + dateAsStr + "_" + suffix + ".png";
 
         try {
             //File file = new File(filePAth +"/screenshot_" + suffix + "_" + dateAsStr + ".png");
