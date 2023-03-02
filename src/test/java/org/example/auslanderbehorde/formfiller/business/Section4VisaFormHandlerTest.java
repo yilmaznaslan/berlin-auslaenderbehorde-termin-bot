@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -29,6 +28,10 @@ class Section4VisaFormHandlerTest {
     static String url_for_service_extend_studium = "file:".concat(path_extend_studium);
     static String path_apply_bluecard = Section4VisaFormHandler.class.getClassLoader().getResource("section4Handler_apply_bluecard_visa_exists_2023-01-12_00:10:29.html").getPath();
     static String url_for_service_apply_for_bluecard = "file:".concat(path_apply_bluecard);
+
+    static String path_new = Section4VisaFormHandler.class.getClassLoader().getResource("Section4VisaFormHandler_extend_visa_2023-03-01_14_11_31.html").getPath();
+    static String url_new = "file:".concat(path_new);
+
     String citizenshipValue = "Türkei";
     String firstName = "firstName";
     String lastName = "lastName";
@@ -51,6 +54,13 @@ class Section4VisaFormHandlerTest {
             "Aufenthaltstitel - beantragen",
             "Erwerbstätigkeit",
             "Blaue Karte EU (§ 18b Abs. 2)");
+
+    VisaFormTO visaForm_extend_berufsausbildung = new VisaFormTO(
+            null,
+            "D12123123",
+            "Aufenthaltstitel - verlängern",
+            "Studium und Ausbildung",
+            "Aufenthaltserlaubnis für eine Berufsausbildung (§ 16a)");
 
     static ChromeDriver driver;
     Section4VisaFormHandler formFiller = new Section4VisaFormHandler(personalInfoFormTO, visaForm_apply_for_bluecard_with_residencePermit, driver);
@@ -89,9 +99,9 @@ class Section4VisaFormHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getPathUrls")
-    void ASSERT_THAT_lastName_is_entered_WHEN_enterLastName_is_called() throws ElementNotFoundTimeoutException, InterruptedException {
+    void ASSERT_THAT_lastName_is_entered_WHEN_enterLastName_is_called(String url) throws ElementNotFoundTimeoutException, InterruptedException {
         // GIVEN
-        driver.get(url_for_service_apply_for_bluecard);
+        driver.get(url);
 
         // WHEN
         formFiller.enterLastName();
@@ -105,9 +115,9 @@ class Section4VisaFormHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getPathUrls")
-    void ASSERT_THAT_email_is_entered_WHEN_enterEmail_is_called() throws ElementNotFoundTimeoutException, InterruptedException {
+    void ASSERT_THAT_email_is_entered_WHEN_enterEmail_is_called(String url) throws ElementNotFoundTimeoutException, InterruptedException {
         // GIVEN
-        driver.get(url_for_service_apply_for_bluecard);
+        driver.get(url);
 
         // WHEN
         formFiller.enterEmail();
@@ -122,9 +132,9 @@ class Section4VisaFormHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getPathUrls")
-    void ASSERT_THAT_birthdate_is_entered_WHEN_enterBirthdate_is_called() throws ElementNotFoundTimeoutException, InterruptedException {
+    void ASSERT_THAT_birthdate_is_entered_WHEN_enterBirthdate_is_called(String url) throws ElementNotFoundTimeoutException, InterruptedException {
         // GIVEN
-        driver.get(url_for_service_apply_for_bluecard);
+        driver.get(url);
 
         // WHEN
         formFiller.enterBirthdate();
@@ -136,8 +146,7 @@ class Section4VisaFormHandlerTest {
         Assertions.assertEquals(birthdate, element.getAttribute("value"));
     }
 
-    @ParameterizedTest
-    @MethodSource("getPathUrls")
+    @Test
     void ASSERT_THAT_residencePermit_is_selected_true_WHEN_selectResidencePermit_is_called_GIVEN_residencePermit_exist_AND_apply_to_visa() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
         // GIVEN
         driver.get(url_for_service_apply_for_bluecard);
@@ -191,12 +200,72 @@ class Section4VisaFormHandlerTest {
     }
 
     @Test
-    void ASSERT_THAT_form_is_filled_and_sent_WHEN_sendForm_is_called_GIVEN_form_is_filled() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
+    void ASSERT_THAT_residencePermitId_is_entered_true_WHEN_selectResidencePermit_is_called_GIVEN_residencePermit_exist_AND_extend_visa() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
+        // GIVEN
+        driver.get(url_for_service_extend_studium);
+        Section4VisaFormHandler formFiller = new Section4VisaFormHandler(personalInfoFormTO, visaForm_extend_berufsausbildung, driver);
+
+        // WHEN
+        formFiller.enterResidencePermitId(RESIDENCE_PERMIT_NUMBER_EXTENSION.getId());
+
+        // THEN
+        String elementId = RESIDENCE_PERMIT_NUMBER.getId();
+        String elementDescription = RESIDENCE_PERMIT_NUMBER.getName();
+        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
+        Assertions.assertEquals(residencePermitId, element.getAttribute("value"));
+    }
+
+    @Test
+    void ASSERT_THAT_residencePermitId_is_entered_true_WHEN_selectResidencePermit_is_called_GIVEN_service_is_Aufenthaltserlaubnis_für_eine_Berufsausbildung() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
+        // GIVEN
+        driver.get(url_new);
+        Section4VisaFormHandler formFiller = new Section4VisaFormHandler(personalInfoFormTO, visaForm_extend_berufsausbildung, driver);
+
+        // WHEN
+        formFiller.enterResidencePermitId(RESIDENCE_PERMIT_NUMBER_EXTENSION.getId());
+
+        // THEN
+        String elementId = RESIDENCE_PERMIT_NUMBER_EXTENSION.getId();
+        String elementDescription = RESIDENCE_PERMIT_NUMBER.getName();
+        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
+        Assertions.assertEquals("D12123123", element.getAttribute("value"));
+    }
+
+    @Test
+    void ASSERT_THAT_form_is_filled_and_sent_WHEN_sendForm_is_called_GIVEN_form_is_filled_GIVEN_THAT_service_is_apply_for_bluecard() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
         // GIVEN
         driver.get(url_for_service_apply_for_bluecard);
 
         // WHEN
         Section4VisaFormHandler spiedFormFiller = spy(new Section4VisaFormHandler(personalInfoFormTO, visaForm_apply_for_bluecard_with_residencePermit, driver));
+        spiedFormFiller.fillAndSendForm();
+
+        // THEN
+        verify(spiedFormFiller).fillForm();
+        verify(spiedFormFiller).sendForm();
+    }
+
+    @Test
+    void ASSERT_THAT_form_is_filled_and_sent_WHEN_sendForm_is_called_GIVEN_form_is_filled_AND_visa_type_is_extension() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
+        // GIVEN
+        driver.get(url_for_service_extend_studium);
+
+        // WHEN
+        Section4VisaFormHandler spiedFormFiller = spy(new Section4VisaFormHandler(personalInfoFormTO, visaForm_extend_berufsausbildung, driver));
+        spiedFormFiller.fillAndSendForm();
+
+        // THEN
+        verify(spiedFormFiller).fillForm();
+        verify(spiedFormFiller).sendForm();
+    }
+
+    @Test
+    void ASSERT_THAT_form_is_filled_and_sent_WHEN_sendForm_is_called_GIVEN_form_is_filled_AND_visa_type_is_extension_() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
+        // GIVEN
+        driver.get(url_new);
+
+        // WHEN
+        Section4VisaFormHandler spiedFormFiller = spy(new Section4VisaFormHandler(personalInfoFormTO, visaForm_extend_berufsausbildung, driver));
         spiedFormFiller.fillAndSendForm();
 
         // THEN

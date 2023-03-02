@@ -47,12 +47,12 @@ public class Section4VisaFormHandler {
 
         sendForm();
 
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName() , "aftersend");
-        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName() , "aftersend");
+        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName() , "after_send");
+        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName() , "after_send");
     }
 
     protected void fillForm() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
-        logger.info("Starting to fill the section 4 form: Angaben, for servicetype: {}", serviceType);
+        logger.info("Starting to fill the section 4 form: Angaben, for servicetype: {}.", serviceType);
         enterFirstName();
         enterLastName();
         enterBirthdate();
@@ -68,6 +68,8 @@ public class Section4VisaFormHandler {
                 enterResidencePermitId(RESIDENCE_PERMIT_NUMBER.getId());
             }
         }
+        logger.error("This shouldn't happen");
+        throw new RuntimeException("Failed to enter residence permit id");
 
  }
 
