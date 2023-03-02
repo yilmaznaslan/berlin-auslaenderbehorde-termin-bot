@@ -45,3 +45,5 @@ bin/
 /.idea/
 
 *.cer
+
+/infra
