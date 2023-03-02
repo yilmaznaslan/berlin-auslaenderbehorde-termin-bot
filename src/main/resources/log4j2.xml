@@ -20,7 +20,7 @@
             </JSONLayout>
             -->
         </Console>
-        <RollingFile name="infoLogFile" fileName="${APP_LOG_ROOT}/search-info.log"
+        <!-- <RollingFile name="infoLogFile" fileName="${APP_LOG_ROOT}/search-info.log"
                      filePattern="${APP_LOG_ROOT}/search-info-%d{yyyy-MM-dd}-%i.log" >
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
@@ -28,6 +28,7 @@
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
+        -->
         <!-- <RollingFile name="infoLogFileJson" fileName="${APP_LOG_ROOT}/search-info.json"
                      filePattern="${APP_LOG_ROOT}/search-info-%d{yyyy-MM-dd}-%i.json" >
             <JSONLayout compact="false" complete="true" eventEol="true" properties="true" stacktraceAsString="true" includeTimeMillis="true">
