@@ -40,8 +40,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
-/logs/
-/src/main/resources/scripts/work_mac_os.cer
 /.idea/
 
 *.cer
