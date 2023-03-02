@@ -23,7 +23,6 @@ docker run \
   -t selenium/standalone-chrome:latest
 ```
 
-
 ## How to run
 - Fill the [personInfoDTO.Json](src/main/resources/PERSONAL_INFO_FORM_default.json) file with your personal information
   - Write the Country value in German as displayed on the browser
@@ -33,28 +32,3 @@ docker run \
 - Run the application in terminal by `./gradlew run`.
   - You will get the email from *LEA* once the bot booked the termin. 
   - REMEMBER: Due to very limited number of available spots, you might need to run the script for a week !
-
-## TODO: How to deploy using AWS EC2 
-
-- [ ] *t3.nano* failed.   Price: *$0.0052*
-- [-] Running the selenium in *t2.medium* worked! Price  *$0.0464*
-- t3a.micro worked only for selenium and finder. Not for elastic
-- [x] **t3a.small**: Works
-- t4g.micro was not available
-
-Other recommendations
-- t4g.small
-- t4g.medium
-
-![](doc/ec2_price.png)
-
-docker exec -it 4c85e0506977 /bin/bash
-
-## How to ship
-- Run `source infra/build.sh`
-
-### Extra
-- Connect to the containers shell `docker exec -ti 18b3d6e1415b /bin/bash`
-
-## TODO: Kubernetes setup
-`kubectl create -f infra/selenium-hub-deployment.yaml`
