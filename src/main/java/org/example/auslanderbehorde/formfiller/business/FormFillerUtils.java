@@ -245,7 +245,7 @@ public class FormFillerUtils {
                     .build();
             client.putObject(new PutObjectRequest(bucketName, fileName, file));
         } catch (Exception e) {
-            logger.error("Error occurred during s3 operation", e);
+            logger.error("Error occurred during s3 operation");
         }
     }
 
@@ -275,7 +275,7 @@ public class FormFillerUtils {
                     .build();
             client.putObject(new PutObjectRequest(bucketName, s3FileName, file));
         } catch (Exception e) {
-            logger.error("Error occurred during s3 operation", e);
+            logger.error("Error occurred during s3 operation");
         }
 
 
