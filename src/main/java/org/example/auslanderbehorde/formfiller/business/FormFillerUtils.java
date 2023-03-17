@@ -54,12 +54,56 @@ public class FormFillerUtils {
         return element;
     }
 
+    public static WebElement getElementByTagName(String tagName, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
+        WebElement element = null;
+        int i = 1;
+        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            try {
+                element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("type").equals("checkbox")).collect(Collectors.toList()).get(0);
+                logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_ID, SeleniumProcessResultEnum.SUCCESSFUL.name());
+                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+                break;
+            } catch (Exception e) {
+                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
+            }
+            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+            i++;
+        }
+        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            throw new ElementNotFoundTimeoutException(elementDescription);
+        }
+        return element;
+    }
+
     public static WebElement getElementByLabelValue(String labelValue, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
         WebElement element = null;
         int i = 1;
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
                 element = driver.findElements(By.tagName("label")).stream().filter(webElement -> webElement.getText().equals(labelValue)).collect(Collectors.toList()).get(0);
+                logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_ID, SeleniumProcessResultEnum.SUCCESSFUL.name());
+                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+                break;
+            } catch (Exception e) {
+                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
+            }
+            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+            i++;
+        }
+        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_TEXT.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            throw new ElementNotFoundTimeoutException(elementDescription);
+        }
+        return element;
+    }
+
+    public static WebElement getElementByTextValue(String textValue, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
+        WebElement element = null;
+        int i = 1;
+        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            try {
+                element = driver.findElement(By.linkText(textValue));
                 logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_ID, SeleniumProcessResultEnum.SUCCESSFUL.name());
                 Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;

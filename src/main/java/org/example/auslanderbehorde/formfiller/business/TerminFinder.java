@@ -4,15 +4,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.formfiller.model.PersonalInfoFormTO;
 import org.example.auslanderbehorde.formfiller.model.VisaFormTO;
-import org.example.auslanderbehorde.sessionfinder.business.SessionFinder;
-import org.example.auslanderbehorde.sessionfinder.model.SessionInfo;
-import org.openqa.selenium.WindowType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.stream.Collectors;
 
 import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.saveSourceCodeToFile;
 
@@ -23,8 +18,6 @@ public class TerminFinder extends TimerTask {
     private final PersonalInfoFormTO personalInfoFormTO;
     private final long FORM_REFRESH_PERIOD_MILLISECONDS = 1000;
     private RemoteWebDriver driver;
-    private String currentWindowHandle;
-    private SessionInfo sessionInfo;
     private final Timer timer = new Timer(true);
 
     public TerminFinder(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO, RemoteWebDriver driver) {
@@ -41,16 +34,21 @@ public class TerminFinder extends TimerTask {
     public void run() {
         // Section 1
         try {
-            initNewSessionInfo();
+            getFormPage();
         } catch (Exception e) {
             logger.error("Error in initializing a new session. Exception: ", e);
-            try {
-                driver = DriverManager.initDriverHeadless();
-            } catch (Exception ex) {
-                logger.error("Failed to initialize the driver. Quitting. Reason: ", ex);
-                driver.quit();
-                return;
-            }
+            driver = DriverManager.initDriverHeadless();
+            return;
+        }
+
+        // Section 1
+        Section1MainPageHandler section1MainPageHandler = new Section1MainPageHandler(driver);
+        try {
+            section1MainPageHandler.fillAndSendForm();
+            driver = section1MainPageHandler.getDriver();
+        } catch (Exception e) {
+            logger.error("Error in initializing a new session. Exception: ", e);
+            driver = DriverManager.initDriverHeadless();
             return;
         }
 
@@ -121,29 +119,13 @@ public class TerminFinder extends TimerTask {
 
     }
 
-    private void initNewSessionInfo() throws InterruptedException {
-        logger.info("Switching to a new tab");
-        driver.switchTo().newWindow(WindowType.TAB);
-        Thread.sleep(2000);
-        SessionFinder sessionFinder = new SessionFinder(driver);
-        sessionInfo = sessionFinder.findAndGetSession();
-        currentWindowHandle = sessionFinder.getDriver().getWindowHandle();
-        Set<String> handle = driver.getWindowHandles();
-        handle.forEach((asd) -> logger.info(String.format("Window handle: " + asd)));
-        logger.info(String.format("Closing the  window handle: %s", handle.stream().collect(Collectors.toList()).get(0)));
-        driver.switchTo().window(handle.stream().collect(Collectors.toList()).get(0)).close();
-        logger.info(String.format("Switching to window handle: %s", currentWindowHandle));
-        driver.switchTo().window(currentWindowHandle);
-        getFormPage(sessionInfo.getRequestId(), sessionInfo.getDswid(), sessionInfo.getDsrid());
+
+    private void getFormPage() {
+        String url = "https://otv.verwalt-berlin.de/ams/TerminBuchen?lang=en";
+        logger.info(String.format("Getting the URL: %s", url));
+        driver.get(url);
     }
 
-    private void getFormPage(String requestId, String dswid, String dsrid) {
-        String hostUrl = "https://otv.verwalt-berlin.de/ams/TerminBuchen/wizardng";
-        String targetUrl = hostUrl + "/" + requestId + "?dswid=" + dswid + "&dsrid=" + dsrid;
-        logger.info(String.format("Getting the URL: %s", targetUrl));
-        currentWindowHandle = driver.getWindowHandle();
-        driver.get(targetUrl);
-    }
 
     public RemoteWebDriver getDriver() {
         return driver;
