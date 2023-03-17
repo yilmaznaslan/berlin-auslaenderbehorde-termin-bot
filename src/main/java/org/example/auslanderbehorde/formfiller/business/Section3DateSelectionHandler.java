@@ -43,7 +43,7 @@ public class Section3DateSelectionHandler {
         String elementDescription = "DateSelection".toUpperCase();
         String cssSelector = "[data-handler=selectDay]";
         FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "handling_date");
-        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(),"handling_Date");
+        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "handling_Date");
         WebElement element = FormFillerUtils.getElementByCssSelector(cssSelector, elementDescription, driver);
         if (isDateVerified(element)) {
             logger.info("Date is verified");
@@ -122,7 +122,7 @@ public class Section3DateSelectionHandler {
                     return true;
                 }
 
-                if (isCalenderFound()){
+                if (isCalenderFound()) {
                     return true;
                 }
 
@@ -142,7 +142,7 @@ public class Section3DateSelectionHandler {
         return driver;
     }
 
-    boolean isCalenderFound(){
+    boolean isCalenderFound() {
         try {
             String asd = "//*[@id=\"xi-div-1\"]/div[3]";
             String elementDescription1 = "calender".toUpperCase();

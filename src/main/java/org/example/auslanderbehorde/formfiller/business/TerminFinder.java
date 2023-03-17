@@ -4,10 +4,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.auslanderbehorde.formfiller.model.PersonalInfoFormTO;
 import org.example.auslanderbehorde.formfiller.model.VisaFormTO;
+import org.openqa.selenium.WindowType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.saveSourceCodeToFile;
 
@@ -18,6 +21,7 @@ public class TerminFinder extends TimerTask {
     private final PersonalInfoFormTO personalInfoFormTO;
     private final long FORM_REFRESH_PERIOD_MILLISECONDS = 1000;
     private RemoteWebDriver driver;
+    private String currentWindowHandle;
     private final Timer timer = new Timer(true);
 
     public TerminFinder(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO, RemoteWebDriver driver) {
@@ -48,8 +52,8 @@ public class TerminFinder extends TimerTask {
             driver = section1MainPageHandler.getDriver();
         } catch (Exception e) {
             logger.error("Error in initializing a new session. Exception: ", e);
-            driver = DriverManager.initDriverHeadless();
-            return;
+            //driver = DriverManager.initDriverHeadless();
+            //return;
         }
 
         // Section 2
@@ -120,10 +124,27 @@ public class TerminFinder extends TimerTask {
     }
 
 
-    private void getFormPage() {
+    private void getFormPage() throws InterruptedException {
+        currentWindowHandle = driver.getWindowHandle();
+        logger.info("Switching to a new tab");
+        driver.switchTo().newWindow(WindowType.TAB);
+        Thread.sleep(2000);
+
+        currentWindowHandle = driver.getWindowHandle();
+
         String url = "https://otv.verwalt-berlin.de/ams/TerminBuchen?lang=en";
         logger.info(String.format("Getting the URL: %s", url));
+        Set<String> handle = driver.getWindowHandles();
+        handle.forEach((asd) -> logger.info(String.format("Window handle: " + asd)));
+        logger.info(String.format("Closing the  window handle: %s", handle.stream().collect(Collectors.toList()).get(0)));
+        driver.switchTo().window(handle.stream().collect(Collectors.toList()).get(0)).close();
+        logger.info(String.format("Switching to window handle: %s", currentWindowHandle));
+        driver.switchTo().window(currentWindowHandle);
+
+
+        currentWindowHandle = driver.getWindowHandle();
         driver.get(url);
+
     }
 
 

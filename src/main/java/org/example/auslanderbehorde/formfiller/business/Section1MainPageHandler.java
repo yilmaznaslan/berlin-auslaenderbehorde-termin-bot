@@ -21,10 +21,11 @@ public class Section1MainPageHandler {
     }
 
     public void fillAndSendForm() throws ElementNotFoundTimeoutException, InteractionFailedException, InterruptedException {
-        fillForm();
+        logger.info("Starting to fill the form");
+        clickBookAppointment();
+        clickToAcceptConsent();
         sendForm();
     }
-
 
     private void clickBookAppointment() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String labelValue = "Book Appointment";
@@ -42,13 +43,6 @@ public class Section1MainPageHandler {
         String elementDescription = "clickButton".toUpperCase();
         WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
         FormFillerUtils.clickToElement(element, elementDescription);
-    }
-
-    private void fillForm() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
-        logger.info("Starting to fill the form");
-        clickBookAppointment();
-        clickToAcceptConsent();
-        sendForm();
     }
 
     public RemoteWebDriver getDriver() {

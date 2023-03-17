@@ -22,7 +22,7 @@ public class FormManager {
 
     public static PersonalInfoFormTO readPersonalInfoFromFile() {
         ObjectMapper mapper = new ObjectMapper();
-        InputStream is = PersonalInfoFormTO.class.getResourceAsStream("/PERSONAL_INFO_FORM_default.json");
+        InputStream is = PersonalInfoFormTO.class.getResourceAsStream("/DEFAULT_PERSONAL_INFO_FORM.json");
         try {
             return mapper.readValue(is, PersonalInfoFormTO.class);
         } catch (IOException e) {
@@ -32,9 +32,7 @@ public class FormManager {
 
     public static VisaFormTO readVisaInfoFromFile() {
         ObjectMapper mapper = new ObjectMapper();
-        InputStream is = VisaFormTO.class.getResourceAsStream("/de/APPLY_FOR_A_RESIDENCE_TITLE_default.json");
-        //InputStream is = VisaFormTO.class.getResourceAsStream("/EXTEND_A_RESIDENCE_TITLE_default.json");
-
+        InputStream is = VisaFormTO.class.getResourceAsStream("/DEFAULT_VISA_APPLICATION_FORM.json");
         try {
             return mapper.readValue(is, VisaFormTO.class);
         } catch (IOException e) {
@@ -81,6 +79,5 @@ public class FormManager {
         terminFinder.startScanning();
 
     }
-
 
 }
