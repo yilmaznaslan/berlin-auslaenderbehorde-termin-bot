@@ -18,7 +18,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
     implementation 'com.twilio.sdk:twilio:9.1.0'
 
-    implementation 'org.seleniumhq.selenium:selenium-java:4.4.0'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.8.1'
 
     implementation 'org.apache.logging.log4j:log4j-core:2.14.1'
     implementation 'org.apache.logging.log4j:log4j-api:2.14.1'
@@ -38,6 +38,10 @@ dependencies {
 
     //implementation('org.springframework.boot:spring-boot-starter-web')
 
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
 
 test {

@@ -69,6 +69,15 @@ class Section4VisaFormHandlerTest {
     @BeforeAll
     static void initDriver() {
         ChromeOptions options = new ChromeOptions();
+        // Add options to make Selenium-driven browser look more like a regular user's browser
+        options.addArguments("--disable-blink-features=AutomationControlled"); // Remove "navigator.webdriver" flag
+        options.addArguments("--disable-infobars"); // Disable infobars
+        options.addArguments("--start-maximized"); // Start the browser maximized
+        options.addArguments("--disable-extensions"); // Disable extensions
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--remote-allow-origins=*");
+
+
         driver = new ChromeDriver(options);
     }
 

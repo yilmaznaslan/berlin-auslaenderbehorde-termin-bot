@@ -2,13 +2,22 @@ package org.example.auslanderbehorde.formfiller.business;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessEnum;
+import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessResultEnum;
 import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
 import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
 import org.example.auslanderbehorde.formfiller.model.PersonalInfoFormTO;
 import org.example.auslanderbehorde.formfiller.model.VisaFormTO;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.Select;
 
+import java.util.stream.Collectors;
+
+import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.*;
+import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.logWarn;
+import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.COUNTRY;
 import static org.example.auslanderbehorde.formfiller.enums.Section4FormParameterEnum.*;
 
 /**
@@ -74,49 +83,136 @@ public class Section4VisaFormHandler {
  }
 
     protected void enterFirstName() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementId = FIRSTNAME.getId();
         String elementDescription = FIRSTNAME.name();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        element.sendKeys(firstName);
+        int i = 1;
+        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            try {
+                WebElement element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals("antragsteller_vname")).collect(Collectors.toList()).get(0);
+                element.sendKeys(firstName);
+                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+                break;
+            } catch (Exception e) {
+                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
+            }
+            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+            i++;
+        }
+        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            throw new ElementNotFoundTimeoutException(elementDescription);
+        }
     }
 
     protected void enterLastName() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementId = LASTNAME.getId();
         String elementDescription = LASTNAME.name();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        element.sendKeys(lastName);
+        int i = 1;
+        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            try {
+                WebElement element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals("antragsteller_nname")).collect(Collectors.toList()).get(0);
+                element.sendKeys(lastName);
+                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+                break;
+            } catch (Exception e) {
+                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
+            }
+            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+            i++;
+        }
+        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            throw new ElementNotFoundTimeoutException(elementDescription);
+        }
     }
 
     protected void enterEmail() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementId = EMAIL.getId();
         String elementDescription = EMAIL.name();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        element.sendKeys(emailAddress);
+        int i = 1;
+        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            try {
+                WebElement element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals("antragsteller_email")).collect(Collectors.toList()).get(0);
+                element.sendKeys(emailAddress);
+                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+                break;
+            } catch (Exception e) {
+                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
+            }
+            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+            i++;
+        }
+        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            throw new ElementNotFoundTimeoutException(elementDescription);
+        }
+
     }
 
     protected void enterBirthdate() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementId = BIRTHDATE.getId();
         String elementDescription = BIRTHDATE.name();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        element.sendKeys(birthdate);
+        int i = 1;
+        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            try {
+                WebElement element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals("antragsteller_gebDatum")).collect(Collectors.toList()).get(0);
+                element.sendKeys(birthdate);
+                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+                break;
+            } catch (Exception e) {
+                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
+            }
+            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+            i++;
+        }
+        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            throw new ElementNotFoundTimeoutException(elementDescription);
+        }
     }
 
     protected void enterResidencePermitId(String elementId) throws ElementNotFoundTimeoutException, InterruptedException {
         logger.info("Entering the residence permit id");
         String elementDescription = RESIDENCE_PERMIT_NUMBER.name();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        element.sendKeys(residencePermitId);
+        int i = 1;
+        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            try {
+                WebElement element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals("antragsteller_nrAufenthaltserlaubnis2")).collect(Collectors.toList()).get(0);
+                element.sendKeys(residencePermitId);
+                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+                break;
+            } catch (Exception e) {
+                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
+            }
+            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+            i++;
+        }
+        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            throw new ElementNotFoundTimeoutException(elementDescription);
+        }
     }
 
     protected void selectResidencePermit() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
-        String elementId = RESIDENCE_PERMIT.getId();
         String elementDescription = RESIDENCE_PERMIT.getName();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        if (isResidencePermitPresent) {
-            FormFillerUtils.selectOptionByValue(element, elementDescription, "1");
-        } else {
-            FormFillerUtils.selectOptionByValue(element, elementDescription, "0");
+        int i = 1;
+        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            try {
+                WebElement element = driver.findElements(By.tagName("select")).stream().filter(element1 -> element1.getAttribute("name").equals("sel_aufenthaltserlaubnis")).collect(Collectors.toList()).get(0);
+                if (isResidencePermitPresent) {
+                    FormFillerUtils.selectOptionByValue(element, elementDescription, "1");
+                } else {
+                    FormFillerUtils.selectOptionByValue(element, elementDescription, "0");
+                }
+                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+                break;
+            } catch (Exception e) {
+                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
+            }
+            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+            i++;
         }
+        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            throw new ElementNotFoundTimeoutException(elementDescription);
+        }
+
     }
 
     protected void sendForm() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
