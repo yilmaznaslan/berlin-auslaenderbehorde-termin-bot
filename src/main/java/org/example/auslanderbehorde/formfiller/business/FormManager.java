@@ -32,7 +32,7 @@ public class FormManager {
 
     public static VisaFormTO readVisaInfoFromFile() {
         ObjectMapper mapper = new ObjectMapper();
-        InputStream is = VisaFormTO.class.getResourceAsStream("/APPLY_FOR_A_RESIDENCE_TITLE_default.json");
+        InputStream is = VisaFormTO.class.getResourceAsStream("/de/APPLY_FOR_A_RESIDENCE_TITLE_default.json");
         //InputStream is = VisaFormTO.class.getResourceAsStream("/EXTEND_A_RESIDENCE_TITLE_default.json");
 
         try {
