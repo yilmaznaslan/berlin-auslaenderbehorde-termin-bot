@@ -41,7 +41,13 @@ public class TerminFinder extends TimerTask {
             getFormPage();
         } catch (Exception e) {
             logger.error("Error in initializing a new session. Exception: ", e);
-            driver = DriverManager.initDriverHeadless();
+            try {
+                driver = DriverManager.initDriverHeadless();
+            } catch (Exception ex) {
+                logger.error("Failed to initialize the driver. Quitting. Reason: ", ex);
+                driver.quit();
+                return;
+            }
             return;
         }
 
@@ -53,7 +59,7 @@ public class TerminFinder extends TimerTask {
         } catch (Exception e) {
             logger.error("Error in initializing a new session. Exception: ", e);
             //driver = DriverManager.initDriverHeadless();
-            //return;
+            return;
         }
 
         // Section 2
