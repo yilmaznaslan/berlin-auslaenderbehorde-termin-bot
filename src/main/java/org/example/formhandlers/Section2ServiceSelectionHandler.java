@@ -62,10 +62,11 @@ public class Section2ServiceSelectionHandler {
 
     private void selectCitizenshipValue() throws InterruptedException, ElementNotFoundTimeoutException {
         String elementDescription = FormParameterEnum.COUNTRY.name();
+        String elementName = FormParameterEnum.COUNTRY.getName();
         int i = 1;
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
-                WebElement element = driver.findElements(By.tagName("select")).stream().filter(element1 -> element1.getAttribute("name").equals("sel_staat")).collect(Collectors.toList()).get(0);
+                WebElement element = driver.findElements(By.tagName("select")).stream().filter(element1 -> element1.getAttribute("name").equals(elementName)).collect(Collectors.toList()).get(0);
                 Select select = new Select(element);
                 select.selectByVisibleText(citizenshipValue);
                 WebElement option = select.getFirstSelectedOption();
@@ -87,7 +88,7 @@ public class Section2ServiceSelectionHandler {
     }
 
     private void selectApplicantsCount() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementDescription = FormParameterEnum.APPLICANT_COUNT.name();
+        String elementDescription = FormParameterEnum.APPLICANT_COUNT.getName();
         int i = 1;
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
