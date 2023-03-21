@@ -2,7 +2,7 @@ package org.example.business;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.formhandlers.*;
+import org.example.business.formhandlers.*;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
 import org.example.utils.DriverManager;
@@ -42,7 +42,7 @@ public class TerminFinder extends TimerTask {
 
     public void startScanning() {
         logger.info(String.format("Scheduled the task at rate: %s", FORM_REFRESH_PERIOD_MILLISECONDS));
-        timer.scheduleAtFixedRate(this, 2000, FORM_REFRESH_PERIOD_MILLISECONDS);
+        timer.scheduleAtFixedRate(this, 0, FORM_REFRESH_PERIOD_MILLISECONDS);
     }
 
     public void run() {

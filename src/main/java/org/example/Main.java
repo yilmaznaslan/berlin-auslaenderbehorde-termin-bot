@@ -4,8 +4,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
+import org.example.utils.ThreadMonitor;
 
-import static org.example.FormManager.*;
+import static org.example.business.FormManager.*;
 
 public class Main {
     public static final Logger logger = LogManager.getLogger(Main.class);

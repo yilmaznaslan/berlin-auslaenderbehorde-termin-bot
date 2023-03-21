@@ -1,4 +1,4 @@
-package org.example.formhandlers;
+package org.example.business.formhandlers;
 
 import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.utils.FormFillerUtils;
@@ -9,10 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.Select;
-
-import static org.example.enums.Section4FormParameterEnum.RESIDENCE_PERMIT;
-import static org.junit.jupiter.api.Assertions.*;
 
 class Section3DateSelectionHandlerTest {
 

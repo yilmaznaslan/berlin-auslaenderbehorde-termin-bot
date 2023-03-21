@@ -1,4 +1,4 @@
-package org.example.formhandlers;
+package org.example.business.formhandlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -6,10 +6,10 @@ import org.example.enums.Section4FormParameterEnum;
 import org.example.enums.SeleniumProcessEnum;
 import org.example.enums.SeleniumProcessResultEnum;
 import org.example.exceptions.ElementNotFoundTimeoutException;
-import org.example.utils.FormFillerUtils;
 import org.example.exceptions.InteractionFailedException;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
+import org.example.utils.FormFillerUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 import static org.example.enums.Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER;
 import static org.example.enums.Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER_EXTENSION;
 import static org.example.utils.FormFillerUtils.*;
-import static org.example.utils.FormFillerUtils.logWarn;
 
 /**
  * Business Access Layer for filling the Section 4: Angaben

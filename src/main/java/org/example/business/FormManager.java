@@ -1,9 +1,8 @@
-package org.example;
+package org.example.business;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.business.TerminFinder;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -62,9 +61,6 @@ public class FormManager {
         }
 
         if (serviceType.equals("Extend a residence title")) {
-            if (isResidencePermitPresent != null) {
-                return false;
-            }
 
             if (residencePermitId == null) {
                 return false;
@@ -75,6 +71,8 @@ public class FormManager {
     }
 
     public static void startForm(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO) {
+        logger.info("PersonalInfoFormTO: {}", personalInfoFormTO);
+        logger.info("VisaFormTO: {}", visaFormTO);
         RemoteWebDriver remoteWebDriver = initDriverHeadless();
         TerminFinder terminFinder = new TerminFinder(personalInfoFormTO, visaFormTO, remoteWebDriver);
         terminFinder.startScanning();

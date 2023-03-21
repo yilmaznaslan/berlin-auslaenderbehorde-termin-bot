@@ -1,21 +1,18 @@
-package org.example.formhandlers;
+package org.example.business.formhandlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.enums.FormParameterEnum;
-import org.example.enums.Section4FormParameterEnum;
 import org.example.enums.SeleniumProcessEnum;
 import org.example.enums.SeleniumProcessResultEnum;
 import org.example.exceptions.ElementNotFoundTimeoutException;
-import org.example.utils.FormFillerUtils;
 import org.example.exceptions.InteractionFailedException;
+import org.example.utils.FormFillerUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -139,6 +136,7 @@ public class Section3DateSelectionHandler {
             String activeStepXpath = "//*[@id=\"main\"]/div[2]/div[4]/div[2]/div/div[1]/ul/li[2]";
             WebElement activeStepElement = FormFillerUtils.getElementByXPathCalender(activeStepXpath ,"ActivePath", driver);
             String activeStepText = activeStepElement.getText();
+            logger.info("text:"+activeStepText);
             if(activeStepText.contains("Terminauswahl") || activeStepText.contains("Date selection")){
                 return true;
             }

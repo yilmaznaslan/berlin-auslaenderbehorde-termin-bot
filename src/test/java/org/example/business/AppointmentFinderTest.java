@@ -1,6 +1,6 @@
 package org.example.business;
 
-import org.example.formhandlers.Section3DateSelectionHandler;
+import org.example.business.formhandlers.Section3DateSelectionHandler;
 import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.exceptions.InteractionFailedException;
 import org.junit.jupiter.api.Assertions;

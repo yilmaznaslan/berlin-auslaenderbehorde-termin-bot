@@ -2,7 +2,7 @@ package org.example.enums;
 
 public enum FormParameterEnum {
 
-    COUNTRY("xi-sel-400", "sel-staat"),
+    COUNTRY("xi-sel-400", "sel_staat"),
     APPLICANT_COUNT("xi-sel-422", "personenAnzahl_normal"),
     FAMILY_STATUS("xi-sel-427", "lebnBrMitFmly"),
     TIME_SLOT("xi-sel-3", "dd_zeiten");

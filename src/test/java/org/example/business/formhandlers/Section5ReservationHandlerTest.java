@@ -1,4 +1,4 @@
-package org.example.formhandlers;
+package org.example.business.formhandlers;
 
 import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.exceptions.InteractionFailedException;

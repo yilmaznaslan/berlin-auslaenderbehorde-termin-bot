@@ -1,4 +1,4 @@
-package org.example.formhandlers;
+package org.example.business.formhandlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -6,10 +6,10 @@ import org.example.enums.FormParameterEnum;
 import org.example.enums.SeleniumProcessEnum;
 import org.example.enums.SeleniumProcessResultEnum;
 import org.example.exceptions.ElementNotFoundTimeoutException;
-import org.example.utils.FormFillerUtils;
 import org.example.exceptions.InteractionFailedException;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
+import org.example.utils.FormFillerUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -17,9 +17,9 @@ import org.openqa.selenium.support.ui.Select;
 
 import java.util.stream.Collectors;
 
+import static org.example.business.formhandlers.Section3DateSelectionHandler.foundAppointmentCount;
+import static org.example.business.formhandlers.Section3DateSelectionHandler.handledAppointmentCount;
 import static org.example.utils.FormFillerUtils.*;
-import static org.example.formhandlers.Section3DateSelectionHandler.foundAppointmentCount;
-import static org.example.formhandlers.Section3DateSelectionHandler.handledAppointmentCount;
 
 /**
  * Business Access Layer for filling the form
@@ -66,7 +66,8 @@ public class Section2ServiceSelectionHandler {
         int i = 1;
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
-                WebElement element = driver.findElements(By.tagName("select")).stream().filter(element1 -> element1.getAttribute("name").equals(elementName)).collect(Collectors.toList()).get(0);
+                WebElement element = driver.findElements(By.tagName("select")).stream()
+                        .filter(element1 -> element1.getAttribute("name").equals(elementName)).collect(Collectors.toList()).get(0);
                 Select select = new Select(element);
                 select.selectByVisibleText(citizenshipValue);
                 WebElement option = select.getFirstSelectedOption();
