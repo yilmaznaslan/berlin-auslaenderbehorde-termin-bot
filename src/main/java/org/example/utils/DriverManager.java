@@ -1,7 +1,8 @@
-package org.example.auslanderbehorde.formfiller.business;
+package org.example.utils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.example.business.TerminFinder;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 

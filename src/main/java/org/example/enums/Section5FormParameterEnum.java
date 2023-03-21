@@ -1,4 +1,4 @@
-package org.example.auslanderbehorde.formfiller.enums;
+package org.example.enums;
 
 public enum Section5FormParameterEnum {
 

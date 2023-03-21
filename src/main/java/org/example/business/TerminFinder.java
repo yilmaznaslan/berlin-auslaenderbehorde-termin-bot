@@ -1,9 +1,12 @@
-package org.example.auslanderbehorde.formfiller.business;
+package org.example.business;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.formfiller.model.PersonalInfoFormTO;
-import org.example.auslanderbehorde.formfiller.model.VisaFormTO;
+import org.example.formhandlers.*;
+import org.example.model.PersonalInfoFormTO;
+import org.example.model.VisaFormTO;
+import org.example.utils.DriverManager;
+import org.example.utils.FormFillerUtils;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -12,8 +15,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
-import static org.example.auslanderbehorde.formfiller.business.DriverManager.initDriverHeadless;
-import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.saveSourceCodeToFile;
+import static org.example.utils.DriverManager.initDriverHeadless;
+import static org.example.utils.FormFillerUtils.saveSourceCodeToFile;
 
 public class TerminFinder extends TimerTask {
 

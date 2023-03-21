@@ -1,4 +1,4 @@
-package org.example.auslanderbehorde.formfiller.model;
+package org.example.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

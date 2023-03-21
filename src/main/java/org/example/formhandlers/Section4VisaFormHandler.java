@@ -1,24 +1,23 @@
-package org.example.auslanderbehorde.formfiller.business;
+package org.example.formhandlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessEnum;
-import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessResultEnum;
-import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
-import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
-import org.example.auslanderbehorde.formfiller.model.PersonalInfoFormTO;
-import org.example.auslanderbehorde.formfiller.model.VisaFormTO;
+import org.example.enums.Section4FormParameterEnum;
+import org.example.enums.SeleniumProcessEnum;
+import org.example.enums.SeleniumProcessResultEnum;
+import org.example.exceptions.ElementNotFoundTimeoutException;
+import org.example.utils.FormFillerUtils;
+import org.example.exceptions.InteractionFailedException;
+import org.example.model.PersonalInfoFormTO;
+import org.example.model.VisaFormTO;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.Select;
 
 import java.util.stream.Collectors;
 
-import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.*;
-import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.logWarn;
-import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.COUNTRY;
-import static org.example.auslanderbehorde.formfiller.enums.Section4FormParameterEnum.*;
+import static org.example.utils.FormFillerUtils.*;
+import static org.example.utils.FormFillerUtils.logWarn;
 
 /**
  * Business Access Layer for filling the Section 4: Angaben
@@ -67,14 +66,14 @@ public class Section4VisaFormHandler {
         enterBirthdate();
         enterEmail();
 
-        if (serviceType.equals("Aufenthaltstitel - verlängern")) {
-            enterResidencePermitId(RESIDENCE_PERMIT_NUMBER_EXTENSION.getId());
+        if (serviceType.equals("Extend a residence title")) {
+            enterResidencePermitId(Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER_EXTENSION.getId());
         }
 
-        if (serviceType.equals("Aufenthaltstitel - beantragen")) {
+        if (serviceType.equals("Apply for a residence title")) {
             selectResidencePermit();
             if (isResidencePermitPresent) {
-                enterResidencePermitId(RESIDENCE_PERMIT_NUMBER.getId());
+                enterResidencePermitId(Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER.getId());
             }
         }
         logger.error("This shouldn't happen");
@@ -83,7 +82,7 @@ public class Section4VisaFormHandler {
  }
 
     protected void enterFirstName() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementDescription = FIRSTNAME.name();
+        String elementDescription = Section4FormParameterEnum.FIRSTNAME.name();
         int i = 1;
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
@@ -104,7 +103,7 @@ public class Section4VisaFormHandler {
     }
 
     protected void enterLastName() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementDescription = LASTNAME.name();
+        String elementDescription = Section4FormParameterEnum.LASTNAME.name();
         int i = 1;
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
@@ -125,7 +124,7 @@ public class Section4VisaFormHandler {
     }
 
     protected void enterEmail() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementDescription = EMAIL.name();
+        String elementDescription = Section4FormParameterEnum.EMAIL.name();
         int i = 1;
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
@@ -147,7 +146,7 @@ public class Section4VisaFormHandler {
     }
 
     protected void enterBirthdate() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementDescription = BIRTHDATE.name();
+        String elementDescription = Section4FormParameterEnum.BIRTHDATE.name();
         int i = 1;
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
@@ -169,7 +168,7 @@ public class Section4VisaFormHandler {
 
     protected void enterResidencePermitId(String elementId) throws ElementNotFoundTimeoutException, InterruptedException {
         logger.info("Entering the residence permit id");
-        String elementDescription = RESIDENCE_PERMIT_NUMBER.name();
+        String elementDescription = Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER.name();
         int i = 1;
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
@@ -190,7 +189,7 @@ public class Section4VisaFormHandler {
     }
 
     protected void selectResidencePermit() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
-        String elementDescription = RESIDENCE_PERMIT.getName();
+        String elementDescription = Section4FormParameterEnum.RESIDENCE_PERMIT.getName();
         int i = 1;
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {

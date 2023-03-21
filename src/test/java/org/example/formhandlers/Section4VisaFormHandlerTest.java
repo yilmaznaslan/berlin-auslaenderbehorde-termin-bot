@@ -1,9 +1,10 @@
-package org.example.auslanderbehorde.formfiller.business;
+package org.example.formhandlers;
 
-import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
-import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
-import org.example.auslanderbehorde.formfiller.model.PersonalInfoFormTO;
-import org.example.auslanderbehorde.formfiller.model.VisaFormTO;
+import org.example.exceptions.ElementNotFoundTimeoutException;
+import org.example.exceptions.InteractionFailedException;
+import org.example.model.PersonalInfoFormTO;
+import org.example.model.VisaFormTO;
+import org.example.utils.FormFillerUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,7 +18,7 @@ import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
 
-import static org.example.auslanderbehorde.formfiller.enums.Section4FormParameterEnum.*;
+import static org.example.enums.Section4FormParameterEnum.*;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 

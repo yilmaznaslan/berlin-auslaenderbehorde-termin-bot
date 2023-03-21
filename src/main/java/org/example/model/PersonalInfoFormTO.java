@@ -1,4 +1,4 @@
-package org.example.auslanderbehorde.formfiller.model;
+package org.example.model;
 
 public class PersonalInfoFormTO {
     private String citizenshipValue;

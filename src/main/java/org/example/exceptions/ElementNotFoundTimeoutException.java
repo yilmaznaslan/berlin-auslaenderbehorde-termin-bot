@@ -1,4 +1,4 @@
-package org.example.auslanderbehorde.formfiller.exceptions;
+package org.example.exceptions;
 
 public class ElementNotFoundTimeoutException extends Exception {
     public ElementNotFoundTimeoutException(String message) {

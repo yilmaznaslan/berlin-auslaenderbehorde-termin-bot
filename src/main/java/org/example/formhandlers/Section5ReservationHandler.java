@@ -1,10 +1,11 @@
-package org.example.auslanderbehorde.formfiller.business;
+package org.example.formhandlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.formfiller.enums.Section5FormParameterEnum;
-import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
-import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
+import org.example.utils.FormFillerUtils;
+import org.example.enums.Section5FormParameterEnum;
+import org.example.exceptions.ElementNotFoundTimeoutException;
+import org.example.exceptions.InteractionFailedException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 

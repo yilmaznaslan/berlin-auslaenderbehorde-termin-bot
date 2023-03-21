@@ -1,7 +1,8 @@
-package org.example.auslanderbehorde.formfiller.business;
+package org.example.business;
 
-import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
-import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
+import org.example.formhandlers.Section3DateSelectionHandler;
+import org.example.exceptions.ElementNotFoundTimeoutException;
+import org.example.exceptions.InteractionFailedException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

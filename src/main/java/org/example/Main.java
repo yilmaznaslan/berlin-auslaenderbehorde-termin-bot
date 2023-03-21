@@ -2,10 +2,10 @@ package org.example;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.formfiller.model.PersonalInfoFormTO;
-import org.example.auslanderbehorde.formfiller.model.VisaFormTO;
+import org.example.model.PersonalInfoFormTO;
+import org.example.model.VisaFormTO;
 
-import static org.example.auslanderbehorde.formfiller.business.FormManager.*;
+import static org.example.FormManager.*;
 
 public class Main {
     public static final Logger logger = LogManager.getLogger(Main.class);

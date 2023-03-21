@@ -1,4 +1,4 @@
-package org.example.auslanderbehorde.formfiller.business;
+package org.example.utils;
 
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.regions.Regions;
@@ -9,10 +9,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
-import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessEnum;
-import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessResultEnum;
-import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
-import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
+import org.example.enums.SeleniumProcessEnum;
+import org.example.enums.SeleniumProcessResultEnum;
+import org.example.exceptions.ElementNotFoundTimeoutException;
+import org.example.exceptions.InteractionFailedException;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 
@@ -25,11 +25,11 @@ import java.util.stream.Collectors;
 
 public class FormFillerUtils {
     private static final Logger logger = LogManager.getLogger(FormFillerUtils.class);
-    static final int TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS = 25;
+    public static final int TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS = 25;
     static final int TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS = 5;
 
     static final int TIMEOUT_FOR_INTERACTING_IN_SECONDS = 25;
-    static final int SLEEP_DURATION_IN_MILLISECONDS = 1500;
+    public static final int SLEEP_DURATION_IN_MILLISECONDS = 1500;
     public static long formId;
 
     public static WebElement getElementById(String id, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {

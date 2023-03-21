@@ -1,11 +1,13 @@
-package org.example.auslanderbehorde.formfiller.business;
+package org.example.formhandlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessEnum;
-import org.example.auslanderbehorde.formfiller.enums.SeleniumProcessResultEnum;
-import org.example.auslanderbehorde.formfiller.exceptions.ElementNotFoundTimeoutException;
-import org.example.auslanderbehorde.formfiller.exceptions.InteractionFailedException;
+import org.example.enums.FormParameterEnum;
+import org.example.enums.SeleniumProcessEnum;
+import org.example.enums.SeleniumProcessResultEnum;
+import org.example.exceptions.ElementNotFoundTimeoutException;
+import org.example.utils.FormFillerUtils;
+import org.example.exceptions.InteractionFailedException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -14,9 +16,8 @@ import org.openqa.selenium.support.ui.Select;
 import java.io.IOException;
 import java.util.List;
 
-import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
-import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.logInfo;
-import static org.example.auslanderbehorde.formfiller.enums.FormParameterEnum.TIME_SLOT;
+import static org.example.utils.FormFillerUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
+import static org.example.utils.FormFillerUtils.logInfo;
 
 public class Section3DateSelectionHandler {
 
@@ -54,8 +55,8 @@ public class Section3DateSelectionHandler {
     }
 
     private void handleSelectingTimeslotAndSendForm() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
-        String elementId = TIME_SLOT.getId();
-        String elementDescription = TIME_SLOT.name();
+        String elementId = FormParameterEnum.TIME_SLOT.getId();
+        String elementDescription = FormParameterEnum.TIME_SLOT.name();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         if (isTimeslotOptionVerified(element)) {
             foundAppointmentCount++;
@@ -142,7 +143,7 @@ public class Section3DateSelectionHandler {
         return driver;
     }
 
-    boolean isCalenderFound() {
+    public boolean isCalenderFound() {
         try {
             String asd = "//*[@id=\"xi-div-1\"]/div[3]";
             String elementDescription1 = "calender".toUpperCase();
