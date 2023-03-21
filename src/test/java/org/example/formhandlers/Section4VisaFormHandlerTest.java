@@ -46,22 +46,22 @@ class Section4VisaFormHandlerTest {
     VisaFormTO visaForm_apply_for_bluecard_with_residencePermit = new VisaFormTO(
             true,
             residencePermitId,
-            "Aufenthaltstitel - beantragen",
-            "Erwerbstätigkeit",
-            "Blaue Karte EU (§ 18b Abs. 2)");
+            "Apply for a residence title",
+            "Economic activity",
+            "EU Blue Card / Blaue Karte EU (sect. 18b para. 2)");
     VisaFormTO visaForm_apply_for_bluecard_without_residencePermit = new VisaFormTO(
             false,
             null,
-            "Aufenthaltstitel - beantragen",
-            "Erwerbstätigkeit",
-            "Blaue Karte EU (§ 18b Abs. 2)");
+            "Apply for a residence title",
+            "Economic activity",
+            "EU Blue Card / Blaue Karte EU (sect. 18b para. 2)");
 
     VisaFormTO visaForm_extend_berufsausbildung = new VisaFormTO(
             null,
-            "D12123123",
-            "Aufenthaltstitel - verlängern",
-            "Studium und Ausbildung",
-            "Aufenthaltserlaubnis für eine Berufsausbildung (§ 16a)");
+            residencePermitId,
+            "Extend a residence title",
+            "Educational purposes",
+            "Residence permit for vocational training (sect. 16a)");
 
     static ChromeDriver driver;
     Section4VisaFormHandler formFiller = new Section4VisaFormHandler(personalInfoFormTO, visaForm_apply_for_bluecard_with_residencePermit, driver);
@@ -77,8 +77,8 @@ class Section4VisaFormHandlerTest {
         options.addArguments("--disable-extensions"); // Disable extensions
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--remote-allow-origins=*");
-
-
+        options.addArguments("--disable-dev-shm-usage");
+        //options.addArguments("--headless");
         driver = new ChromeDriver(options);
     }
 
@@ -87,7 +87,7 @@ class Section4VisaFormHandlerTest {
         driver.quit();
     }
 
-    static List<String> getPathUrls(){
+    static List<String> getPathUrls() {
         return List.of(url_for_service_apply_for_bluecard, url_for_service_extend_studium);
     }
 
@@ -200,7 +200,7 @@ class Section4VisaFormHandlerTest {
         Section4VisaFormHandler formFiller = new Section4VisaFormHandler(personalInfoFormTO, visaForm_apply_for_bluecard_with_residencePermit, driver);
 
         // WHEN
-        formFiller.enterResidencePermitId(RESIDENCE_PERMIT_NUMBER.getId());
+        formFiller.enterResidencePermitId(RESIDENCE_PERMIT_NUMBER.getName());
 
         // THEN
         String elementId = RESIDENCE_PERMIT_NUMBER.getId();
@@ -216,29 +216,29 @@ class Section4VisaFormHandlerTest {
         Section4VisaFormHandler formFiller = new Section4VisaFormHandler(personalInfoFormTO, visaForm_extend_berufsausbildung, driver);
 
         // WHEN
-        formFiller.enterResidencePermitId(RESIDENCE_PERMIT_NUMBER_EXTENSION.getId());
+        formFiller.enterResidencePermitId(RESIDENCE_PERMIT_NUMBER_EXTENSION.getName());
 
         // THEN
-        String elementId = RESIDENCE_PERMIT_NUMBER.getId();
-        String elementDescription = RESIDENCE_PERMIT_NUMBER.getName();
+        String elementId = RESIDENCE_PERMIT_NUMBER_EXTENSION.getId();
+        String elementDescription = RESIDENCE_PERMIT_NUMBER_EXTENSION.getName();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
         Assertions.assertEquals(residencePermitId, element.getAttribute("value"));
     }
 
     @Test
-    void ASSERT_THAT_residencePermitId_is_entered_true_WHEN_selectResidencePermit_is_called_GIVEN_service_is_Aufenthaltserlaubnis_für_eine_Berufsausbildung() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
+    void ASSERT_THAT_residencePermitId_is_entered_true_WHEN_selectResidencePermit_is_called_GIVEN_service_is_Aufenthaltserlaubnis_für_eine_Berufsausbildung() throws ElementNotFoundTimeoutException, InterruptedException {
         // GIVEN
-        driver.get(url_new);
+        driver.get(url_for_service_extend_studium);
         Section4VisaFormHandler formFiller = new Section4VisaFormHandler(personalInfoFormTO, visaForm_extend_berufsausbildung, driver);
 
         // WHEN
-        formFiller.enterResidencePermitId(RESIDENCE_PERMIT_NUMBER_EXTENSION.getId());
+        formFiller.enterResidencePermitId(RESIDENCE_PERMIT_NUMBER_EXTENSION.getName());
 
         // THEN
         String elementId = RESIDENCE_PERMIT_NUMBER_EXTENSION.getId();
         String elementDescription = RESIDENCE_PERMIT_NUMBER.getName();
         WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        Assertions.assertEquals("D12123123", element.getAttribute("value"));
+        Assertions.assertEquals(residencePermitId, element.getAttribute("value"));
     }
 
     @Test

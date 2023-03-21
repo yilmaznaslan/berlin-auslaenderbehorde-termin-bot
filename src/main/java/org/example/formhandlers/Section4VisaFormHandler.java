@@ -16,6 +16,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.stream.Collectors;
 
+import static org.example.enums.Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER;
+import static org.example.enums.Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER_EXTENSION;
 import static org.example.utils.FormFillerUtils.*;
 import static org.example.utils.FormFillerUtils.logWarn;
 
@@ -59,7 +61,7 @@ public class Section4VisaFormHandler {
         FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName() , "after_send");
     }
 
-    protected void fillForm() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
+    protected void fillForm() throws ElementNotFoundTimeoutException, InterruptedException{
         logger.info("Starting to fill the section 4 form: Angaben, for servicetype: {}.", serviceType);
         enterFirstName();
         enterLastName();
@@ -67,14 +69,16 @@ public class Section4VisaFormHandler {
         enterEmail();
 
         if (serviceType.equals("Extend a residence title")) {
-            enterResidencePermitId(Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER_EXTENSION.getId());
+            enterResidencePermitId(RESIDENCE_PERMIT_NUMBER_EXTENSION.getName());
+            return;
         }
 
         if (serviceType.equals("Apply for a residence title")) {
             selectResidencePermit();
             if (isResidencePermitPresent) {
-                enterResidencePermitId(Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER.getId());
+                enterResidencePermitId(RESIDENCE_PERMIT_NUMBER.getName());
             }
+            return;
         }
         logger.error("This shouldn't happen");
         throw new RuntimeException("Failed to enter residence permit id");
@@ -82,11 +86,11 @@ public class Section4VisaFormHandler {
  }
 
     protected void enterFirstName() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementDescription = Section4FormParameterEnum.FIRSTNAME.name();
+        String elementDescription = Section4FormParameterEnum.FIRSTNAME.getName();
         int i = 1;
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
-                WebElement element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals("antragsteller_vname")).collect(Collectors.toList()).get(0);
+                WebElement element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals(elementDescription)).collect(Collectors.toList()).get(0);
                 element.sendKeys(firstName);
                 Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
@@ -103,11 +107,11 @@ public class Section4VisaFormHandler {
     }
 
     protected void enterLastName() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementDescription = Section4FormParameterEnum.LASTNAME.name();
+        String elementDescription = Section4FormParameterEnum.LASTNAME.getName();
         int i = 1;
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
-                WebElement element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals("antragsteller_nname")).collect(Collectors.toList()).get(0);
+                WebElement element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals(elementDescription)).collect(Collectors.toList()).get(0);
                 element.sendKeys(lastName);
                 Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
@@ -124,11 +128,11 @@ public class Section4VisaFormHandler {
     }
 
     protected void enterEmail() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementDescription = Section4FormParameterEnum.EMAIL.name();
+        String elementDescription = Section4FormParameterEnum.EMAIL.getName();
         int i = 1;
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
-                WebElement element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals("antragsteller_email")).collect(Collectors.toList()).get(0);
+                WebElement element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals(elementDescription)).collect(Collectors.toList()).get(0);
                 element.sendKeys(emailAddress);
                 Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
@@ -146,11 +150,11 @@ public class Section4VisaFormHandler {
     }
 
     protected void enterBirthdate() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementDescription = Section4FormParameterEnum.BIRTHDATE.name();
+        String elementDescription = Section4FormParameterEnum.BIRTHDATE.getName();
         int i = 1;
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
-                WebElement element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals("antragsteller_gebDatum")).collect(Collectors.toList()).get(0);
+                WebElement element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals(elementDescription)).collect(Collectors.toList()).get(0);
                 element.sendKeys(birthdate);
                 Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
@@ -166,13 +170,13 @@ public class Section4VisaFormHandler {
         }
     }
 
-    protected void enterResidencePermitId(String elementId) throws ElementNotFoundTimeoutException, InterruptedException {
+    protected void enterResidencePermitId(String elementName) throws ElementNotFoundTimeoutException, InterruptedException {
         logger.info("Entering the residence permit id");
-        String elementDescription = Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER.name();
+        String elementDescription = "residenetPermit";
         int i = 1;
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
-                WebElement element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals("antragsteller_nrAufenthaltserlaubnis2")).collect(Collectors.toList()).get(0);
+                WebElement element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals(elementName)).collect(Collectors.toList()).get(0);
                 element.sendKeys(residencePermitId);
                 Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
@@ -188,12 +192,12 @@ public class Section4VisaFormHandler {
         }
     }
 
-    protected void selectResidencePermit() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
+    protected void selectResidencePermit() throws InterruptedException, ElementNotFoundTimeoutException{
         String elementDescription = Section4FormParameterEnum.RESIDENCE_PERMIT.getName();
         int i = 1;
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
-                WebElement element = driver.findElements(By.tagName("select")).stream().filter(element1 -> element1.getAttribute("name").equals("sel_aufenthaltserlaubnis")).collect(Collectors.toList()).get(0);
+                WebElement element = driver.findElements(By.tagName("select")).stream().filter(element1 -> element1.getAttribute("name").equals(elementDescription)).collect(Collectors.toList()).get(0);
                 if (isResidencePermitPresent) {
                     FormFillerUtils.selectOptionByValue(element, elementDescription, "1");
                 } else {
