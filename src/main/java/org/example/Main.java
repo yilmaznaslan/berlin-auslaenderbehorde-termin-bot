@@ -7,12 +7,10 @@ import org.example.auslanderbehorde.formfiller.model.VisaFormTO;
 
 import static org.example.auslanderbehorde.formfiller.business.FormManager.*;
 
-//@SpringBootApplication
 public class Main {
     public static final Logger logger = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) throws InterruptedException {
-        //SpringApplication.run(Main.class, args);
         PersonalInfoFormTO personalInfoFormTO = readPersonalInfoFromFile();
         VisaFormTO visaFormTO = readVisaInfoFromFile();
         if(isResidenceTitleInfoVerified(visaFormTO)){

@@ -12,6 +12,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
+import static org.example.auslanderbehorde.formfiller.business.DriverManager.initDriverHeadless;
 import static org.example.auslanderbehorde.formfiller.business.FormFillerUtils.saveSourceCodeToFile;
 
 public class TerminFinder extends TimerTask {
@@ -28,6 +29,12 @@ public class TerminFinder extends TimerTask {
         this.personalInfoFormTO = personalInfoFormTO;
         this.visaFormTO = visaFormTO;
         this.driver = driver;
+    }
+
+    public TerminFinder(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO) {
+        this.personalInfoFormTO = personalInfoFormTO;
+        this.visaFormTO = visaFormTO;
+        this.driver = initDriverHeadless();
     }
 
     public void startScanning() {

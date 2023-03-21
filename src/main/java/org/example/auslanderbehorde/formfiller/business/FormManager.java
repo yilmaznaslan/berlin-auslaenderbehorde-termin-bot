@@ -46,7 +46,7 @@ public class FormManager {
         Boolean isResidencePermitPresent = visaFormTO.getResidencePermitPresent();
         String residencePermitId = visaFormTO.getResidencePermitId();
 
-        if (serviceType.equals("Aufenthaltstitel - beantragen")) {
+        if (serviceType.equals("Apply for a residence title")) {
             if (isResidencePermitPresent == null) {
                 return false;
             }
@@ -60,7 +60,7 @@ public class FormManager {
             }
         }
 
-        if (serviceType.equals("Aufenthaltstitel - verlängern")) {
+        if (serviceType.equals("Extend a residence title")) {
             if (isResidencePermitPresent != null) {
                 return false;
             }
@@ -77,7 +77,6 @@ public class FormManager {
         RemoteWebDriver remoteWebDriver = initDriverHeadless();
         TerminFinder terminFinder = new TerminFinder(personalInfoFormTO, visaFormTO, remoteWebDriver);
         terminFinder.startScanning();
-
     }
 
 }
