@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.example.utils.DriverUtils.*;
+import static org.example.utils.IoUtils.savePage;
 import static org.example.utils.LogUtils.logInfo;
 import static org.example.utils.LogUtils.logWarn;
 
@@ -34,8 +35,7 @@ public class Section3DateSelectionHandler {
     }
 
     public void fillAndSendForm() throws InteractionFailedException, ElementNotFoundTimeoutException,InterruptedException {
-        DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "");
-        DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "");
+        savePage(driver, this.getClass().getSimpleName(), "" );
         handleFindingDate();
     }
 
@@ -44,8 +44,7 @@ public class Section3DateSelectionHandler {
         handledAppointmentCount++;
         String elementDescription = "DateSelection".toUpperCase();
         String cssSelector = "[data-handler=selectDay]";
-        DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "handling_date");
-        DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "handling_Date");
+        savePage(driver, this.getClass().getSimpleName(), "handling_date" );
         WebElement element = DriverUtils.getElementByCssSelector(cssSelector, elementDescription, driver);
         if (isDateVerified(element)) {
             logger.info("Date is verified");
@@ -87,8 +86,7 @@ public class Section3DateSelectionHandler {
             logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, SeleniumProcessResultEnum.SUCCESSFUL.name(), "Value: " + selectValue);
             Thread.sleep(1000);
             sendForm();
-            DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "after_send");
-            DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "after_send");
+            savePage(driver, this.getClass().getSimpleName(), "after_send" );
             Thread.sleep(5000);
             String url = driver.getCurrentUrl();
             logger.info(String.format("Found a place. URL: %s", url));
@@ -147,9 +145,8 @@ public class Section3DateSelectionHandler {
                 }
                 String asd = "//*[@id=\"xi-div-1\"]/div[3]";
                 String elementDescription1 = "calender".toUpperCase();
-                WebElement calender = DriverUtils.getElementByXPathCalender(asd, elementDescription1, driver);
-                DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "dateSelection_in");
-                DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "dateSelection_in");
+                WebElement calender = driver.findElement(By.xpath(asd));
+                savePage(driver, this.getClass().getSimpleName(), "date_selecntion_in" );
                 return true;
             } catch (Exception e) {
                 //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");

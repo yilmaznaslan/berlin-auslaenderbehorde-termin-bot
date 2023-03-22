@@ -9,6 +9,8 @@ import org.example.utils.DriverUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import static org.example.utils.IoUtils.savePage;
+
 /**
  * Business Access Layer for filling the Section 5: Reservation
  */
@@ -28,8 +30,8 @@ public class Section5ReservationHandler {
         WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
         DriverUtils.clickToElement(element, elementDescription);
         logger.info("BOOKED");
-        DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "aftersend");
-        DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "aftersend");
+        savePage(driver,this.getClass().getSimpleName(), "aftersend" );
+
     }
 
     public RemoteWebDriver getDriver() {

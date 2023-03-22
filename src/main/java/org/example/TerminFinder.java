@@ -6,7 +6,6 @@ import org.example.business.formhandlers.*;
 import org.example.exceptions.FormValidationFailed;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
-import org.example.utils.DriverUtils;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 
 import static org.example.business.FormVerifier.isResidenceTitleInfoVerified;
 import static org.example.utils.DriverUtils.initDriverHeadless;
-import static org.example.utils.DriverUtils.saveSourceCodeToFile;
+import static org.example.utils.IoUtils.savePage;
 
 public class TerminFinder extends TimerTask {
 
@@ -93,8 +92,7 @@ public class TerminFinder extends TimerTask {
             logger.error("Exception occurred during handling section 2, quitting.", e);
             driver = section2ServiceSelectionHandler.getDriver();
             String fileName = section2ServiceSelectionHandler.getClass().getSimpleName();
-            saveSourceCodeToFile(driver.getPageSource(), fileName, "exception");
-            DriverUtils.saveScreenshot(driver, fileName, "exception");
+            savePage(driver, fileName, "exception");
             return;
         }
 
@@ -113,8 +111,7 @@ public class TerminFinder extends TimerTask {
             logger.error("Exception occurred during handling section 3, quitting.", e);
             driver = section3DateSelectionHandler.getDriver();
             String fileName = section3DateSelectionHandler.getClass().getSimpleName();
-            saveSourceCodeToFile(driver.getPageSource(), fileName, "exception");
-            DriverUtils.saveScreenshot(driver, fileName, "exception");
+            savePage(driver, fileName, "exception");
             return;
         }
 
@@ -127,8 +124,7 @@ public class TerminFinder extends TimerTask {
             logger.error("Exception occurred during handling section 4, quitting.", e);
             driver = section4VisaFormHandler.getDriver();
             String fileName = section4VisaFormHandler.getClass().getSimpleName();
-            saveSourceCodeToFile(driver.getPageSource(), fileName, "exception");
-            DriverUtils.saveScreenshot(driver, fileName, "exception");
+            savePage(driver, fileName, "exception");
             return;
         }
 
@@ -144,8 +140,7 @@ public class TerminFinder extends TimerTask {
             logger.error("Exception occurred during handling section 5, quitting.");
             driver = section5ReservationHandler.getDriver();
             String fileName = section5ReservationHandler.getClass().getSimpleName();
-            saveSourceCodeToFile(driver.getPageSource(), fileName, "exception");
-            DriverUtils.saveScreenshot(driver, fileName, "exception");
+            savePage(driver, fileName, "exception");
             return;
         }
 

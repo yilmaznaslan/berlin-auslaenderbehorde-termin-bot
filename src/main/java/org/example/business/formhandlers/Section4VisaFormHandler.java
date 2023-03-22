@@ -20,6 +20,7 @@ import static org.example.enums.Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBE
 import static org.example.enums.Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER_EXTENSION;
 import static org.example.utils.DriverUtils.SLEEP_DURATION_IN_MILLISECONDS;
 import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
+import static org.example.utils.IoUtils.savePage;
 import static org.example.utils.LogUtils.logWarn;
 
 /**
@@ -49,17 +50,12 @@ public class Section4VisaFormHandler {
     }
 
     public void fillAndSendForm() throws ElementNotFoundTimeoutException, InteractionFailedException, InterruptedException {
-        DriverUtils.saveSourceCodeToFile(driver.getPageSource(), "Section4VisaFormHandler", "");
-        DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "");
-
+        savePage(driver,this.getClass().getSimpleName(), "" );
         fillForm();
-        DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(),  "after_filling");
-        DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName() , "after_filling");
 
+        savePage(driver,this.getClass().getSimpleName(), "after_filling" );
         sendForm();
-
-        DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName() , "after_send");
-        DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName() , "after_send");
+        savePage(driver,this.getClass().getSimpleName(), "after_send" );
     }
 
     protected void fillForm() throws ElementNotFoundTimeoutException, InterruptedException{
