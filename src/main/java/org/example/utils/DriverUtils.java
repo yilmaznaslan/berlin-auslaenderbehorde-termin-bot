@@ -8,29 +8,56 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.ThreadContext;
 import org.example.enums.SeleniumProcessEnum;
 import org.example.enums.SeleniumProcessResultEnum;
 import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.exceptions.InteractionFailedException;
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
-public class FormFillerUtils {
-    private static final Logger logger = LogManager.getLogger(FormFillerUtils.class);
+import static org.example.utils.LogUtils.logInfo;
+import static org.example.utils.LogUtils.logWarn;
+
+public class DriverUtils {
+    private static final Logger logger = LogManager.getLogger(DriverUtils.class);
     public static final int TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS = 25;
-    static final int TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS = 5;
+    public static final int TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS = 5;
 
     static final int TIMEOUT_FOR_INTERACTING_IN_SECONDS = 25;
     public static final int SLEEP_DURATION_IN_MILLISECONDS = 1500;
     public static long formId;
+
+    public static RemoteWebDriver initDriverHeadless() {
+        String seleniumDriverHost = System.getenv().getOrDefault("SELENIUM_GRID_HOST", "localhost");
+        ChromeOptions options = new ChromeOptions();
+
+        // Add options to make Selenium-driven browser look more like a regular user's browser
+        options.addArguments("--disable-blink-features=AutomationControlled"); // Remove "navigator.webdriver" flag
+        options.addArguments("--disable-infobars"); // Disable infobars
+        options.addArguments("--start-maximized"); // Start the browser maximized
+        options.addArguments("--disable-extensions"); // Disable extensions
+
+        String remoteUrl = "http://" + seleniumDriverHost + ":4444/wd/hub";
+        try {
+            RemoteWebDriver driver = new RemoteWebDriver(new URL(remoteUrl), options);
+            logger.info("Driver is initialized.");
+            return driver;
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
     public static WebElement getElementById(String id, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
         WebElement element = null;
@@ -325,30 +352,4 @@ public class FormFillerUtils {
 
     }
 
-    public static void logInfo(String elementDescription, SeleniumProcessEnum process, String status) {
-        ThreadContext.put("formId", String.valueOf(formId));
-        ThreadContext.put("elementDescription", elementDescription);
-        ThreadContext.put("seleniumProcess", process.name());
-        ThreadContext.put("seleniumStatus", status);
-        logger.info(String.format("Element: %s, Process:%s, Status:%s", elementDescription, process, status));
-        ThreadContext.clearAll();
-    }
-
-    public static void logInfo(String elementDescription, SeleniumProcessEnum process, String status, String msg) {
-        ThreadContext.put("formId", String.valueOf(formId));
-        ThreadContext.put("elementDescription", elementDescription);
-        ThreadContext.put("seleniumProcess", process.name());
-        ThreadContext.put("seleniumStatus", status);
-        logger.info(String.format("Element: %s, Process:%s, Status:%s, Msg:%s", elementDescription, process, status, msg));
-        ThreadContext.clearAll();
-    }
-
-    public static void logWarn(String elementDescription, String process, String status, String msg) {
-        ThreadContext.put("formId", String.valueOf(formId));
-        ThreadContext.put("elementDescription", elementDescription);
-        ThreadContext.put("seleniumProcess", process);
-        ThreadContext.put("seleniumStatus", status);
-        logger.warn(String.format("Element: %s, Process:%s, Status:%s Msg:%s", elementDescription, process, status, msg));
-        ThreadContext.clearAll();
-    }
 }

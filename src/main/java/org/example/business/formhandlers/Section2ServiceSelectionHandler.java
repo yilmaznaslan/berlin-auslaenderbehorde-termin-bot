@@ -9,7 +9,7 @@ import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.exceptions.InteractionFailedException;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
-import org.example.utils.FormFillerUtils;
+import org.example.utils.DriverUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -19,7 +19,10 @@ import java.util.stream.Collectors;
 
 import static org.example.business.formhandlers.Section3DateSelectionHandler.foundAppointmentCount;
 import static org.example.business.formhandlers.Section3DateSelectionHandler.handledAppointmentCount;
-import static org.example.utils.FormFillerUtils.*;
+import static org.example.utils.DriverUtils.SLEEP_DURATION_IN_MILLISECONDS;
+import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
+import static org.example.utils.LogUtils.logInfo;
+import static org.example.utils.LogUtils.logWarn;
 
 /**
  * Business Access Layer for filling the form
@@ -138,25 +141,25 @@ public class Section2ServiceSelectionHandler {
     }
 
     private void clickServiceType() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
-        WebElement element = FormFillerUtils.getElementByLabelValue(serviceTypeLabelValue, serviceTypeLabelValue, driver);
-        FormFillerUtils.clickToElement(element, serviceTypeLabelValue);
+        WebElement element = DriverUtils.getElementByLabelValue(serviceTypeLabelValue, serviceTypeLabelValue, driver);
+        DriverUtils.clickToElement(element, serviceTypeLabelValue);
     }
 
     private void clickVisaPurpose() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
-        WebElement element = FormFillerUtils.getElementByLabelValue(visaPurposeLabelValue, visaPurposeLabelValue, driver);
-        FormFillerUtils.clickToElement(element, visaPurposeLabelValue);
+        WebElement element = DriverUtils.getElementByLabelValue(visaPurposeLabelValue, visaPurposeLabelValue, driver);
+        DriverUtils.clickToElement(element, visaPurposeLabelValue);
     }
 
     private void clickToVisa() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
-        WebElement element = FormFillerUtils.getElementByLabelValue(visaLabelValue, visaLabelValue, driver);
-        FormFillerUtils.clickToElement(element, visaLabelValue);
+        WebElement element = DriverUtils.getElementByLabelValue(visaLabelValue, visaLabelValue, driver);
+        DriverUtils.clickToElement(element, visaLabelValue);
     }
 
     private void sendForm() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
         String elementDescription = "clickButton".toUpperCase();
-        WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
-        FormFillerUtils.clickToElement(element, elementDescription);
+        WebElement element = DriverUtils.getElementByXPath(elementXpath, elementDescription, driver);
+        DriverUtils.clickToElement(element, elementDescription);
         searchCount++;
         String msg = String.format("SuccessfullyFormSenCount:%s, HandledAppoi.Count:%s, Found count: %s", searchCount, handledAppointmentCount, foundAppointmentCount);
         logger.info(msg);

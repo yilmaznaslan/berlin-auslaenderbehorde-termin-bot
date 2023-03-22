@@ -7,7 +7,7 @@ import org.example.enums.SeleniumProcessEnum;
 import org.example.enums.SeleniumProcessResultEnum;
 import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.exceptions.InteractionFailedException;
-import org.example.utils.FormFillerUtils;
+import org.example.utils.DriverUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -16,7 +16,9 @@ import org.openqa.selenium.support.ui.Select;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.example.utils.FormFillerUtils.*;
+import static org.example.utils.DriverUtils.*;
+import static org.example.utils.LogUtils.logInfo;
+import static org.example.utils.LogUtils.logWarn;
 
 public class Section3DateSelectionHandler {
 
@@ -32,8 +34,8 @@ public class Section3DateSelectionHandler {
     }
 
     public void fillAndSendForm() throws InteractionFailedException, ElementNotFoundTimeoutException,InterruptedException {
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "");
-        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "");
+        DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "");
+        DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "");
         handleFindingDate();
     }
 
@@ -42,9 +44,9 @@ public class Section3DateSelectionHandler {
         handledAppointmentCount++;
         String elementDescription = "DateSelection".toUpperCase();
         String cssSelector = "[data-handler=selectDay]";
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "handling_date");
-        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "handling_Date");
-        WebElement element = FormFillerUtils.getElementByCssSelector(cssSelector, elementDescription, driver);
+        DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "handling_date");
+        DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "handling_Date");
+        WebElement element = DriverUtils.getElementByCssSelector(cssSelector, elementDescription, driver);
         if (isDateVerified(element)) {
             logger.info("Date is verified");
             element.click();
@@ -85,8 +87,8 @@ public class Section3DateSelectionHandler {
             logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, SeleniumProcessResultEnum.SUCCESSFUL.name(), "Value: " + selectValue);
             Thread.sleep(1000);
             sendForm();
-            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "after_send");
-            FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "after_send");
+            DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "after_send");
+            DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "after_send");
             Thread.sleep(5000);
             String url = driver.getCurrentUrl();
             logger.info(String.format("Found a place. URL: %s", url));
@@ -100,8 +102,8 @@ public class Section3DateSelectionHandler {
     private void sendForm() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementId = "applicationForm:managedForm:proceed";
         String elementDescription = "weiter button".toUpperCase();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        FormFillerUtils.clickToElement(element, elementDescription);
+        WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
+        DriverUtils.clickToElement(element, elementDescription);
     }
 
     protected boolean isDateVerified(WebElement element) {
@@ -131,25 +133,34 @@ public class Section3DateSelectionHandler {
         return driver;
     }
 
-    public boolean isCalenderFound() {
-        try {
-            String activeStepXpath = "//*[@id=\"main\"]/div[2]/div[4]/div[2]/div/div[1]/ul/li[2]";
-            WebElement activeStepElement = FormFillerUtils.getElementByXPathCalender(activeStepXpath ,"ActivePath", driver);
-            String activeStepText = activeStepElement.getText();
-            logger.info("text:"+activeStepText);
-            if(activeStepText.contains("Terminauswahl") || activeStepText.contains("Date selection")){
+    public boolean isCalenderFound() throws InterruptedException {
+        int i = 1;
+        String elementDescription = "active step";
+        while (i <= TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS) {
+            try {
+                String activeTabXPath = "//*[@id=\"main\"]/div[2]/div[4]/div[2]/div/div[1]/ul/li[2]";
+                WebElement activeStepElement = driver.findElement(By.xpath(activeTabXPath ));
+                String activeStepText = activeStepElement.getText();
+                logInfo(elementDescription, SeleniumProcessEnum.GETTING_TEXT, SeleniumProcessResultEnum.SUCCESSFUL.name(), activeStepText);
+                if(activeStepText.contains("Terminauswahl") || activeStepText.contains("Date selection")){
+                    return true;
+                }
+                String asd = "//*[@id=\"xi-div-1\"]/div[3]";
+                String elementDescription1 = "calender".toUpperCase();
+                WebElement calender = DriverUtils.getElementByXPathCalender(asd, elementDescription1, driver);
+                DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "dateSelection_in");
+                DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "dateSelection_in");
                 return true;
+            } catch (Exception e) {
+                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
             }
-            String asd = "//*[@id=\"xi-div-1\"]/div[3]";
-            String elementDescription1 = "calender".toUpperCase();
-            WebElement calender = FormFillerUtils.getElementByXPathCalender(asd, elementDescription1, driver);
-            FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "dateSelection_in");
-            FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "dateSelection_in");
-            return true;
-        } catch (ElementNotFoundTimeoutException e) {
-            return false;
-        } catch (InterruptedException e) {
-            return false;
+            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
+            i++;
         }
+        if (i > TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS) {
+            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+        }
+        return false;
+
     }
 }

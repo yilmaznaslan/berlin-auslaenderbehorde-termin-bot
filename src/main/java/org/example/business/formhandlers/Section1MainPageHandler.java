@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.exceptions.InteractionFailedException;
-import org.example.utils.FormFillerUtils;
+import org.example.utils.DriverUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -30,20 +30,20 @@ public class Section1MainPageHandler {
 
     private void clickBookAppointment() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String labelValue = "Book Appointment";
-        WebElement element = FormFillerUtils.getElementByTextValue(labelValue, labelValue, driver);
-        FormFillerUtils.clickToElement(element, labelValue);
+        WebElement element = DriverUtils.getElementByTextValue(labelValue, labelValue, driver);
+        DriverUtils.clickToElement(element, labelValue);
     }
 
     private void clickToAcceptConsent() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
-        WebElement webElement = FormFillerUtils.getElementByTagName("checkbox", "checkbox", driver);
-        FormFillerUtils.clickToElement(webElement, "");
+        WebElement webElement = DriverUtils.getElementByTagName("checkbox", "checkbox", driver);
+        DriverUtils.clickToElement(webElement, "");
     }
 
     private void sendForm() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
         String elementDescription = "clickButton".toUpperCase();
-        WebElement element = FormFillerUtils.getElementByXPath(elementXpath, elementDescription, driver);
-        FormFillerUtils.clickToElement(element, elementDescription);
+        WebElement element = DriverUtils.getElementByXPath(elementXpath, elementDescription, driver);
+        DriverUtils.clickToElement(element, elementDescription);
     }
 
     public RemoteWebDriver getDriver() {

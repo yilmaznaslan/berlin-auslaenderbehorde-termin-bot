@@ -1,12 +1,12 @@
-package org.example.business;
+package org.example;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.business.formhandlers.*;
+import org.example.exceptions.FormValidationFailed;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
-import org.example.utils.DriverManager;
-import org.example.utils.FormFillerUtils;
+import org.example.utils.DriverUtils;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -15,8 +15,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
-import static org.example.utils.DriverManager.initDriverHeadless;
-import static org.example.utils.FormFillerUtils.saveSourceCodeToFile;
+import static org.example.business.FormVerifier.isResidenceTitleInfoVerified;
+import static org.example.utils.DriverUtils.initDriverHeadless;
+import static org.example.utils.DriverUtils.saveSourceCodeToFile;
 
 public class TerminFinder extends TimerTask {
 
@@ -32,6 +33,7 @@ public class TerminFinder extends TimerTask {
         this.personalInfoFormTO = personalInfoFormTO;
         this.visaFormTO = visaFormTO;
         this.driver = driver;
+
     }
 
     public TerminFinder(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO) {
@@ -40,19 +42,29 @@ public class TerminFinder extends TimerTask {
         this.driver = initDriverHeadless();
     }
 
-    public void startScanning() {
+    public void startScanning() throws FormValidationFailed {
+        // Section 0
+        if (isResidenceTitleInfoVerified(visaFormTO)) {
+            logger.info("Successfully validated form: {}", visaFormTO);
+        } else {
+            logger.error("Failed validate form: {}", visaFormTO);
+            throw new FormValidationFailed("");
+        }
+
         logger.info(String.format("Scheduled the task at rate: %s", FORM_REFRESH_PERIOD_MILLISECONDS));
         timer.scheduleAtFixedRate(this, 0, FORM_REFRESH_PERIOD_MILLISECONDS);
     }
 
     public void run() {
+
+
         // Section 1
         try {
             getFormPage();
         } catch (Exception e) {
             logger.error("Error in initializing a new session. Exception: ", e);
             try {
-                driver = DriverManager.initDriverHeadless();
+                driver = initDriverHeadless();
             } catch (Exception ex) {
                 logger.error("Failed to initialize the driver. Quitting. Reason: ", ex);
                 driver.quit();
@@ -82,7 +94,7 @@ public class TerminFinder extends TimerTask {
             driver = section2ServiceSelectionHandler.getDriver();
             String fileName = section2ServiceSelectionHandler.getClass().getSimpleName();
             saveSourceCodeToFile(driver.getPageSource(), fileName, "exception");
-            FormFillerUtils.saveScreenshot(driver, fileName, "exception");
+            DriverUtils.saveScreenshot(driver, fileName, "exception");
             return;
         }
 
@@ -102,7 +114,7 @@ public class TerminFinder extends TimerTask {
             driver = section3DateSelectionHandler.getDriver();
             String fileName = section3DateSelectionHandler.getClass().getSimpleName();
             saveSourceCodeToFile(driver.getPageSource(), fileName, "exception");
-            FormFillerUtils.saveScreenshot(driver, fileName, "exception");
+            DriverUtils.saveScreenshot(driver, fileName, "exception");
             return;
         }
 
@@ -116,7 +128,7 @@ public class TerminFinder extends TimerTask {
             driver = section4VisaFormHandler.getDriver();
             String fileName = section4VisaFormHandler.getClass().getSimpleName();
             saveSourceCodeToFile(driver.getPageSource(), fileName, "exception");
-            FormFillerUtils.saveScreenshot(driver, fileName, "exception");
+            DriverUtils.saveScreenshot(driver, fileName, "exception");
             return;
         }
 
@@ -133,12 +145,11 @@ public class TerminFinder extends TimerTask {
             driver = section5ReservationHandler.getDriver();
             String fileName = section5ReservationHandler.getClass().getSimpleName();
             saveSourceCodeToFile(driver.getPageSource(), fileName, "exception");
-            FormFillerUtils.saveScreenshot(driver, fileName, "exception");
+            DriverUtils.saveScreenshot(driver, fileName, "exception");
             return;
         }
 
     }
-
 
     private void getFormPage() throws InterruptedException {
         currentWindowHandle = driver.getWindowHandle();

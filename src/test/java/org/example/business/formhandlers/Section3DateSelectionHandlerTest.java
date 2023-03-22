@@ -1,7 +1,7 @@
 package org.example.business.formhandlers;
 
 import org.example.exceptions.ElementNotFoundTimeoutException;
-import org.example.utils.FormFillerUtils;
+import org.example.utils.DriverUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -42,7 +42,7 @@ class Section3DateSelectionHandlerTest {
 
 
     @Test
-    void ASSERT_THAT_isCalenderFound_returns_true() {
+    void ASSERT_THAT_isCalenderFound_returns_true() throws InterruptedException {
 
         // GIVEN
         driver.get(url);
@@ -59,9 +59,9 @@ class Section3DateSelectionHandlerTest {
         // GIVEN
         driver.get(url);
         String cssSelector = "[data-handler=selectDay]";
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "handling_date");
-        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "handling_Date");
-        WebElement element = FormFillerUtils.getElementByCssSelector(cssSelector, "elementDescription", driver);
+        DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "handling_date");
+        DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "handling_Date");
+        WebElement element = DriverUtils.getElementByCssSelector(cssSelector, "elementDescription", driver);
 
         // WHEN
         boolean actualResult = formFiller.isDateVerified(element);

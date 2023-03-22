@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.example.enums.Section5FormParameterEnum;
 import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.exceptions.InteractionFailedException;
-import org.example.utils.FormFillerUtils;
+import org.example.utils.DriverUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -25,11 +25,11 @@ public class Section5ReservationHandler {
     public void sendForm() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementId = Section5FormParameterEnum.SEND_FORM_BUTTON.getId();
         String elementDescription = Section5FormParameterEnum.SEND_FORM_BUTTON.getName();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        FormFillerUtils.clickToElement(element, elementDescription);
+        WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
+        DriverUtils.clickToElement(element, elementDescription);
         logger.info("BOOKED");
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "aftersend");
-        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "aftersend");
+        DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "aftersend");
+        DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "aftersend");
     }
 
     public RemoteWebDriver getDriver() {

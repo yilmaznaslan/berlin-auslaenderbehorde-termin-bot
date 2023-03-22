@@ -4,7 +4,7 @@ import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.exceptions.InteractionFailedException;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
-import org.example.utils.FormFillerUtils;
+import org.example.utils.DriverUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -103,7 +103,7 @@ class Section4VisaFormHandlerTest {
         // THEN
         String elementId = FIRSTNAME.getId();
         String elementDescription = FIRSTNAME.getName();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
+        WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
         Assertions.assertEquals(firstName, element.getAttribute("value"));
     }
 
@@ -119,7 +119,7 @@ class Section4VisaFormHandlerTest {
         // THEN
         String elementId = LASTNAME.getId();
         String elementDescription = LASTNAME.getName();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
+        WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
         Assertions.assertEquals(lastName, element.getAttribute("value"));
     }
 
@@ -135,7 +135,7 @@ class Section4VisaFormHandlerTest {
         // THEN
         String elementId = EMAIL.getId();
         String elementDescription = EMAIL.getName();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
+        WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
         Assertions.assertEquals(email, element.getAttribute("value"));
 
     }
@@ -152,7 +152,7 @@ class Section4VisaFormHandlerTest {
         // THEN
         String elementId = BIRTHDATE.getId();
         String elementDescription = BIRTHDATE.getName();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
+        WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
         Assertions.assertEquals(birthdate, element.getAttribute("value"));
     }
 
@@ -167,7 +167,7 @@ class Section4VisaFormHandlerTest {
         // THEN
         String elementId = RESIDENCE_PERMIT.getId();
         String elementDescription = RESIDENCE_PERMIT.getName();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
+        WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
         Select select = new Select(element);
         WebElement option = select.getFirstSelectedOption();
         String actualValue = option.getText();
@@ -186,7 +186,7 @@ class Section4VisaFormHandlerTest {
         // THEN
         String elementId = RESIDENCE_PERMIT.getId();
         String elementDescription = RESIDENCE_PERMIT.getName();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
+        WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
         Select select = new Select(element);
         WebElement option = select.getFirstSelectedOption();
         String actualValue = option.getText();
@@ -205,7 +205,7 @@ class Section4VisaFormHandlerTest {
         // THEN
         String elementId = RESIDENCE_PERMIT_NUMBER.getId();
         String elementDescription = RESIDENCE_PERMIT_NUMBER.getName();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
+        WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
         Assertions.assertEquals(residencePermitId, element.getAttribute("value"));
     }
 
@@ -221,7 +221,7 @@ class Section4VisaFormHandlerTest {
         // THEN
         String elementId = RESIDENCE_PERMIT_NUMBER_EXTENSION.getId();
         String elementDescription = RESIDENCE_PERMIT_NUMBER_EXTENSION.getName();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
+        WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
         Assertions.assertEquals(residencePermitId, element.getAttribute("value"));
     }
 
@@ -237,7 +237,7 @@ class Section4VisaFormHandlerTest {
         // THEN
         String elementId = RESIDENCE_PERMIT_NUMBER_EXTENSION.getId();
         String elementDescription = RESIDENCE_PERMIT_NUMBER.getName();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
+        WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
         Assertions.assertEquals(residencePermitId, element.getAttribute("value"));
     }
 

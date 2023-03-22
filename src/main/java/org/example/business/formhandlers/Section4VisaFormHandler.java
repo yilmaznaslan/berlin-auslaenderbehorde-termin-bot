@@ -9,7 +9,7 @@ import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.exceptions.InteractionFailedException;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
-import org.example.utils.FormFillerUtils;
+import org.example.utils.DriverUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -18,7 +18,9 @@ import java.util.stream.Collectors;
 
 import static org.example.enums.Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER;
 import static org.example.enums.Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER_EXTENSION;
-import static org.example.utils.FormFillerUtils.*;
+import static org.example.utils.DriverUtils.SLEEP_DURATION_IN_MILLISECONDS;
+import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
+import static org.example.utils.LogUtils.logWarn;
 
 /**
  * Business Access Layer for filling the Section 4: Angaben
@@ -47,17 +49,17 @@ public class Section4VisaFormHandler {
     }
 
     public void fillAndSendForm() throws ElementNotFoundTimeoutException, InteractionFailedException, InterruptedException {
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), "Section4VisaFormHandler", "");
-        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "");
+        DriverUtils.saveSourceCodeToFile(driver.getPageSource(), "Section4VisaFormHandler", "");
+        DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "");
 
         fillForm();
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(),  "after_filling");
-        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName() , "after_filling");
+        DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(),  "after_filling");
+        DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName() , "after_filling");
 
         sendForm();
 
-        FormFillerUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName() , "after_send");
-        FormFillerUtils.saveScreenshot(driver, this.getClass().getSimpleName() , "after_send");
+        DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName() , "after_send");
+        DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName() , "after_send");
     }
 
     protected void fillForm() throws ElementNotFoundTimeoutException, InterruptedException{
@@ -206,9 +208,9 @@ public class Section4VisaFormHandler {
             try {
                 WebElement element = driver.findElements(By.tagName("select")).stream().filter(element1 -> element1.getAttribute("name").equals(elementDescription)).collect(Collectors.toList()).get(0);
                 if (isResidencePermitPresent) {
-                    FormFillerUtils.selectOptionByValue(element, elementDescription, "1");
+                    DriverUtils.selectOptionByValue(element, elementDescription, "1");
                 } else {
-                    FormFillerUtils.selectOptionByValue(element, elementDescription, "0");
+                    DriverUtils.selectOptionByValue(element, elementDescription, "0");
                 }
                 Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
@@ -228,8 +230,8 @@ public class Section4VisaFormHandler {
     protected void sendForm() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         String elementId = "applicationForm:managedForm:proceed";
         String elementDescription = "weiter button".toUpperCase();
-        WebElement element = FormFillerUtils.getElementById(elementId, elementDescription, driver);
-        FormFillerUtils.clickToElement(element, elementDescription);
+        WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
+        DriverUtils.clickToElement(element, elementDescription);
     }
 
     public RemoteWebDriver getDriver() {
