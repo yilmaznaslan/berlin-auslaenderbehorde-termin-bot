@@ -1,29 +1,26 @@
-package org.example.business.formhandlers;
+package org.example.formhandlers;
 
+import org.example.BaseTestSetup;
 import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.exceptions.InteractionFailedException;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
 import org.example.utils.DriverUtils;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mockito;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
 
 import static org.example.enums.Section4FormParameterEnum.*;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 
-class Section4VisaFormHandlerTest {
+class Section4VisaFormHandlerTest extends BaseTestSetup {
 
     static String path_extend_studium = Section4VisaFormHandler.class.getClassLoader().getResource("section4Handler_extend_study_2023-02-03_10:23:40.html").getPath();
     static String url_for_service_extend_studium = "file:".concat(path_extend_studium);
@@ -63,29 +60,7 @@ class Section4VisaFormHandlerTest {
             "Educational purposes",
             "Residence permit for vocational training (sect. 16a)");
 
-    static ChromeDriver driver;
     Section4VisaFormHandler formFiller = new Section4VisaFormHandler(personalInfoFormTO, visaForm_apply_for_bluecard_with_residencePermit, driver);
-
-
-    @BeforeAll
-    static void initDriver() {
-        ChromeOptions options = new ChromeOptions();
-        // Add options to make Selenium-driven browser look more like a regular user's browser
-        options.addArguments("--disable-blink-features=AutomationControlled"); // Remove "navigator.webdriver" flag
-        options.addArguments("--disable-infobars"); // Disable infobars
-        options.addArguments("--start-maximized"); // Start the browser maximized
-        options.addArguments("--disable-extensions"); // Disable extensions
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--remote-allow-origins=*");
-        options.addArguments("--disable-dev-shm-usage");
-        //options.addArguments("--headless");
-        driver = new ChromeDriver(options);
-    }
-
-    @AfterAll
-    static void quitDriver() {
-        driver.quit();
-    }
 
     static List<String> getPathUrls() {
         return List.of(url_for_service_apply_for_bluecard, url_for_service_extend_studium);
@@ -247,7 +222,7 @@ class Section4VisaFormHandlerTest {
         driver.get(url_for_service_apply_for_bluecard);
 
         // WHEN
-        Section4VisaFormHandler spiedFormFiller = spy(new Section4VisaFormHandler(personalInfoFormTO, visaForm_apply_for_bluecard_with_residencePermit, driver));
+        Section4VisaFormHandler spiedFormFiller = Mockito.spy(new Section4VisaFormHandler(personalInfoFormTO, visaForm_apply_for_bluecard_with_residencePermit, driver));
         spiedFormFiller.fillAndSendForm();
 
         // THEN
@@ -261,7 +236,7 @@ class Section4VisaFormHandlerTest {
         driver.get(url_for_service_extend_studium);
 
         // WHEN
-        Section4VisaFormHandler spiedFormFiller = spy(new Section4VisaFormHandler(personalInfoFormTO, visaForm_extend_berufsausbildung, driver));
+        Section4VisaFormHandler spiedFormFiller = Mockito.spy(new Section4VisaFormHandler(personalInfoFormTO, visaForm_extend_berufsausbildung, driver));
         spiedFormFiller.fillAndSendForm();
 
         // THEN
@@ -275,7 +250,7 @@ class Section4VisaFormHandlerTest {
         driver.get(url_new);
 
         // WHEN
-        Section4VisaFormHandler spiedFormFiller = spy(new Section4VisaFormHandler(personalInfoFormTO, visaForm_extend_berufsausbildung, driver));
+        Section4VisaFormHandler spiedFormFiller = Mockito.spy(new Section4VisaFormHandler(personalInfoFormTO, visaForm_extend_berufsausbildung, driver));
         spiedFormFiller.fillAndSendForm();
 
         // THEN

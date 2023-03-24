@@ -2,8 +2,8 @@ package org.example;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.business.formhandlers.*;
 import org.example.exceptions.FormValidationFailed;
+import org.example.formhandlers.*;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
 import org.openqa.selenium.WindowType;
@@ -14,7 +14,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
-import static org.example.business.FormVerifier.isResidenceTitleInfoVerified;
 import static org.example.utils.DriverUtils.initDriverHeadless;
 import static org.example.utils.IoUtils.savePage;
 
@@ -169,6 +168,35 @@ public class TerminFinder extends TimerTask {
 
     }
 
+    public boolean isResidenceTitleInfoVerified(VisaFormTO visaFormTO) {
+        logger.info("Verifying form: {}", visaFormTO);
+        String serviceType = visaFormTO.getServiceType();
+        Boolean isResidencePermitPresent = visaFormTO.getResidencePermitPresent();
+        String residencePermitId = visaFormTO.getResidencePermitId();
+
+        if (serviceType.equals("Apply for a residence title")) {
+            if (isResidencePermitPresent == null) {
+                return false;
+            }
+
+            if (isResidencePermitPresent && residencePermitId == null) {
+                return false;
+            }
+
+            if (!isResidencePermitPresent && residencePermitId != null) {
+                return false;
+            }
+        }
+
+        if (serviceType.equals("Extend a residence title")) {
+
+            if (residencePermitId == null) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     public RemoteWebDriver getDriver() {
         return driver;

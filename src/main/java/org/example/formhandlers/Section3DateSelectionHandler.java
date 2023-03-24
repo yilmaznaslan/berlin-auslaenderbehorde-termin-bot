@@ -1,4 +1,4 @@
-package org.example.business.formhandlers;
+package org.example.formhandlers;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.logging.log4j.LogManager;

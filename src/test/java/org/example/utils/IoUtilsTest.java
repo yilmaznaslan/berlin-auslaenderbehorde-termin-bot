@@ -1,7 +1,7 @@
 package org.example.utils;
 
 import org.example.BaseTestSetup;
-import org.example.business.formhandlers.Section4VisaFormHandler;
+import org.example.formhandlers.Section4VisaFormHandler;
 import org.junit.jupiter.api.Test;
 
 import static org.example.utils.IoUtils.savePage;

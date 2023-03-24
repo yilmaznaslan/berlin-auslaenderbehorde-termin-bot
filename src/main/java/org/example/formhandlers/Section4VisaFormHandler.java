@@ -1,4 +1,4 @@
-package org.example.business.formhandlers;
+package org.example.formhandlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

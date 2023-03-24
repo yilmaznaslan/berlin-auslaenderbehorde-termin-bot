@@ -1,14 +1,14 @@
-package org.example.business.formhandlers;
+package org.example.formhandlers;
 
 import org.example.BaseTestSetup;
 import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.utils.DriverUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 class Section3DateSelectionHandlerTest extends BaseTestSetup {
@@ -141,7 +141,7 @@ class Section3DateSelectionHandlerTest extends BaseTestSetup {
         driver.get(urlToFile_de);
 
         // WHEN & THEN
-        Section3DateSelectionHandler spiedFormFiller = spy(new Section3DateSelectionHandler(driver));
+        Section3DateSelectionHandler spiedFormFiller = Mockito.spy(new Section3DateSelectionHandler(driver));
         spiedFormFiller.fillAndSendForm();
 
         // THEN
