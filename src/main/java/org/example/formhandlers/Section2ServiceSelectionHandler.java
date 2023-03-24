@@ -55,7 +55,9 @@ public class Section2ServiceSelectionHandler {
         selectApplicantsCount();
         selectFamilyStatus();
         clickServiceType();
-        clickVisaPurpose();
+        if(visaPurposeLabelValue != null){
+            clickVisaPurpose();
+        }
         clickToVisa();
         Thread.sleep(2000);
         sendForm();
