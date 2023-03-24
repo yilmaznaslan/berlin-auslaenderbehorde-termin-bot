@@ -28,6 +28,7 @@ public class IoUtils {
     private final static String S3_BUCKET_NAME = "auslander-termin-files";
     private static AmazonS3 client;
     public static boolean isS3Enabled = false;
+
     public static PersonalInfoFormTO readPersonalInfoFromFile() {
         ObjectMapper mapper = new ObjectMapper();
         InputStream is = PersonalInfoFormTO.class.getResourceAsStream("/DEFAULT_PERSONAL_INFO_FORM.json");
@@ -56,50 +57,57 @@ public class IoUtils {
         String pagesourceFileName = fileName + ".html";
         String screenshotFileName = fileName + ".png";
         logger.info("File name :{}, {}", pagesourceFileName, screenshotFileName);
-        if(isS3Enabled){
+
+        String content = driver.getPageSource();
+        File sourceFile;
+        try {
+            sourceFile = saveSourceCodeToFile(content, pagesourceFileName);
+        } catch (IOException e) {
+            logger.error("Error occurred during s3 operation. Exception: ", e);
+            return;
+        }
+        File screenShotFile;
+        try {
+            screenShotFile = saveScreenshot(driver, screenshotFileName);
+        } catch (IOException e) {
+            logger.error("Error occurred during s3 operation. Exception: ", e);
+            return;
+        }
+
+        if (isS3Enabled) {
             client = AmazonS3ClientBuilder
                     .standard()
                     .withCredentials(new EnvironmentVariableCredentialsProvider())
                     .withRegion(Regions.US_EAST_1)
                     .build();
-            String content = driver.getPageSource();
-            saveSourceCodeToFile(content, pagesourceFileName);
-            saveScreenshot(driver, screenshotFileName);
+
+            try {
+                client.putObject(new PutObjectRequest(S3_BUCKET_NAME, fileName, sourceFile));
+                client.putObject(new PutObjectRequest(S3_BUCKET_NAME, fileName, screenShotFile));
+            } catch (Exception e) {
+                logger.error("Error occurred during s3 operation. Exception: ", e);
+            }
+
         }
     }
 
-    private static void saveSourceCodeToFile(String content, String fileName) {
+    private static File saveSourceCodeToFile(String content, String fileName) throws IOException {
         File file = new File(fileName);
         FileWriter fw;
-        try {
-            fw = new FileWriter(file);
-            fw.write(content);
-            fw.close();
-        } catch (IOException e) {
-            logger.error("Failed to write to file", e);
-        }
-        try {
-            client.putObject(new PutObjectRequest(S3_BUCKET_NAME, fileName, file));
-        } catch (Exception e) {
-            logger.error("Error occurred during s3 operation. Exception: ", e);
-        }
+        fw = new FileWriter(file);
+        fw.write(content);
+        fw.close();
+        return file;
     }
 
-    private static void saveScreenshot(WebDriver driver, String fileName) {
+    private static File saveScreenshot(WebDriver driver, String fileName) throws IOException {
         File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         File file = null;
-        try {
-            file = new File(fileName);
-            FileUtils.copyFile(scrFile1, file);
-        } catch (IOException e) {
-            logger.error("Failed to write to file", e);
-        }
 
-        try {
-            client.putObject(new PutObjectRequest(S3_BUCKET_NAME, fileName, file));
-        } catch (Exception e) {
-            logger.error("Error occurred during s3 operation. Exception: ", e);
-        }
+        file = new File(fileName);
+        FileUtils.copyFile(scrFile1, file);
+
+        return file;
     }
 
 }

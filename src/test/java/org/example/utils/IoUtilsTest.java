@@ -2,6 +2,7 @@ package org.example.utils;
 
 import org.example.BaseTestSetup;
 import org.example.formhandlers.Section4VisaFormHandler;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.example.utils.IoUtils.savePage;
@@ -16,10 +17,8 @@ class IoUtilsTest extends BaseTestSetup {
         // GIVEN
         driver.get(url);
 
-        // WHEN
-        savePage(driver, "testPage", "demo");
-
-        // THEN
+        // WHEN && THEN
+        Assertions.assertDoesNotThrow(() -> savePage(driver, "testPage", "demo"));
 
     }
 
