@@ -7,13 +7,16 @@ import org.example.enums.FormParameterEnum;
 import org.example.enums.SeleniumProcessEnum;
 import org.example.enums.SeleniumProcessResultEnum;
 import org.example.exceptions.ElementNotFoundTimeoutException;
-import org.example.exceptions.InteractionFailedException;
+import org.example.exceptions.FormValidationFailed;
 import org.example.utils.DriverUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,96 +30,88 @@ public class Section3DateSelectionHandler {
 
     private final Logger logger = LogManager.getLogger(Section3DateSelectionHandler.class);
 
-    public static int foundAppointmentCount = 0;
-    public static int handledAppointmentCount = 0;
+    public int handledTimeslotCount = 0;
+    public int handledDateCount = 0;
 
-    private RemoteWebDriver driver;
+    public RemoteWebDriver driver;
 
     public Section3DateSelectionHandler(RemoteWebDriver webDriver) {
         this.driver = webDriver;
     }
 
-    public void fillAndSendForm() throws Exception {
+    public void fillAndSendForm() throws FormValidationFailed, InterruptedException, ElementNotFoundTimeoutException {
         savePage(driver, this.getClass().getSimpleName(), "");
-        handleFindingDate();
-        handleSelectingTimeslotAndSendForm();
+        handleSelectingDate();
+        handleSelectingTimeslot();
+        Thread.sleep(2000);
+        sendForm();
     }
 
     @VisibleForTesting
-    protected void handleFindingDate() throws Exception {
+    protected void handleSelectingDate() {
         String elementDescription = "DateSelection".toUpperCase();
         logger.info("Starting to find an appointment date");
-        handledAppointmentCount++;
+        handledDateCount++;
         String cssSelector = "[data-handler=selectDay]";
         savePage(driver, this.getClass().getSimpleName(), "handling_date");
-        Exception exception = null;
-        int i = 1;
-        while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
-            try {
-                WebElement element = driver.findElement(By.cssSelector(cssSelector));
-                if (isDateVerified(element)) {
-                    logger.info("Date is verified");
-                    element.click();
-                    logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SUCCESSFUL.name());
-                    break;
-                }
-            } catch (Exception e) {
-                exception = e;
-            }
-            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-            i++;
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+                .until(__ -> driver.findElement(By.cssSelector(cssSelector)));
+        if (isDateVerified(element)) {
+            logger.info("Date is verified");
+            Actions actions = new Actions(driver);
+            actions.moveToElement(element).click().build().perform();
+            logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, SUCCESSFUL.name());
         }
-        if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
-            throw exception;
-        }
-
     }
 
-    private void handleSelectingTimeslotAndSendForm() throws ElementNotFoundTimeoutException, InterruptedException, InteractionFailedException {
-        String elementDescription = FormParameterEnum.TIME_SLOT.name();
-        WebElement element = null;
+    @VisibleForTesting
+    protected void handleSelectingTimeslot() throws FormValidationFailed, InterruptedException {
+        handledTimeslotCount++;
+        // Get timeslot element && timeslot options
+        Select webElement = getAvailableTimeslotOptions();
+
+        // Verify timeslot options
+        if (isTimeslotOptionVerified(webElement)) {
+            selectTimeslot(webElement);
+        } else {
+            throw new FormValidationFailed("Validating the time slots has failed");
+        }
+    }
+
+    @VisibleForTesting
+    protected Select getAvailableTimeslotOptions() {
         String elementName = FormParameterEnum.TIME_SLOT.getName();
-        int i = 1;
-        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            try {
-                element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals(elementName)).collect(Collectors.toList()).get(0);
-                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-                break;
-            } catch (Exception e) {
-                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
-            }
-            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-            i++;
-        }
-        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
-            throw new ElementNotFoundTimeoutException(elementDescription);
-        }
-        if (isTimeslotOptionVerified(element)) {
-            foundAppointmentCount++;
-            Select select = new Select(element);
-            List<WebElement> availableHours = select.getOptions();
-            String selectValue = availableHours.get(0).getText();
-            select.selectByIndex(0);
-            logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, SUCCESSFUL.name(), "Value: " + selectValue);
-            Thread.sleep(1000);
-            sendForm();
-            savePage(driver, this.getClass().getSimpleName(), "after_send");
-            Thread.sleep(5000);
-            String url = driver.getCurrentUrl();
-            logger.info(String.format("Found a place. URL: %s", url));
-            logger.info(String.format("Found Appointment count: %s", foundAppointmentCount));
-
-            Thread.sleep(100);
-
-        }
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+                .until(__ -> driver.findElements(By.tagName("select")).stream().filter(element1 -> element1.getAttribute("name").equals(elementName)).collect(Collectors.toList()).get(0));
+        return new Select(element);
     }
 
-    private void sendForm() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
+    @VisibleForTesting
+    protected void selectTimeslot(Select select) throws InterruptedException {
+        String elementDescription = "TIMESLOT";
+        List<WebElement> availableHours = select.getOptions();
+        for (int i = 0; i < availableHours.size(); i++) {
+            String timeSlot = availableHours.get(i).getText();
+            logger.info(String.format("Timeslot: %s, Value: %s", i, timeSlot));
+            if (timeSlot != null || !timeSlot.equals("")) {
+                logger.info(String.format("Available timeslot: Timeslot: %s, Value: %s", i, timeSlot));
+                String selectValue = availableHours.get(0).getText();
+                select.selectByIndex(i);
+                logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, SUCCESSFUL.name(), "Value: " + selectValue);
+                break;
+            }
+        }
+        Thread.sleep(1000);
+        savePage(driver, this.getClass().getSimpleName(), "after_send");
+    }
+
+    @VisibleForTesting
+    protected void sendForm() throws InterruptedException, ElementNotFoundTimeoutException {
         String elementId = "applicationForm:managedForm:proceed";
         String elementDescription = "weiter button".toUpperCase();
         WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
-        DriverUtils.clickToElement(element, elementDescription);
+        Actions actions = new Actions(driver);
+        actions.moveToElement(element).click().build().perform();
     }
 
     @VisibleForTesting
@@ -128,23 +123,15 @@ public class Section3DateSelectionHandler {
         return dateDay != null && dateMonth != null && dateYear != null;
     }
 
-    private boolean isTimeslotOptionVerified(WebElement element) {
-        Select select = new Select(element);
+    @VisibleForTesting
+    protected boolean isTimeslotOptionVerified(Select select) {
         List<WebElement> availableHours = select.getOptions();
         int availableHoursCount = availableHours.size();
         logger.info(String.format("There are %s available timeslots", availableHoursCount));
-        for (int i = 0; i < availableHoursCount; i++) {
-            logger.info(String.format("Timeslot: %s, Value: %s", i, availableHours.get(i).getText()));
-        }
-        if (availableHours.get(0).getText().contains("Bitte")) {
-            logger.info("Failed to validate timeslots");
-            return false;
-        }
-        return true;
-    }
-
-    public RemoteWebDriver getDriver() {
-        return driver;
+        return availableHours.stream()
+                .peek(availableHour -> logger.info(String.format("Timeslot: %s, Value: %s", availableHours.indexOf(availableHour), availableHour.getText())))
+                .map(WebElement::getText)
+                .anyMatch(timeSlot -> timeSlot != null && !timeSlot.equals(""));
     }
 
     public boolean isCalenderFound() throws InterruptedException {
@@ -159,9 +146,6 @@ public class Section3DateSelectionHandler {
                 if (activeStepText.contains("Terminauswahl") || activeStepText.contains("Date selection")) {
                     return true;
                 }
-                String asd = "//*[@id=\"xi-div-1\"]/div[3]";
-                String elementDescription1 = "calender".toUpperCase();
-                WebElement calender = driver.findElement(By.xpath(asd));
                 savePage(driver, this.getClass().getSimpleName(), "date_selecntion_in");
                 return true;
             } catch (Exception e) {

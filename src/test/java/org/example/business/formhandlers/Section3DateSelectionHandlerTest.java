@@ -6,16 +6,20 @@ import org.example.utils.DriverUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 class Section3DateSelectionHandlerTest extends BaseTestSetup {
 
-    static String pathToFile_de = Section4VisaFormHandler.class.getClassLoader().getResource("page_section3_dateSelection_2023-02-03_10:23:27.html").getPath();
-    static String pathToFile_en = Section4VisaFormHandler.class.getClassLoader().getResource("Section3DateSelectionHandler_2023-03-23_00_35_11_handling_date.html").getPath();
+    static String pathToFile_de = Section4VisaFormHandler.class.getClassLoader().getResource("dateSelection_DE.html").getPath();
+    static String pathToFile_en = Section4VisaFormHandler.class.getClassLoader().getResource("Section3DateSelectionHandler_2023-03-23_00_35_10_.html").getPath();
 
     static String urlToFile_de = "file:".concat(pathToFile_de);
     static String urlToFile_en = "file:".concat(pathToFile_en);
 
-    Section3DateSelectionHandler formFiller = new Section3DateSelectionHandler(driver);
+    private final Section3DateSelectionHandler formFiller = new Section3DateSelectionHandler(driver);
 
     @Test
     void ASSERT_THAT_isCalenderFound_returns_true_WHEN_page_is_opened_and_language_is_deutsch() throws InterruptedException {
@@ -75,7 +79,7 @@ class Section3DateSelectionHandlerTest extends BaseTestSetup {
         driver.get(urlToFile_de);
 
         // WHEN & THEN
-        Assertions.assertDoesNotThrow(() -> formFiller.handleFindingDate());
+        Assertions.assertDoesNotThrow(formFiller::handleSelectingDate);
     }
 
     @Test
@@ -84,6 +88,66 @@ class Section3DateSelectionHandlerTest extends BaseTestSetup {
         driver.get(urlToFile_en);
 
         // WHEN & THEN
-        Assertions.assertDoesNotThrow(() -> formFiller.handleFindingDate());
+        Assertions.assertDoesNotThrow(formFiller::handleSelectingDate);
+    }
+
+    @Test
+    void ASSERT_THAT_time_is_not_verified_WHEN_date_is_verified_AND_page_language_is_english() {
+        // GIVEN
+        driver.get(urlToFile_en);
+        formFiller.handleSelectingDate();
+        Select select = formFiller.getAvailableTimeslotOptions();
+
+        // WHEN
+        boolean isTimeslotVerified = formFiller.isTimeslotOptionVerified(select);
+
+        // THEN
+        Assertions.assertFalse(isTimeslotVerified);
+    }
+
+    @Test
+    void ASSERT_THAT_time_is_verified_WHEN_date_is_verified_AND_page_language_is_german() {
+        // GIVEN
+        driver.get(urlToFile_de);
+        formFiller.handleSelectingDate();
+        Select select = formFiller.getAvailableTimeslotOptions();
+
+        // WHEN
+        boolean isTimeslotVerified = formFiller.isTimeslotOptionVerified(select);
+
+        // THEN
+        Assertions.assertTrue(isTimeslotVerified);
+    }
+
+    @Test
+    void ASSERT_THAT_time_is_selected_WHEN_date_is_verified_AND_page_language_is_german() {
+        // GIVEN
+        driver.get(urlToFile_de);
+        formFiller.handleSelectingDate();
+        Select select = formFiller.getAvailableTimeslotOptions();
+        String expectedSelectedTime = "09:30";
+
+        // WHEN & THEN
+        Assertions.assertDoesNotThrow(() -> formFiller.selectTimeslot(select));
+        String actualSelectedTime = select.getFirstSelectedOption().getText();
+
+        // THEN
+        Assertions.assertEquals(expectedSelectedTime, actualSelectedTime);
+    }
+
+    @Test
+    void ASSERT_THAT_form_is_send_WHEN_date_and_time_is_selected_AND_page_language_is_german() throws Exception {
+        // GIVEN
+        driver.get(urlToFile_de);
+
+        // WHEN & THEN
+        Section3DateSelectionHandler spiedFormFiller = spy(new Section3DateSelectionHandler(driver));
+        spiedFormFiller.fillAndSendForm();
+
+        // THEN
+        verify(spiedFormFiller).handleSelectingDate();
+        verify(spiedFormFiller).handleSelectingTimeslot();
+        verify(spiedFormFiller).sendForm();
+
     }
 }

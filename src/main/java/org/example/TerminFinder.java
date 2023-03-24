@@ -102,14 +102,14 @@ public class TerminFinder extends TimerTask {
             if (section3DateSelectionHandler.isCalenderFound()) {
                 logger.info("Calender section is opened");
                 section3DateSelectionHandler.fillAndSendForm();
-                driver = section3DateSelectionHandler.getDriver();
+                driver = section3DateSelectionHandler.driver;
             } else {
                 logger.info("Page section 3 is not opened, quitting.");
                 return;
             }
         } catch (Exception e) {
             logger.error("Exception occurred during handling section 3, quitting.", e);
-            driver = section3DateSelectionHandler.getDriver();
+            driver = section3DateSelectionHandler.driver;
             String fileName = section3DateSelectionHandler.getClass().getSimpleName();
             savePage(driver, fileName, "exception");
             return;
