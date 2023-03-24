@@ -43,3 +43,7 @@ bin/
 /.idea/
 
 *.cer
+
+### Personal data
+src/main/resources/DEFAULT_PERSONAL_INFO_FORM.json
+src/main/resources/DEFAULT_PERSONAL_INFO_FORM.json
