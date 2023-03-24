@@ -8,7 +8,7 @@ import static org.example.utils.IoUtils.savePage;
 
 class IoUtilsTest extends BaseTestSetup {
 
-    static String path = Section4VisaFormHandler.class.getClassLoader().getResource("page_section3_dateSelection_2023-02-03_10:23:27.html").getPath();
+    static String path = Section4VisaFormHandler.class.getClassLoader().getResource("Section3DateSelectionHandler_2023-03-24.html").getPath();
     static String url = "file:".concat(path);
 
     @Test
