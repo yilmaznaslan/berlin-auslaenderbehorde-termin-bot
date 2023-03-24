@@ -1,51 +1,42 @@
 package org.example.business.formhandlers;
 
+import org.example.BaseTestSetup;
 import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.utils.DriverUtils;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.Select;
 
-class Section3DateSelectionHandlerTest {
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
-    static String path = Section4VisaFormHandler.class.getClassLoader().getResource("page_section3_dateSelection_2023-02-03_10:23:27.html").getPath();
-    static String url = "file:".concat(path);
+class Section3DateSelectionHandlerTest extends BaseTestSetup {
 
-    static ChromeDriver driver;
+    static String pathToFile_de = Section4VisaFormHandler.class.getClassLoader().getResource("dateSelection_DE.html").getPath();
+    static String pathToFile_en = Section4VisaFormHandler.class.getClassLoader().getResource("Section3DateSelectionHandler_2023-03-23_00_35_10_.html").getPath();
 
-    Section3DateSelectionHandler formFiller = new Section3DateSelectionHandler(driver);
+    static String urlToFile_de = "file:".concat(pathToFile_de);
+    static String urlToFile_en = "file:".concat(pathToFile_en);
 
-
-    @BeforeAll
-    static void initDriver() {
-        ChromeOptions options = new ChromeOptions();
-        // Add options to make Selenium-driven browser look more like a regular user's browser
-        options.addArguments("--disable-blink-features=AutomationControlled"); // Remove "navigator.webdriver" flag
-        options.addArguments("--disable-infobars"); // Disable infobars
-        options.addArguments("--start-maximized"); // Start the browser maximized
-        options.addArguments("--disable-extensions"); // Disable extensions
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--remote-allow-origins=*");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--headless");
-        driver = new ChromeDriver(options);
-    }
-
-    @AfterAll
-    static void quitDriver() {
-        driver.quit();
-    }
-
+    private final Section3DateSelectionHandler formFiller = new Section3DateSelectionHandler(driver);
 
     @Test
-    void ASSERT_THAT_isCalenderFound_returns_true() throws InterruptedException {
-
+    void ASSERT_THAT_isCalenderFound_returns_true_WHEN_page_is_opened_and_language_is_deutsch() throws InterruptedException {
         // GIVEN
-        driver.get(url);
+        driver.get(urlToFile_de);
+
+        // WHEN
+        boolean actualResult = formFiller.isCalenderFound();
+
+        // THEN
+        Assertions.assertTrue(actualResult);
+    }
+
+    @Test
+    void ASSERT_THAT_isCalenderFound_returns_true_WHEN_page_is_opened_and_language_is_english() throws InterruptedException {
+        // GIVEN
+        driver.get(urlToFile_en);
 
         // WHEN
         boolean actualResult = formFiller.isCalenderFound();
@@ -57,10 +48,8 @@ class Section3DateSelectionHandlerTest {
     @Test
     void ASSERT_THAT_isDateVerified_returns_true() throws ElementNotFoundTimeoutException, InterruptedException {
         // GIVEN
-        driver.get(url);
+        driver.get(urlToFile_de);
         String cssSelector = "[data-handler=selectDay]";
-        DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "handling_date");
-        DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "handling_Date");
         WebElement element = DriverUtils.getElementByCssSelector(cssSelector, "elementDescription", driver);
 
         // WHEN
@@ -68,5 +57,97 @@ class Section3DateSelectionHandlerTest {
 
         // THEN
         Assertions.assertTrue(actualResult);
+    }
+
+    @Test
+    void ASSERT_THAT_isDateVerified_returns_true_WHEN_page_language_is_english() throws ElementNotFoundTimeoutException, InterruptedException {
+        // GIVEN
+        driver.get(urlToFile_en);
+        String cssSelector = "[data-handler=selectDay]";
+        WebElement element = DriverUtils.getElementByCssSelector(cssSelector, "elementDescription", driver);
+
+        // WHEN
+        boolean actualResult = formFiller.isDateVerified(element);
+
+        // THEN
+        Assertions.assertTrue(actualResult);
+    }
+
+    @Test
+    void ASSERT_THAT_date_is_clicked_WHEN_date_is_verified_AND_page_language_is_german() {
+        // GIVEN
+        driver.get(urlToFile_de);
+
+        // WHEN & THEN
+        Assertions.assertDoesNotThrow(formFiller::handleSelectingDate);
+    }
+
+    @Test
+    void ASSERT_THAT_date_is_clicked_WHEN_date_is_verified_AND_page_language_is_english() {
+        // GIVEN
+        driver.get(urlToFile_en);
+
+        // WHEN & THEN
+        Assertions.assertDoesNotThrow(formFiller::handleSelectingDate);
+    }
+
+    @Test
+    void ASSERT_THAT_time_is_not_verified_WHEN_date_is_verified_AND_page_language_is_english() {
+        // GIVEN
+        driver.get(urlToFile_en);
+        formFiller.handleSelectingDate();
+        Select select = formFiller.getAvailableTimeslotOptions();
+
+        // WHEN
+        boolean isTimeslotVerified = formFiller.isTimeslotOptionVerified(select);
+
+        // THEN
+        Assertions.assertFalse(isTimeslotVerified);
+    }
+
+    @Test
+    void ASSERT_THAT_time_is_verified_WHEN_date_is_verified_AND_page_language_is_german() {
+        // GIVEN
+        driver.get(urlToFile_de);
+        formFiller.handleSelectingDate();
+        Select select = formFiller.getAvailableTimeslotOptions();
+
+        // WHEN
+        boolean isTimeslotVerified = formFiller.isTimeslotOptionVerified(select);
+
+        // THEN
+        Assertions.assertTrue(isTimeslotVerified);
+    }
+
+    @Test
+    void ASSERT_THAT_time_is_selected_WHEN_date_is_verified_AND_page_language_is_german() {
+        // GIVEN
+        driver.get(urlToFile_de);
+        formFiller.handleSelectingDate();
+        Select select = formFiller.getAvailableTimeslotOptions();
+        String expectedSelectedTime = "09:30";
+
+        // WHEN & THEN
+        Assertions.assertDoesNotThrow(() -> formFiller.selectTimeslot(select));
+        String actualSelectedTime = select.getFirstSelectedOption().getText();
+
+        // THEN
+        Assertions.assertEquals(expectedSelectedTime, actualSelectedTime);
+    }
+
+    @Test
+    void ASSERT_THAT_form_is_send_WHEN_date_and_time_is_selected_AND_page_language_is_german() throws Exception {
+        // GIVEN
+        driver.get(urlToFile_de);
+
+        // WHEN & THEN
+        Section3DateSelectionHandler spiedFormFiller = spy(new Section3DateSelectionHandler(driver));
+        spiedFormFiller.fillAndSendForm();
+
+        // THEN
+        verify(spiedFormFiller).handleSelectingDate();
+        verify(spiedFormFiller).handleSelectingTimeslot();
+        verify(spiedFormFiller).sendForm();
+
     }
 }

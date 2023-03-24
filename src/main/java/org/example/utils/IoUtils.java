@@ -25,7 +25,9 @@ import java.time.format.DateTimeFormatter;
 public class IoUtils {
 
     private final static Logger logger = LogManager.getLogger(IoUtils.class);
-
+    private final static String S3_BUCKET_NAME = "auslander-termin-files";
+    private static AmazonS3 client;
+    public static boolean isS3Enabled = true;
     public static PersonalInfoFormTO readPersonalInfoFromFile() {
         ObjectMapper mapper = new ObjectMapper();
         InputStream is = PersonalInfoFormTO.class.getResourceAsStream("/DEFAULT_PERSONAL_INFO_FORM.json");
@@ -50,19 +52,23 @@ public class IoUtils {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String dateAsStr = dtf.format(now);
-        String fileName = pageDescriber + "_" + dateAsStr + "_" + suffix + ".html";
-        String s3FileName = pageDescriber + "_" + dateAsStr + "_" + suffix + ".png";
-
-        logger.info("File name :{}, {}", fileName, s3FileName);
-
-        String content = driver.getPageSource();
-        saveSourceCodeToFile(content, fileName);
-        saveScreenshot(driver, s3FileName);
+        String fileName = pageDescriber + "_" + dateAsStr + "_" + suffix;
+        String pagesourceFileName = fileName + ".html";
+        String screenshotFileName = fileName + ".png";
+        logger.info("File name :{}, {}", pagesourceFileName, screenshotFileName);
+        if(isS3Enabled){
+            client = AmazonS3ClientBuilder
+                    .standard()
+                    .withCredentials(new EnvironmentVariableCredentialsProvider())
+                    .withRegion(Regions.US_EAST_1)
+                    .build();
+            String content = driver.getPageSource();
+            saveSourceCodeToFile(content, pagesourceFileName);
+            saveScreenshot(driver, screenshotFileName);
+        }
     }
 
     private static void saveSourceCodeToFile(String content, String fileName) {
-        String bucketName = "auslander-termin-files";
-
         File file = new File(fileName);
         FileWriter fw;
         try {
@@ -73,14 +79,9 @@ public class IoUtils {
             logger.error("Failed to write to file", e);
         }
         try {
-            AmazonS3 client = AmazonS3ClientBuilder
-                    .standard()
-                    .withCredentials(new EnvironmentVariableCredentialsProvider())
-                    .withRegion(Regions.US_EAST_1)
-                    .build();
-            client.putObject(new PutObjectRequest(bucketName, fileName, file));
+            client.putObject(new PutObjectRequest(S3_BUCKET_NAME, fileName, file));
         } catch (Exception e) {
-            logger.error("Error occurred during s3 operation");
+            logger.error("Error occurred during s3 operation. Exception: ", e);
         }
     }
 
@@ -88,26 +89,17 @@ public class IoUtils {
         File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         File file = null;
         try {
-            //File file = new File(filePAth +"/screenshot_" + suffix + "_" + dateAsStr + ".png");
             file = new File(fileName);
             FileUtils.copyFile(scrFile1, file);
         } catch (IOException e) {
             logger.error("Failed to write to file", e);
         }
 
-        String bucketName = "auslander-termin-files";
         try {
-            AmazonS3 client = AmazonS3ClientBuilder
-                    .standard()
-                    .withCredentials(new EnvironmentVariableCredentialsProvider())
-                    .withRegion(Regions.US_EAST_1)
-                    .build();
-            client.putObject(new PutObjectRequest(bucketName, fileName, file));
+            client.putObject(new PutObjectRequest(S3_BUCKET_NAME, fileName, file));
         } catch (Exception e) {
-            logger.error("Error occurred during s3 operation");
+            logger.error("Error occurred during s3 operation. Exception: ", e);
         }
-
-
     }
 
 }

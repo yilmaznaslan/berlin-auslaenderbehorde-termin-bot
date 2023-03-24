@@ -12,7 +12,9 @@ mainClassName = 'org.example.Main'
 repositories {
     mavenCentral()
 }
-
+test {
+    testLogging.showStandardStreams = true
+}
 dependencies {
     // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation 'commons-io:commons-io:2.11.0'
