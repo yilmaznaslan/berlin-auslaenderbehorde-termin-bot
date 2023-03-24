@@ -27,7 +27,7 @@ public class IoUtils {
     private final static Logger logger = LogManager.getLogger(IoUtils.class);
     private final static String S3_BUCKET_NAME = "auslander-termin-files";
     private static AmazonS3 client;
-    public static boolean isS3Enabled = true;
+    public static boolean isS3Enabled = false;
     public static PersonalInfoFormTO readPersonalInfoFromFile() {
         ObjectMapper mapper = new ObjectMapper();
         InputStream is = PersonalInfoFormTO.class.getResourceAsStream("/DEFAULT_PERSONAL_INFO_FORM.json");
