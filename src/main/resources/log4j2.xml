@@ -4,7 +4,7 @@
     <Properties>
         <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %p %C{1} %m%n</Property>
         <Property name="APP_LOG_ROOT">/Users/yilmaznaci.aslan/repositories/berlinTerminFinder/logs</Property>
-        <!--<Property name="ELASTICSEARCH_URL">http://${env:ELASTICSEARCH_HOST}:9200/logs/_doc</Property>-->
+        <!--<Property name="ELASTICSEARCH_URL">http://${env:ELASTICSEARCH_HOST}:9200/logs/_doc</Property> -->
     </Properties>
 
     <Appenders>
@@ -40,17 +40,20 @@
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile> -->
+
+        <!--
+
         <Http name="elasticsearch" url="${ELASTICSEARCH_URL}">
             <JSONLayout compact="true" complete="false" eventEol="true" properties="true" stacktraceAsString="true" includeTimeMillis="true">
-                <!--  Project properties -->
-               <!-- <KeyValuePair key="elementDescription" value="${ctx:elementDescription}" />
+                <KeyValuePair key="elementDescription" value="${ctx:elementDescription}" />
                 <KeyValuePair key="seleniumProcess" value="${ctx:seleniumProcess}" />
                 <KeyValuePair key="seleniumStatus" value="${ctx:seleniumProcess}" />
                 <KeyValuePair key="formId" value="${ctx:formId}" />
-                -->
                 <KeyValuePair key="timestamp" value="$${date:yyyy-MM-dd'T'HH:mm:ss.SSSZ}" />
             </JSONLayout>
         </Http>
+
+        -->
     </Appenders>
 
     <Loggers>

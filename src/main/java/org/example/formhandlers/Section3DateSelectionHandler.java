@@ -144,9 +144,9 @@ public class Section3DateSelectionHandler {
                 String activeStepText = activeStepElement.getText();
                 logInfo(elementDescription, SeleniumProcessEnum.GETTING_TEXT, SUCCESSFUL.name(), activeStepText);
                 if (activeStepText.contains("Terminauswahl") || activeStepText.contains("Date selection")) {
+                    savePage(driver, this.getClass().getSimpleName(), "date_selecntion_in");
                     return true;
                 }
-                savePage(driver, this.getClass().getSimpleName(), "date_selecntion_in");
             } catch (Exception e) {
                 //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
             }
