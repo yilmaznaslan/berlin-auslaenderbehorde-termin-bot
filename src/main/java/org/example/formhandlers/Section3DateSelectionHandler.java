@@ -147,7 +147,6 @@ public class Section3DateSelectionHandler {
                     return true;
                 }
                 savePage(driver, this.getClass().getSimpleName(), "date_selecntion_in");
-                return true;
             } catch (Exception e) {
                 //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
             }
