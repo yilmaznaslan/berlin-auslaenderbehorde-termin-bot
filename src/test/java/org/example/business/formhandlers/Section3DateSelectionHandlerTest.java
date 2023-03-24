@@ -1,51 +1,38 @@
 package org.example.business.formhandlers;
 
+import org.example.BaseTestSetup;
 import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.utils.DriverUtils;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 
-class Section3DateSelectionHandlerTest {
+class Section3DateSelectionHandlerTest extends BaseTestSetup {
 
-    static String path = Section4VisaFormHandler.class.getClassLoader().getResource("page_section3_dateSelection_2023-02-03_10:23:27.html").getPath();
-    static String url = "file:".concat(path);
+    static String pathToFile_de = Section4VisaFormHandler.class.getClassLoader().getResource("page_section3_dateSelection_2023-02-03_10:23:27.html").getPath();
+    static String pathToFile_en = Section4VisaFormHandler.class.getClassLoader().getResource("Section3DateSelectionHandler_2023-03-23_00_35_11_handling_date.html").getPath();
 
-    static ChromeDriver driver;
+    static String urlToFile_de = "file:".concat(pathToFile_de);
+    static String urlToFile_en = "file:".concat(pathToFile_en);
 
     Section3DateSelectionHandler formFiller = new Section3DateSelectionHandler(driver);
 
+    @Test
+    void ASSERT_THAT_isCalenderFound_returns_true_WHEN_page_is_opened_and_language_is_deutsch() throws InterruptedException {
+        // GIVEN
+        driver.get(urlToFile_de);
 
-    @BeforeAll
-    static void initDriver() {
-        ChromeOptions options = new ChromeOptions();
-        // Add options to make Selenium-driven browser look more like a regular user's browser
-        options.addArguments("--disable-blink-features=AutomationControlled"); // Remove "navigator.webdriver" flag
-        options.addArguments("--disable-infobars"); // Disable infobars
-        options.addArguments("--start-maximized"); // Start the browser maximized
-        options.addArguments("--disable-extensions"); // Disable extensions
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--remote-allow-origins=*");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--headless");
-        driver = new ChromeDriver(options);
+        // WHEN
+        boolean actualResult = formFiller.isCalenderFound();
+
+        // THEN
+        Assertions.assertTrue(actualResult);
     }
-
-    @AfterAll
-    static void quitDriver() {
-        driver.quit();
-    }
-
 
     @Test
-    void ASSERT_THAT_isCalenderFound_returns_true() throws InterruptedException {
-
+    void ASSERT_THAT_isCalenderFound_returns_true_WHEN_page_is_opened_and_language_is_english() throws InterruptedException {
         // GIVEN
-        driver.get(url);
+        driver.get(urlToFile_en);
 
         // WHEN
         boolean actualResult = formFiller.isCalenderFound();
@@ -57,10 +44,8 @@ class Section3DateSelectionHandlerTest {
     @Test
     void ASSERT_THAT_isDateVerified_returns_true() throws ElementNotFoundTimeoutException, InterruptedException {
         // GIVEN
-        driver.get(url);
+        driver.get(urlToFile_de);
         String cssSelector = "[data-handler=selectDay]";
-        DriverUtils.saveSourceCodeToFile(driver.getPageSource(), this.getClass().getSimpleName(), "handling_date");
-        DriverUtils.saveScreenshot(driver, this.getClass().getSimpleName(), "handling_Date");
         WebElement element = DriverUtils.getElementByCssSelector(cssSelector, "elementDescription", driver);
 
         // WHEN
@@ -68,5 +53,37 @@ class Section3DateSelectionHandlerTest {
 
         // THEN
         Assertions.assertTrue(actualResult);
+    }
+
+    @Test
+    void ASSERT_THAT_isDateVerified_returns_true_WHEN_page_language_is_english() throws ElementNotFoundTimeoutException, InterruptedException {
+        // GIVEN
+        driver.get(urlToFile_en);
+        String cssSelector = "[data-handler=selectDay]";
+        WebElement element = DriverUtils.getElementByCssSelector(cssSelector, "elementDescription", driver);
+
+        // WHEN
+        boolean actualResult = formFiller.isDateVerified(element);
+
+        // THEN
+        Assertions.assertTrue(actualResult);
+    }
+
+    @Test
+    void ASSERT_THAT_date_is_clicked_WHEN_date_is_verified_AND_page_language_is_german() {
+        // GIVEN
+        driver.get(urlToFile_de);
+
+        // WHEN & THEN
+        Assertions.assertDoesNotThrow(() -> formFiller.handleFindingDate());
+    }
+
+    @Test
+    void ASSERT_THAT_date_is_clicked_WHEN_date_is_verified_AND_page_language_is_english() {
+        // GIVEN
+        driver.get(urlToFile_en);
+
+        // WHEN & THEN
+        Assertions.assertDoesNotThrow(() -> formFiller.handleFindingDate());
     }
 }

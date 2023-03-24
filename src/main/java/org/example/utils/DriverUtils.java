@@ -25,7 +25,7 @@ public class DriverUtils {
     public static final int TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS = 25;
     public static final int TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS = 5;
 
-    static final int TIMEOUT_FOR_INTERACTING_IN_SECONDS = 25;
+    public static final int TIMEOUT_FOR_INTERACTING_IN_SECONDS = 25;
     public static final int SLEEP_DURATION_IN_MILLISECONDS = 1500;
     public static long formId;
 
@@ -42,6 +42,7 @@ public class DriverUtils {
         String remoteUrl = "http://" + seleniumDriverHost + ":4444/wd/hub";
         try {
             RemoteWebDriver driver = new RemoteWebDriver(new URL(remoteUrl), options);
+            driver.manage().window().maximize();
             logger.info("Driver is initialized.");
             return driver;
         } catch (MalformedURLException e) {
