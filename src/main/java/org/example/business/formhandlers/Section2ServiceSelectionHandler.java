@@ -17,8 +17,6 @@ import org.openqa.selenium.support.ui.Select;
 
 import java.util.stream.Collectors;
 
-import static org.example.business.formhandlers.Section3DateSelectionHandler.foundAppointmentCount;
-import static org.example.business.formhandlers.Section3DateSelectionHandler.handledAppointmentCount;
 import static org.example.utils.DriverUtils.SLEEP_DURATION_IN_MILLISECONDS;
 import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
 import static org.example.utils.LogUtils.logInfo;
@@ -161,7 +159,7 @@ public class Section2ServiceSelectionHandler {
         WebElement element = DriverUtils.getElementByXPath(elementXpath, elementDescription, driver);
         DriverUtils.clickToElement(element, elementDescription);
         searchCount++;
-        String msg = String.format("SuccessfullyFormSenCount:%s, HandledAppoi.Count:%s, Found count: %s", searchCount, handledAppointmentCount, foundAppointmentCount);
+        String msg = String.format("SuccessfullyFormSenCount:%s", searchCount);
         logger.info(msg);
     }
 
