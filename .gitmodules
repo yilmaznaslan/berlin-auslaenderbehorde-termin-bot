@@ -1,3 +1,0 @@
-[submodule "infra"]
-	path = infra
-	url = git@github.com:yilmaznaslan/infra.git
