@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.example.exceptions.FormValidationFailed;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
-import org.example.utils.ThreadMonitor;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import static org.example.utils.DriverUtils.initDriverHeadless;
@@ -23,11 +22,5 @@ public class Main {
         TerminFinder terminFinder = new TerminFinder(personalInfoFormTO, visaFormTO, remoteWebDriver);
         terminFinder.startScanning();
 
-        ThreadMonitor threadMonitor = new ThreadMonitor();
-        threadMonitor.startMonitoring();
-
-        while (true) {
-            Thread.sleep(1000);
-        }
     }
 }

@@ -63,14 +63,14 @@ public class IoUtils {
         try {
             sourceFile = saveSourceCodeToFile(content, pagesourceFileName);
         } catch (IOException e) {
-            logger.error("Error occurred during s3 operation. Exception: ", e);
+            logger.error("Error occurred during IO operation. Exception: ", e);
             return;
         }
         File screenShotFile;
         try {
             screenShotFile = saveScreenshot(driver, screenshotFileName);
         } catch (IOException e) {
-            logger.error("Error occurred during s3 operation. Exception: ", e);
+            logger.error("Error occurred during IO operation. Exception: ", e);
             return;
         }
 

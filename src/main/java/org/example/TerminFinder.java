@@ -11,18 +11,20 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.Set;
 import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.example.utils.DriverUtils.initDriverHeadless;
 import static org.example.utils.IoUtils.savePage;
 
-public class TerminFinder extends TimerTask {
+public class TerminFinder{
 
     private final Logger logger = LogManager.getLogger(TerminFinder.class);
     private final VisaFormTO visaFormTO;
     private final PersonalInfoFormTO personalInfoFormTO;
-    private final long FORM_REFRESH_PERIOD_MILLISECONDS = 1000;
+    private final long FORM_REFRESH_PERIOD_IN_SECONDS = 1;
     private RemoteWebDriver driver;
     private String currentWindowHandle;
     private final Timer timer = new Timer(true);
@@ -31,7 +33,6 @@ public class TerminFinder extends TimerTask {
         this.personalInfoFormTO = personalInfoFormTO;
         this.visaFormTO = visaFormTO;
         this.driver = driver;
-
     }
 
     public TerminFinder(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO) {
@@ -49,13 +50,14 @@ public class TerminFinder extends TimerTask {
             throw new FormValidationFailed("");
         }
 
-        logger.info(String.format("Scheduled the task at rate: %s", FORM_REFRESH_PERIOD_MILLISECONDS));
-        timer.scheduleAtFixedRate(this, 0, FORM_REFRESH_PERIOD_MILLISECONDS);
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        executor.scheduleWithFixedDelay(this::run, 0, FORM_REFRESH_PERIOD_IN_SECONDS, TimeUnit.SECONDS);
+        logger.info(String.format("Scheduled the task at rate: %s", FORM_REFRESH_PERIOD_IN_SECONDS));
+        //timer.scheduleAtFixedRate(this, 0, FORM_REFRESH_PERIOD_MILLISECONDS);
     }
 
-    public void run() {
 
-
+    private void run() {
         // Section 1
         try {
             getFormPage();
