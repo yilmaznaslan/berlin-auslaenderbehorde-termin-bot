@@ -16,7 +16,6 @@ test {
     testLogging.showStandardStreams = true
 }
 dependencies {
-    // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation 'commons-io:commons-io:2.11.0'
 
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
@@ -41,8 +40,16 @@ publishing {
             from components.java
         }
     }
+    repositories {
+        maven {
+            url 'https://yilmaznaslan-250602908823.d.codeartifact.us-east-1.amazonaws.com/maven/berlintermin/'
+            credentials {
+                username "aws"
+                password System.env.CODEARTIFACT_AUTH_TOKEN
+            }
+        }
+    }
 }
-
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
