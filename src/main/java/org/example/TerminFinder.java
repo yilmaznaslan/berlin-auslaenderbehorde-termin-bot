@@ -170,7 +170,7 @@ public class TerminFinder{
 
     }
 
-    public boolean isResidenceTitleInfoVerified(VisaFormTO visaFormTO) {
+    private boolean isResidenceTitleInfoVerified(VisaFormTO visaFormTO) {
         logger.info("Verifying form: {}", visaFormTO);
         String serviceType = visaFormTO.getServiceType();
         Boolean isResidencePermitPresent = visaFormTO.getResidencePermitPresent();
@@ -200,7 +200,4 @@ public class TerminFinder{
         return true;
     }
 
-    public RemoteWebDriver getDriver() {
-        return driver;
-    }
 }
