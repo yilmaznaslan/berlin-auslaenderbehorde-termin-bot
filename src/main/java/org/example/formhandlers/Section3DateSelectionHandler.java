@@ -40,7 +40,6 @@ public class Section3DateSelectionHandler {
     }
 
     public void fillAndSendForm() throws FormValidationFailed, InterruptedException, ElementNotFoundTimeoutException {
-        savePage(driver, this.getClass().getSimpleName(), "");
         handleAppointmentSelection();
         Thread.sleep(2000);
         handleTimeSelection();
@@ -54,7 +53,7 @@ public class Section3DateSelectionHandler {
         logger.info("Starting to find an appointment date");
         handledDateCount++;
         String cssSelector = "[data-handler=selectDay]";
-        savePage(driver, this.getClass().getSimpleName(), "handling_date");
+        savePage(driver, this.getClass().getSimpleName(), "handleAppointmentSelection");
         WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
                 .until(__ -> driver.findElement(By.cssSelector(cssSelector)));
         if (isDateVerified(element)) {
@@ -100,7 +99,6 @@ public class Section3DateSelectionHandler {
         List<WebElement> availableHours = select.getOptions();
         for (int i = 0; i < availableHours.size(); i++) {
             String timeSlot = availableHours.get(i).getText();
-            logger.info(String.format("Timeslot: %s, Value: %s", i, timeSlot));
             if (timeSlot != null || !timeSlot.equals("")) {
                 logger.info(String.format("Available timeslot: Timeslot: %s, Value: %s", i, timeSlot));
                 String selectValue = availableHours.get(0).getText();
@@ -110,7 +108,6 @@ public class Section3DateSelectionHandler {
             }
         }
         Thread.sleep(1000);
-        savePage(driver, this.getClass().getSimpleName(), "after_send");
     }
 
     @VisibleForTesting
@@ -120,6 +117,7 @@ public class Section3DateSelectionHandler {
         WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
         Actions actions = new Actions(driver);
         actions.moveToElement(element).click().build().perform();
+        savePage(driver, this.getClass().getSimpleName(), "after_send");
     }
 
     @VisibleForTesting
@@ -139,7 +137,7 @@ public class Section3DateSelectionHandler {
         return availableHours.stream()
                 .peek(availableHour -> logger.info(String.format("Timeslot: %s, Value: %s", availableHours.indexOf(availableHour), availableHour.getText())))
                 .map(WebElement::getText)
-                .anyMatch(timeSlot -> timeSlot != null && !timeSlot.equals(""));
+                .anyMatch(timeSlot -> timeSlot != null && !timeSlot.equals("") && timeSlot.contains(":"));
     }
 
     public boolean isCalenderFound() throws InterruptedException {
