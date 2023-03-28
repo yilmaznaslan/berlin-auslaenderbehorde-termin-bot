@@ -7,7 +7,7 @@ echo "Branch name is $branch"
 echo "building the fatjar"
 ./gradlew shadowJar
 
-tagName=yilmaznaslan/berlinterminfinder:$branch
+tagName=yilmaznaslan/berlin-auslaenderbehorde-termin-bot:$branch
 echo "Build the image tag: $tagName"
 docker build --tag $tagName --file Dockerfile .
 

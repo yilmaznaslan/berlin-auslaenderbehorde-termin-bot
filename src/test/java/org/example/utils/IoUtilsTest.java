@@ -12,10 +12,12 @@ class IoUtilsTest extends BaseTestSetup {
     static String path = Section4VisaFormHandler.class.getClassLoader().getResource("Section3DateSelectionHandler_2023-03-24.html").getPath();
     static String url = "file:".concat(path);
 
+
     @Test
     void ASSERT_THAT_isCalenderFound_returns_true() {
         // GIVEN
         driver.get(url);
+        IoUtils.isS3Enabled = true;
 
         // WHEN && THEN
         Assertions.assertDoesNotThrow(() -> savePage(driver, "testPage", "demo"));

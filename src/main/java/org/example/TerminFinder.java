@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import static org.example.utils.DriverUtils.initDriverHeadless;
 import static org.example.utils.IoUtils.savePage;
 
-public class TerminFinder{
+public class TerminFinder {
 
     private final Logger logger = LogManager.getLogger(TerminFinder.class);
     private final VisaFormTO visaFormTO;
@@ -38,7 +38,6 @@ public class TerminFinder{
     public TerminFinder(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO) {
         this.personalInfoFormTO = personalInfoFormTO;
         this.visaFormTO = visaFormTO;
-        this.driver = initDriverHeadless();
     }
 
     public void startScanning() throws FormValidationFailed {
@@ -49,11 +48,9 @@ public class TerminFinder{
             logger.error("Failed validate form: {}", visaFormTO);
             throw new FormValidationFailed("");
         }
-
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleWithFixedDelay(this::run, 0, FORM_REFRESH_PERIOD_IN_SECONDS, TimeUnit.SECONDS);
         logger.info(String.format("Scheduled the task at rate: %s", FORM_REFRESH_PERIOD_IN_SECONDS));
-        //timer.scheduleAtFixedRate(this, 0, FORM_REFRESH_PERIOD_MILLISECONDS);
     }
 
 
@@ -67,7 +64,9 @@ public class TerminFinder{
                 driver = initDriverHeadless();
             } catch (Exception ex) {
                 logger.error("Failed to initialize the driver. Quitting. Reason: ", ex);
-                driver.quit();
+                if (driver != null) {
+                    driver.quit();
+                }
                 return;
             }
             return;

@@ -41,14 +41,15 @@ public class Section3DateSelectionHandler {
 
     public void fillAndSendForm() throws FormValidationFailed, InterruptedException, ElementNotFoundTimeoutException {
         savePage(driver, this.getClass().getSimpleName(), "");
-        handleSelectingDate();
-        handleSelectingTimeslot();
+        handleAppointmentSelection();
+        Thread.sleep(2000);
+        handleTimeSelection();
         Thread.sleep(2000);
         sendForm();
     }
 
     @VisibleForTesting
-    protected void handleSelectingDate() {
+    protected void handleAppointmentSelection() {
         String elementDescription = "DateSelection".toUpperCase();
         logger.info("Starting to find an appointment date");
         handledDateCount++;
@@ -65,8 +66,10 @@ public class Section3DateSelectionHandler {
     }
 
     @VisibleForTesting
-    protected void handleSelectingTimeslot() throws FormValidationFailed, InterruptedException {
+    protected void handleTimeSelection() throws FormValidationFailed, InterruptedException {
+        savePage(driver, this.getClass().getSimpleName(), "handleTimeSelection");
         handledTimeslotCount++;
+
         // Get timeslot element && timeslot options
         Select webElement = getAvailableTimeslotOptions();
 
@@ -82,7 +85,12 @@ public class Section3DateSelectionHandler {
     protected Select getAvailableTimeslotOptions() {
         String elementName = FormParameterEnum.TIME_SLOT.getName();
         WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
-                .until(__ -> driver.findElements(By.tagName("select")).stream().filter(element1 -> element1.getAttribute("name").equals(elementName)).collect(Collectors.toList()).get(0));
+                .until(__ -> {
+                    WebElement selectElement = driver.findElements(By.tagName("select")).stream()
+                            .filter(element1 -> element1.getAttribute("name").equals(elementName))
+                            .collect(Collectors.toList()).get(0);
+                    return selectElement;
+                });
         return new Select(element);
     }
 

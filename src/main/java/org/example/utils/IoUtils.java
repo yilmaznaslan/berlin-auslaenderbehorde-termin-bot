@@ -75,6 +75,7 @@ public class IoUtils {
         }
 
         if (isS3Enabled) {
+            logger.info("Storing files to s3");
             client = AmazonS3ClientBuilder
                     .standard()
                     .withCredentials(new EnvironmentVariableCredentialsProvider())
@@ -102,11 +103,8 @@ public class IoUtils {
 
     private static File saveScreenshot(WebDriver driver, String fileName) throws IOException {
         File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-        File file = null;
-
-        file = new File(fileName);
+        File file = new File(fileName);
         FileUtils.copyFile(scrFile1, file);
-
         return file;
     }
 
