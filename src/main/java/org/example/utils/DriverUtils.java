@@ -29,19 +29,11 @@ public class DriverUtils {
     public static final int SLEEP_DURATION_IN_MILLISECONDS = 1500;
     public static long formId;
 
-    public static RemoteWebDriver initDriverHeadless() {
+    public static RemoteWebDriver initDriver() {
         String seleniumDriverHost = System.getenv().getOrDefault("SELENIUM_GRID_HOST", "localhost");
-        ChromeOptions options = new ChromeOptions();
-
-        // Add options to make Selenium-driven browser look more like a regular user's browser
-        options.addArguments("--disable-blink-features=AutomationControlled"); // Remove "navigator.webdriver" flag
-        options.addArguments("--disable-infobars"); // Disable infobars
-        options.addArguments("--start-maximized"); // Start the browser maximized
-        options.addArguments("--disable-extensions"); // Disable extensions
-
         String remoteUrl = "http://" + seleniumDriverHost + ":4444/wd/hub";
         try {
-            RemoteWebDriver driver = new RemoteWebDriver(new URL(remoteUrl), options);
+            RemoteWebDriver driver = new RemoteWebDriver(new URL(remoteUrl), getChromeOptions());
             driver.manage().window().maximize();
             logger.info("Driver is initialized.");
             return driver;
@@ -49,6 +41,25 @@ public class DriverUtils {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public static ChromeOptions getChromeOptions() {
+        ChromeOptions options = new ChromeOptions();
+
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--remote-allow-origins=*");
+
+        // Add options to make Selenium-driven browser look more like a regular user's browser
+        options.addArguments("--disable-blink-features=AutomationControlled"); // Remove "navigator.webdriver" flag
+        options.addArguments("--disable-infobars"); // Disable infobars
+        options.addArguments("--start-maximized"); // Start the browser maximized
+        options.addArguments("--disable-extensions"); // Disable extensions
+
+        // Add a fake user-agent to make it look like a regular browser
+        options.addArguments("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
+
+
+        return options;
     }
 
     public static WebElement getElementById(String id, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
@@ -101,28 +112,6 @@ public class DriverUtils {
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
                 element = driver.findElements(By.tagName("label")).stream().filter(webElement -> webElement.getText().equals(labelValue)).collect(Collectors.toList()).get(0);
-                logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_ID, SeleniumProcessResultEnum.SUCCESSFUL.name());
-                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-                break;
-            } catch (Exception e) {
-                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
-            }
-            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-            i++;
-        }
-        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_TEXT.name(), SeleniumProcessResultEnum.FAILED.name(), "");
-            throw new ElementNotFoundTimeoutException(elementDescription);
-        }
-        return element;
-    }
-
-    public static WebElement getElementByTextValue(String textValue, String elementDescription, WebDriver driver) throws InterruptedException, ElementNotFoundTimeoutException {
-        WebElement element = null;
-        int i = 1;
-        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            try {
-                element = driver.findElement(By.linkText(textValue));
                 logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_ID, SeleniumProcessResultEnum.SUCCESSFUL.name());
                 Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;

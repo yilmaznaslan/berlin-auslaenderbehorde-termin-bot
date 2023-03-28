@@ -16,7 +16,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static org.example.utils.DriverUtils.initDriverHeadless;
+import static org.example.utils.DriverUtils.initDriver;
 import static org.example.utils.IoUtils.savePage;
 
 public class TerminFinder {
@@ -29,11 +29,6 @@ public class TerminFinder {
     private String currentWindowHandle;
     private final Timer timer = new Timer(true);
 
-    public TerminFinder(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO, RemoteWebDriver driver) {
-        this.personalInfoFormTO = personalInfoFormTO;
-        this.visaFormTO = visaFormTO;
-        this.driver = driver;
-    }
 
     public TerminFinder(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO) {
         this.personalInfoFormTO = personalInfoFormTO;
@@ -61,7 +56,7 @@ public class TerminFinder {
         } catch (Exception e) {
             logger.error("Error in initializing a new session. Exception: ", e);
             try {
-                driver = initDriverHeadless();
+                driver = initDriver();
             } catch (Exception ex) {
                 logger.error("Failed to initialize the driver. Quitting. Reason: ", ex);
                 if (driver != null) {
