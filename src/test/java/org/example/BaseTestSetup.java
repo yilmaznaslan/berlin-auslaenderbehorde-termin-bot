@@ -19,6 +19,7 @@ public class BaseTestSetup {
         driver = new ChromeDriver(chromeOptions);
         driver.manage().window().maximize();
         IoUtils.isS3Enabled = false;
+        IoUtils.isLocalSaveEnabled = false;
     }
 
     @AfterAll

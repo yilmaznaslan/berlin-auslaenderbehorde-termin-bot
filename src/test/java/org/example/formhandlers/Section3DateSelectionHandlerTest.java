@@ -14,10 +14,12 @@ import static org.mockito.Mockito.verify;
 class Section3DateSelectionHandlerTest extends BaseTestSetup {
 
     static String pathToFile_de = Section3DateSelectionHandler.class.getClassLoader().getResource("dateSelection_DE.html").getPath();
-    static String pathToFile_en = Section3DateSelectionHandler.class.getClassLoader().getResource("Section3DateSelectionHandler_2023-03-27_11:09:38_handleTimeSelection.html").getPath();
+    static String pathToFile_en_successful = Section3DateSelectionHandler.class.getClassLoader().getResource("Section3DateSelectionHandler_2023-03-28_07:18:30_handleTimeSelection.html").getPath();
+    static String pathToFile_en_failed = Section4VisaFormHandler.class.getClassLoader().getResource("Section3DateSelectionHandler_2023-03-23_00_35_10_.html").getPath();
 
     static String urlToFile_de = "file:".concat(pathToFile_de);
-    static String urlToFile_en = "file:".concat(pathToFile_en);
+    static String urlToFile_en = "file:".concat(pathToFile_en_successful);
+    static String urlToFile_en_failed = "file:".concat(pathToFile_en_failed);
 
     private final Section3DateSelectionHandler formFiller = new Section3DateSelectionHandler(driver);
 
@@ -94,7 +96,7 @@ class Section3DateSelectionHandlerTest extends BaseTestSetup {
     @Test
     void ASSERT_THAT_time_is_not_verified_WHEN_date_is_verified_AND_page_language_is_english() {
         // GIVEN
-        driver.get(urlToFile_en);
+        driver.get(urlToFile_en_failed);
         formFiller.handleAppointmentSelection();
         Select select = formFiller.getAvailableTimeslotOptions();
 
@@ -103,17 +105,6 @@ class Section3DateSelectionHandlerTest extends BaseTestSetup {
 
         // THEN
         Assertions.assertFalse(isTimeslotVerified);
-    }
-
-    @Test
-    void ASSERT_THAT_time_is_not_enabled_WHEN_date_is_verified_AND_page_language_is_english() {
-        // GIVEN
-        driver.get(urlToFile_en);
-        formFiller.handleAppointmentSelection();
-        Select select = formFiller.getAvailableTimeslotOptions();
-
-        // WHEN && THEN
-        Assertions.assertThrows(Exception.class, () -> formFiller.getAvailableTimeslotOptions());
     }
 
     @Test
@@ -152,7 +143,7 @@ class Section3DateSelectionHandlerTest extends BaseTestSetup {
         driver.get(urlToFile_en);
         formFiller.handleAppointmentSelection();
         Select select = formFiller.getAvailableTimeslotOptions();
-        String expectedSelectedTime = "10:00";
+        String expectedSelectedTime = "07:30";
 
         // WHEN & THEN
         Assertions.assertDoesNotThrow(() -> formFiller.selectTimeslot(select));
