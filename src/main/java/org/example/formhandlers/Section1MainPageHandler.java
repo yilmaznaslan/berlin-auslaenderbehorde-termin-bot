@@ -1,12 +1,20 @@
 package org.example.formhandlers;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.exceptions.InteractionFailedException;
 import org.example.utils.DriverUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+
+import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
 
 /**
  * Business Access Layer for getting english landing page
@@ -28,10 +36,12 @@ public class Section1MainPageHandler {
         sendForm();
     }
 
-    private void clickBookAppointment() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
+    @VisibleForTesting
+    protected void clickBookAppointment(){
         String labelValue = "Book Appointment";
-        WebElement element = DriverUtils.getElementByTextValue(labelValue, labelValue, driver);
-        DriverUtils.clickToElement(element, labelValue);
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+                .until(ExpectedConditions.elementToBeClickable(By.linkText(labelValue)));
+        element.click();
     }
 
     private void clickToAcceptConsent() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {

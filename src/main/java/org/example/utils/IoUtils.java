@@ -28,6 +28,7 @@ public class IoUtils {
     private final static String S3_BUCKET_NAME = "auslander-termin-files";
     private static AmazonS3 client;
     public static boolean isS3Enabled = false;
+    public static boolean isLocalSaveEnabled = false;
 
     public static PersonalInfoFormTO readPersonalInfoFromFile() {
         ObjectMapper mapper = new ObjectMapper();
@@ -50,6 +51,10 @@ public class IoUtils {
     }
 
     public static void savePage(WebDriver driver, String pageDescriber, String suffix) {
+        if (!isLocalSaveEnabled){
+            logger.info("Saving is disabled");
+            return;
+        }
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String dateAsStr = dtf.format(now);
