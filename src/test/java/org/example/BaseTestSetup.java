@@ -21,7 +21,7 @@ public class BaseTestSetup {
     public static String familyStatus = "2";
     public static String applicationsNumber = "1";
     public static String residencePermitId = "123JSE421";
-    public PersonalInfoFormTO personalInfoFormTO = new PersonalInfoFormTO(citizenshipValue, applicationsNumber, familyStatus, firstName, lastName, email, birthdate);
+    public PersonalInfoFormTO personalInfoFormTO = new PersonalInfoFormTO(citizenshipValue, null, applicationsNumber, familyStatus, firstName, lastName, email, birthdate);
 
     public static VisaFormTO visaForm_apply_for_bluecard_without_residencePermit = new VisaFormTO(
             false,

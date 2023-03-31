@@ -2,6 +2,7 @@ package org.example.model;
 
 public class PersonalInfoFormTO {
     private String citizenshipValue;
+    private String citizenshipValueOfFamilyMember;
     private String applicationsNumber;
     private String familyStatus;
     private String firstName;
@@ -12,8 +13,9 @@ public class PersonalInfoFormTO {
     public PersonalInfoFormTO() {
     }
 
-    public PersonalInfoFormTO(String citizenshipValue, String applicationsNumber, String familyStatus, String firstName, String lastName, String emailAddress, String birthdate) {
+    public PersonalInfoFormTO(String citizenshipValue, String citizenshipValueOfFamilyMember, String applicationsNumber, String familyStatus, String firstName, String lastName, String emailAddress, String birthdate) {
         this.citizenshipValue = citizenshipValue;
+        this.citizenshipValueOfFamilyMember = citizenshipValueOfFamilyMember;
         this.applicationsNumber = applicationsNumber;
         this.familyStatus = familyStatus;
         this.firstName = firstName;
@@ -78,10 +80,19 @@ public class PersonalInfoFormTO {
         this.birthdate = birthdate;
     }
 
+    public String getCitizenshipValueOfFamilyMember() {
+        return citizenshipValueOfFamilyMember;
+    }
+
+    public void setCitizenshipValueOfFamilyMember(String citizenshipValueOfFamilyMember) {
+        this.citizenshipValueOfFamilyMember = citizenshipValueOfFamilyMember;
+    }
+
     @Override
     public String toString() {
-        return "PersonalInfoDTO{" +
+        return "PersonalInfoFormTO{" +
                 "citizenshipValue='" + citizenshipValue + '\'' +
+                ", citizenshipValueOfFamilyMember='" + citizenshipValueOfFamilyMember + '\'' +
                 ", applicationsNumber='" + applicationsNumber + '\'' +
                 ", familyStatus='" + familyStatus + '\'' +
                 ", firstName='" + firstName + '\'' +
