@@ -56,6 +56,9 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         selectCitizenshipValue();
         selectApplicantsCount();
         selectFamilyStatus();
+        if (familyStatus.equals("1")){
+            selectCitizenshipValueOfFamilyMember();
+        }
         clickServiceType();
         if (visaPurposeLabelValue != null) {
             clickVisaPurpose();
@@ -77,6 +80,37 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
 
         String elementDescription = Section2FormElementsEnum.COUNTRY.name();
         String elementName = Section2FormElementsEnum.COUNTRY.getName();
+        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
+
+        wait.until(__ -> {
+            try {
+                WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("select[name='" + elementName + "']")));
+                wait.until(ExpectedConditions.not(ExpectedConditions.stalenessOf(element)));
+                wait.until(ExpectedConditions.visibilityOf(element));
+                Select select = new Select(element);
+                select.selectByVisibleText(citizenshipValue);
+                WebElement option = select.getFirstSelectedOption();
+                String selectValue = option.getText();
+                if (selectValue.equals(citizenshipValue)) {
+                    logger.info("Successfully selected the citizenship value");
+                    return true;
+                }
+                return false;
+            } catch (Exception e) {
+                return false;
+            }
+        });
+
+    }
+
+    private void selectCitizenshipValueOfFamilyMember() {
+        String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+        logger.info("Starting to " + methodName);
+
+        String elementDescription = Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.name();
+        String elementName = Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.getName();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
@@ -139,12 +173,16 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         logger.info("Starting to " + methodName);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
-        WebElement element = wait.until(__ -> {
-            WebElement selectElement = driver.findElements(By.tagName("label")).stream().filter(webElement -> webElement.getText().equals(serviceTypeLabelValue)).findFirst().orElseThrow(() -> new NoSuchElementException("Unable to locate element with text: " + serviceTypeLabelValue));
-            return selectElement;
+        wait.until(__ -> {
+            try {
+                WebElement selectElement = driver.findElements(By.tagName("label")).stream().filter(webElement -> webElement.getText().equals(serviceTypeLabelValue)).findFirst().orElseThrow(() -> new NoSuchElementException("Unable to locate element with text: " + serviceTypeLabelValue));
+                selectElement.click();
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
         });
-        wait.until(ExpectedConditions.not(ExpectedConditions.stalenessOf(element)));
-        wait.until(ExpectedConditions.elementToBeClickable(element)).click();
+
     }
 
     private void clickVisaPurpose() {
