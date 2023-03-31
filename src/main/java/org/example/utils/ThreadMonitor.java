@@ -1,15 +1,14 @@
 package org.example.utils;
 
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.ThreadContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class ThreadMonitor extends TimerTask {
-    private final Logger logger = LogManager.getLogger(ThreadMonitor.class);
+    private final Logger logger = LoggerFactory.getLogger(ThreadMonitor.class);
     private final Timer timer = new Timer(true);
 
     public void startMonitoring() {
@@ -18,7 +17,7 @@ public class ThreadMonitor extends TimerTask {
     @Override
     public void run() {
         int threadCount = Thread.activeCount();
-        ThreadContext.put("threadCount", String.valueOf(threadCount));
+        MDC.put("threadCount", String.valueOf(threadCount));
         logger.info(String.format("Number of threads: %s", threadCount));
         try {
             Thread.sleep(30000);

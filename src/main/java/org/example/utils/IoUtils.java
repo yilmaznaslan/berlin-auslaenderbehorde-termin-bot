@@ -7,13 +7,13 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -24,11 +24,11 @@ import java.time.format.DateTimeFormatter;
 
 public class IoUtils {
 
-    private final static Logger logger = LogManager.getLogger(IoUtils.class);
+    private final static Logger logger = LoggerFactory.getLogger(IoUtils.class);
     private final static String S3_BUCKET_NAME = "auslander-termin-files";
     private static AmazonS3 client;
-    public static boolean isS3Enabled = false;
-    public static boolean isLocalSaveEnabled = false;
+    public static boolean isS3Enabled = true;
+    public static boolean isLocalSaveEnabled = true;
 
     public static PersonalInfoFormTO readPersonalInfoFromFile() {
         ObjectMapper mapper = new ObjectMapper();

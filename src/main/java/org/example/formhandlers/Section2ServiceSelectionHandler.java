@@ -1,7 +1,7 @@
 package org.example.formhandlers;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import com.google.common.annotations.VisibleForTesting;
 import org.example.enums.FormParameterEnum;
 import org.example.enums.SeleniumProcessEnum;
 import org.example.enums.SeleniumProcessResultEnum;
@@ -13,8 +13,13 @@ import org.example.utils.DriverUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.stream.Collectors;
 
 import static org.example.utils.DriverUtils.SLEEP_DURATION_IN_MILLISECONDS;
@@ -27,7 +32,7 @@ import static org.example.utils.LogUtils.logWarn;
  */
 public class Section2ServiceSelectionHandler {
 
-    private final Logger logger = LogManager.getLogger(Section2ServiceSelectionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(Section2ServiceSelectionHandler.class);
     private final String citizenshipValue;
     private final String applicantNumber;
     private final String familyStatus;
@@ -55,7 +60,7 @@ public class Section2ServiceSelectionHandler {
         selectApplicantsCount();
         selectFamilyStatus();
         clickServiceType();
-        if(visaPurposeLabelValue != null){
+        if (visaPurposeLabelValue != null) {
             clickVisaPurpose();
         }
         clickToVisa();
@@ -140,10 +145,18 @@ public class Section2ServiceSelectionHandler {
         }
     }
 
-    private void clickServiceType() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
-        WebElement element = DriverUtils.getElementByLabelValue(serviceTypeLabelValue, serviceTypeLabelValue, driver);
-        DriverUtils.clickToElement(element, serviceTypeLabelValue);
+    @VisibleForTesting
+    protected void clickServiceType() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
+        WebElement element = wait
+                .until(__ -> {
+                    WebElement selectElement = driver.findElement(By.xpath("//label[contains(text(),'Extend a residence title')]"));
+                    return selectElement;
+                });
+        wait.until(ExpectedConditions.not(ExpectedConditions.stalenessOf(element)));
+        wait.until(ExpectedConditions.elementToBeClickable(element)).click();
     }
+
 
     private void clickVisaPurpose() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
         WebElement element = DriverUtils.getElementByLabelValue(visaPurposeLabelValue, visaPurposeLabelValue, driver);

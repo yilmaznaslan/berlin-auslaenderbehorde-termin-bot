@@ -1,13 +1,14 @@
 package org.example.formhandlers;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import org.example.enums.Section5FormParameterEnum;
 import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.exceptions.InteractionFailedException;
 import org.example.utils.DriverUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.example.utils.IoUtils.savePage;
 
@@ -16,7 +17,7 @@ import static org.example.utils.IoUtils.savePage;
  */
 public class Section5ReservationHandler {
 
-    private final Logger logger = LogManager.getLogger(Section5ReservationHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(Section5ReservationHandler.class);
 
     private RemoteWebDriver driver;
 

@@ -1,7 +1,6 @@
 package org.example.formhandlers;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import org.example.enums.Section4FormParameterEnum;
 import org.example.enums.SeleniumProcessEnum;
 import org.example.enums.SeleniumProcessResultEnum;
@@ -13,6 +12,8 @@ import org.example.utils.DriverUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.stream.Collectors;
 
@@ -28,7 +29,7 @@ import static org.example.utils.LogUtils.logWarn;
  */
 public class Section4VisaFormHandler {
 
-    private final Logger logger = LogManager.getLogger(Section4VisaFormHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(Section4VisaFormHandler.class);
     private final String firstName;
     private final String lastName;
     private final String emailAddress;

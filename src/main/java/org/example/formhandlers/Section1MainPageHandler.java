@@ -1,8 +1,6 @@
 package org.example.formhandlers;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.exceptions.InteractionFailedException;
 import org.example.utils.DriverUtils;
@@ -11,6 +9,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
@@ -21,7 +21,7 @@ import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECON
  */
 public class Section1MainPageHandler {
 
-    private final Logger logger = LogManager.getLogger(Section1MainPageHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(Section1MainPageHandler.class);
 
     private RemoteWebDriver driver;
 

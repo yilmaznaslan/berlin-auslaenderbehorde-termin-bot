@@ -1,8 +1,6 @@
 package org.example.formhandlers;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.example.enums.FormParameterEnum;
 import org.example.enums.SeleniumProcessEnum;
 import org.example.enums.SeleniumProcessResultEnum;
@@ -15,6 +13,9 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.time.Duration;
 import java.util.List;
@@ -28,7 +29,7 @@ import static org.example.utils.LogUtils.logWarn;
 
 public class Section3DateSelectionHandler {
 
-    private final Logger logger = LogManager.getLogger(Section3DateSelectionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(Section3DateSelectionHandler.class);
 
     public int handledTimeslotCount = 0;
     public int handledDateCount = 0;
@@ -50,6 +51,8 @@ public class Section3DateSelectionHandler {
     @VisibleForTesting
     protected void handleAppointmentSelection() {
         String elementDescription = "DateSelection".toUpperCase();
+        MDC.put("elementDescription", elementDescription);
+
         logger.info("Starting to find an appointment date");
         handledDateCount++;
         String cssSelector = "[data-handler=selectDay]";

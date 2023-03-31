@@ -1,16 +1,17 @@
 package org.example;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import org.example.exceptions.FormValidationFailed;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.example.utils.IoUtils.readPersonalInfoFromFile;
 import static org.example.utils.IoUtils.readVisaInfoFromFile;
 
 public class Main {
-    public static final Logger logger = LogManager.getLogger(Main.class);
+    public static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws FormValidationFailed {
         PersonalInfoFormTO personalInfoFormTO = readPersonalInfoFromFile();

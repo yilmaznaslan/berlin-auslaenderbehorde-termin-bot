@@ -3,7 +3,6 @@ package org.example.formhandlers;
 import org.example.BaseTestSetup;
 import org.example.exceptions.ElementNotFoundTimeoutException;
 import org.example.exceptions.InteractionFailedException;
-import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
 import org.example.utils.DriverUtils;
 import org.junit.jupiter.api.Assertions;
@@ -30,28 +29,13 @@ class Section4VisaFormHandlerTest extends BaseTestSetup {
     static String path_new = Section4VisaFormHandler.class.getClassLoader().getResource("Section4VisaFormHandler_extend_visa_2023-03-01_14_11_31.html").getPath();
     static String url_new = "file:".concat(path_new);
 
-    String citizenshipValue = "Türkei";
-    String firstName = "firstName";
-    String lastName = "lastName";
-    String email = "yilmazn.aslan@gmail.com";
-    String birthdate = "12.03.1993";
-    String familyStatus = "2";
-    String applicationsNumber = "1";
-    String residencePermitId = "123JSE421";
-
-    PersonalInfoFormTO personalInfoFormTO = new PersonalInfoFormTO(citizenshipValue, applicationsNumber, familyStatus, firstName, lastName, email, birthdate);
     VisaFormTO visaForm_apply_for_bluecard_with_residencePermit = new VisaFormTO(
             true,
             residencePermitId,
             "Apply for a residence title",
             "Economic activity",
             "EU Blue Card / Blaue Karte EU (sect. 18b para. 2)");
-    VisaFormTO visaForm_apply_for_bluecard_without_residencePermit = new VisaFormTO(
-            false,
-            null,
-            "Apply for a residence title",
-            "Economic activity",
-            "EU Blue Card / Blaue Karte EU (sect. 18b para. 2)");
+
 
     VisaFormTO visaForm_extend_berufsausbildung = new VisaFormTO(
             null,

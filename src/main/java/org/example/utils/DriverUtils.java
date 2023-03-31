@@ -1,7 +1,6 @@
 package org.example.utils;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import org.example.enums.SeleniumProcessEnum;
 import org.example.enums.SeleniumProcessResultEnum;
 import org.example.exceptions.ElementNotFoundTimeoutException;
@@ -12,16 +11,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.stream.Collectors;
 
-import static org.example.utils.LogUtils.logInfo;
-import static org.example.utils.LogUtils.logWarn;
-
 public class DriverUtils {
-    private static final Logger logger = LogManager.getLogger(DriverUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(DriverUtils.class);
     public static final int TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS = 25;
     public static final int TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS = 5;
 
@@ -68,7 +66,7 @@ public class DriverUtils {
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
                 element = driver.findElement(By.id(id));
-                logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_ID, SeleniumProcessResultEnum.SUCCESSFUL.name());
+                LogUtils.logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_ID, SeleniumProcessResultEnum.SUCCESSFUL.name());
                 Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
             } catch (Exception e) {
@@ -78,7 +76,7 @@ public class DriverUtils {
             i++;
         }
         if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            LogUtils.logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
             throw new ElementNotFoundTimeoutException(elementDescription);
         }
         return element;
@@ -90,7 +88,7 @@ public class DriverUtils {
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
                 element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("type").equals("checkbox")).collect(Collectors.toList()).get(0);
-                logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_ID, SeleniumProcessResultEnum.SUCCESSFUL.name());
+                LogUtils.logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_ID, SeleniumProcessResultEnum.SUCCESSFUL.name());
                 Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
             } catch (Exception e) {
@@ -100,7 +98,7 @@ public class DriverUtils {
             i++;
         }
         if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            LogUtils.logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
             throw new ElementNotFoundTimeoutException(elementDescription);
         }
         return element;
@@ -112,7 +110,7 @@ public class DriverUtils {
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
                 element = driver.findElements(By.tagName("label")).stream().filter(webElement -> webElement.getText().equals(labelValue)).collect(Collectors.toList()).get(0);
-                logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_ID, SeleniumProcessResultEnum.SUCCESSFUL.name());
+                LogUtils.logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_ID, SeleniumProcessResultEnum.SUCCESSFUL.name());
                 Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
             } catch (Exception e) {
@@ -122,7 +120,7 @@ public class DriverUtils {
             i++;
         }
         if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_TEXT.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            LogUtils.logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_TEXT.name(), SeleniumProcessResultEnum.FAILED.name(), "");
             throw new ElementNotFoundTimeoutException(elementDescription);
         }
         return element;
@@ -134,7 +132,7 @@ public class DriverUtils {
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
                 element = driver.findElement(By.xpath(xpath));
-                logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH, SeleniumProcessResultEnum.SUCCESSFUL.name());
+                LogUtils.logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH, SeleniumProcessResultEnum.SUCCESSFUL.name());
                 Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
             } catch (Exception e) {
@@ -144,7 +142,7 @@ public class DriverUtils {
             i++;
         }
         if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            LogUtils.logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_XPATH.name(), SeleniumProcessResultEnum.FAILED.name(), "");
             throw new ElementNotFoundTimeoutException(elementDescription);
 
         }
@@ -157,7 +155,7 @@ public class DriverUtils {
         while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
             try {
                 element = driver.findElement(By.cssSelector(cssSelector));
-                logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR, SeleniumProcessResultEnum.SUCCESSFUL.name());
+                LogUtils.logInfo(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR, SeleniumProcessResultEnum.SUCCESSFUL.name());
                 Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
                 break;
             } catch (Exception e) {
@@ -167,7 +165,7 @@ public class DriverUtils {
             i++;
         }
         if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            LogUtils.logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_CSS_SELECTOR.name(), SeleniumProcessResultEnum.FAILED.name(), "");
             throw new ElementNotFoundTimeoutException(cssSelector);
 
         }
@@ -183,7 +181,7 @@ public class DriverUtils {
         while (i <= TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
             try {
                 element.click();
-                logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, "Successful");
+                LogUtils.logInfo(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT, "Successful");
                 break;
             } catch (Exception e) {
                 //logger.warn("Element: {}. Process: Click, Result: Failed. Exception: ", elementDescription, e);
@@ -192,7 +190,7 @@ public class DriverUtils {
             i++;
         }
         if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
-            logWarn(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            LogUtils.logWarn(elementDescription, SeleniumProcessEnum.CLICKING_TO_ELEMENT.name(), SeleniumProcessResultEnum.FAILED.name(), "");
             throw new InteractionFailedException("");
         }
     }
@@ -209,7 +207,7 @@ public class DriverUtils {
                 select.selectByValue(optionValue);
                 WebElement option = select.getFirstSelectedOption();
                 String selectValue = option.getText();
-                logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
+                LogUtils.logInfo(elementDescription, SeleniumProcessEnum.SELECTING_OPTION, "Successful", "value" + selectValue);
                 break;
             } catch (Exception e) {
                 //logger.warn("Element: {}. Process: Select, Result: Failed Reason:{}", elementDescription, e.getMessage());
@@ -218,7 +216,7 @@ public class DriverUtils {
             i++;
         }
         if (i > TIMEOUT_FOR_INTERACTING_IN_SECONDS) {
-            logWarn(elementDescription, SeleniumProcessEnum.SELECTING_OPTION.name(), SeleniumProcessResultEnum.FAILED.name(), "");
+            LogUtils.logWarn(elementDescription, SeleniumProcessEnum.SELECTING_OPTION.name(), SeleniumProcessResultEnum.FAILED.name(), "");
             throw new InteractionFailedException("");
         }
     }

@@ -1,13 +1,14 @@
 package org.example;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.example.exceptions.FormValidationFailed;
 import org.example.formhandlers.*;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.util.Set;
 import java.util.Timer;
@@ -21,7 +22,7 @@ import static org.example.utils.IoUtils.savePage;
 
 public class TerminFinder {
 
-    private final Logger logger = LogManager.getLogger(TerminFinder.class);
+    private final Logger logger = LoggerFactory.getLogger(TerminFinder.class);
     private final VisaFormTO visaFormTO;
     private final PersonalInfoFormTO personalInfoFormTO;
     private final long FORM_REFRESH_PERIOD_IN_SECONDS = 1;
@@ -33,6 +34,7 @@ public class TerminFinder {
     public TerminFinder(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO) {
         this.personalInfoFormTO = personalInfoFormTO;
         this.visaFormTO = visaFormTO;
+        setMDCVariables();
     }
 
     public void startScanning() throws FormValidationFailed {
@@ -50,6 +52,8 @@ public class TerminFinder {
 
 
     private void run() {
+        setMDCVariables();
+
         // Section 1
         try {
             getFormPage();
@@ -164,6 +168,9 @@ public class TerminFinder {
 
     }
 
+    private void setMDCVariables(){
+        MDC.put("visaForm", visaFormTO.toString());
+    }
     private boolean isResidenceTitleInfoVerified(VisaFormTO visaFormTO) {
         logger.info("Verifying form: {}", visaFormTO);
         String serviceType = visaFormTO.getServiceType();

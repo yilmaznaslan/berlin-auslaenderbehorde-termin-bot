@@ -1,0 +1,192 @@
+
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements. See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership. The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Ladeseite...</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <script type="text/javascript" src="/javax.faces.resource/deltaspike/windowhandler.js.xhtml"></script>
+    <style type="text/css">
+            #message {
+                width: 350px;
+                height: 50px;
+                margin: -25px 0 0 -175px;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                font-family: arial,sans-serif;
+                font-size: 16px;
+                text-align: center;
+            }
+        </style>
+    <style type="text/css">Hint for history</style>
+</head>
+<body>
+<div id="loading"></div>
+<div id="message" style="">
+    Your browser does not support JavaScript.<br/>
+    Click <a href="?mfDirect=true">here</a> to continue without JavaScript.
+</div>
+
+<script type="text/javascript">
+            //<![CDATA[
+            function addCss(url) {
+                var newSS = document.createElement("style");
+                newSS.setAttribute("rel", "stylesheet");
+                newSS.setAttribute("type", "text/css");
+                newSS.appendChild(document.createTextNode("@import url(" +url + ");"));
+                document.getElementsByTagName("head")[0].appendChild(newSS);
+            }
+
+            function loadCss(clean) {
+                // We don't need to restore the old css on initial requests or if < html5
+                if (!dswh.utils.isHtml5() || !window.name) {
+                    return;
+                }
+
+                var oldCss = dswh.utils.unstringify(localStorage.getItem(window.name + '_css'));
+                if (oldCss) {
+                    for (var i = 0; i < oldCss.length; i++) {
+                        addCss(oldCss[i]);
+                    }
+                    if (clean) {
+                        localStorage.removeItem(window.name + '_css');
+                    }
+                }
+            }
+
+            function replaceContent() {
+                if (document.body.textContent) {
+                    document.getElementById('message').textContent = "";
+                } else {
+                    document.getElementById('message').innerText = "";
+                }
+
+                // We don't need to restore the old windowtree on initial requests or if < html5
+                if (!dswh.utils.isHtml5() || !window.name) {
+                    return;
+                }
+
+                loadCss(false);
+
+                var oldBody = localStorage.getItem(window.name + '_body');
+                if (oldBody) {
+                    document.body.innerHTML = oldBody;
+
+                    var attributes = dswh.utils.unstringify(localStorage.getItem(window.name + '_bodyAttributes'));
+                    for (var attributeName in attributes) {
+                        if (attributes.hasOwnProperty(attributeName)) {
+                            document.body.setAttribute(attributeName, attributes[attributeName]);
+                        }
+                    }
+
+                    window.scrollTo(localStorage.getItem(window.name + '_scrollLeft'),
+                                    localStorage.getItem(window.name + '_scrollTop'));
+
+                    localStorage.removeItem(window.name + '_body');
+                    localStorage.removeItem(window.name + '_bodyAttributes');
+                    localStorage.removeItem(window.name + '_scrollTop');
+                    localStorage.removeItem(window.name + '_scrollLeft');
+
+                    // overlay the doc with an un-clickable full-size div
+                    var overlay = document.createElement("div");
+                    overlay.setAttribute("style", "cursor: wait !important; position:absolute; z-index:1000; background-color:transparent; top:0; left:0; width:100%; height: 100%; background: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);");
+                    overlay.setAttribute("class", "fulldiv");
+                    document.body.appendChild(overlay);
+                }
+            }
+
+            replaceContent();
+
+            window.onload = function() {
+                if (dswh.DEBUG_MODE === true){
+                    if (!confirm('reload?')) {
+                        return true;
+                    }
+                }
+
+                loadCss(true);
+
+                var windowId = dswh.utils.getWindowIdFromWindowName();
+
+                function requestNewWindowId() {
+                    windowId = dswh.utils.generateNewWindowId();
+                    dswh.utils.setWindowIdAsWindowName(windowId);
+                }
+
+                dswh.utils.log('------- DeltaSpike windowhandler.html -------');
+                dswh.utils.log('windowId: ' + windowId);
+                dswh.utils.log('window.name: ' + window.name);
+
+                if (dswh.utils.isWindowNameDefined()) {
+                    if (!dswh.utils.isManagedWindowName()) {
+
+                        dswh.utils.log('window name unmanaged - request new windowId');
+
+                        requestNewWindowId();
+                    }
+                    else {
+                        // occurs with the "duplicate tab" feature of chrome
+                        if (windowId === dswh.TEMP_WINDOW_NAME) {
+
+                            dswh.utils.log('window name is temporary - request new windowId');
+
+                            requestNewWindowId();
+                        }
+                    }
+                }
+                // window name is undefined, which means that "open in new tab/window" was used
+                else {
+                    var newWindowId = 'uninitializedWindowId';
+
+                    dswh.utils.log('newWindowId ' + newWindowId);
+
+                    if (newWindowId === 'uninitializedWindowId') {
+                        dswh.utils.log('windowId not initialized - request new windowId');
+
+                        requestNewWindowId();
+                    }
+                    else {
+                        dswh.utils.log('assign window name from newWindowId');
+
+                        dswh.utils.setWindowIdAsWindowName(newWindowId); // set the window.name with our windowId
+                        windowId = newWindowId;
+                    }
+                }
+
+                var requestToken = dswh.utils.generateNewRequestToken();
+
+                var redirectUrl = '/ams/TerminBuchen/wizardng/69f5a3d0-596b-40c9-a7f8-6017d7d33038?dsrid=46&dswid=2639&st=2&v=1680247650950';
+                redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dsrid", requestToken);
+                // we still add the windowId page param to support lazy windowId dropping for some clients
+                redirectUrl = dswh.utils.setUrlParam(redirectUrl, "dswid", windowId);
+
+                dswh.utils.storeCookie('dsrwid-' + requestToken, windowId, 3);
+
+                dswh.utils.log('redirect to ' + redirectUrl);
+
+                window.location = redirectUrl;
+            };
+            //]]>
+        </script>
+</body>
+</html>
