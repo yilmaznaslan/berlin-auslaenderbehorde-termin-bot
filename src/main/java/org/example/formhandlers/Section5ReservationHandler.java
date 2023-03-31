@@ -2,14 +2,16 @@ package org.example.formhandlers;
 
 
 import org.example.enums.Section5FormParameterEnum;
-import org.example.exceptions.ElementNotFoundTimeoutException;
-import org.example.exceptions.InteractionFailedException;
-import org.example.utils.DriverUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
+
+import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
 import static org.example.utils.IoUtils.savePage;
 
 /**
@@ -19,19 +21,19 @@ public class Section5ReservationHandler {
 
     private final Logger logger = LoggerFactory.getLogger(Section5ReservationHandler.class);
 
-    private RemoteWebDriver driver;
+    private final RemoteWebDriver driver;
 
     public Section5ReservationHandler(RemoteWebDriver remoteWebDriver) {
         this.driver = remoteWebDriver;
     }
 
-    public void sendForm() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
+    public void sendForm() {
         String elementId = Section5FormParameterEnum.SEND_FORM_BUTTON.getId();
-        String elementDescription = Section5FormParameterEnum.SEND_FORM_BUTTON.getName();
-        WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
-        DriverUtils.clickToElement(element, elementDescription);
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+                .until(__ -> driver.findElement(By.id(elementId)));
+        element.click();
         logger.info("BOOKED");
-        savePage(driver,this.getClass().getSimpleName(), "aftersend" );
+        savePage(driver, this.getClass().getSimpleName(), "aftersend");
 
     }
 

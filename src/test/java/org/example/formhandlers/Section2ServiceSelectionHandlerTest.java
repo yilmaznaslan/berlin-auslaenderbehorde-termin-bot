@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 class Section2ServiceSelectionHandlerTest extends BaseTestSetup {
 
-    static String pathToFile_en_successful = Section2ServiceSelectionHandler.class.getClassLoader().getResource("Section2ServiceSelenctionHandler_2023-03-31.html").getPath();
+    static String pathToFile_en_successful = Section2ServiceSelectionHandler.class.getClassLoader().getResource("book appointment - Service selection.html").getPath();
 
     static String urlToFile_en = "file:".concat(pathToFile_en_successful);
 

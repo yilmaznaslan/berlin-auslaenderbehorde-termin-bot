@@ -1,11 +1,13 @@
 package org.example;
 
+import org.example.enums.MdcVariableEnum;
 import org.example.exceptions.FormValidationFailed;
 import org.example.formhandlers.*;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.SessionId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -52,7 +54,7 @@ public class TerminFinder {
 
 
     private void run() {
-        setMDCVariables();
+        setDriver();
 
         // Section 1
         try {
@@ -78,7 +80,6 @@ public class TerminFinder {
             driver = section1MainPageHandler.getDriver();
         } catch (Exception e) {
             logger.error("Error in initializing a new session. Exception: ", e);
-            //driver = DriverManager.initDriverHeadless();
             return;
         }
 
@@ -86,13 +87,15 @@ public class TerminFinder {
         Section2ServiceSelectionHandler section2ServiceSelectionHandler = new Section2ServiceSelectionHandler(visaFormTO, personalInfoFormTO, driver);
         try {
             section2ServiceSelectionHandler.fillAndSendForm();
-            driver = section2ServiceSelectionHandler.getDriver();
+            driver = section2ServiceSelectionHandler.driver;
         } catch (Exception e) {
             logger.error("Exception occurred during handling section 2, quitting.", e);
-            driver = section2ServiceSelectionHandler.getDriver();
+            driver = section2ServiceSelectionHandler.driver;
             String fileName = section2ServiceSelectionHandler.getClass().getSimpleName();
             savePage(driver, fileName, "exception");
             return;
+        } finally {
+            MDC.remove(MdcVariableEnum.elementDescription.name());
         }
 
         // Section 3
@@ -118,10 +121,10 @@ public class TerminFinder {
         Section4VisaFormHandler section4VisaFormHandler = new Section4VisaFormHandler(personalInfoFormTO, visaFormTO, driver);
         try {
             section4VisaFormHandler.fillAndSendForm();
-            driver = section4VisaFormHandler.getDriver();
+            driver = section4VisaFormHandler.driver;
         } catch (Exception e) {
             logger.error("Exception occurred during handling section 4, quitting.", e);
-            driver = section4VisaFormHandler.getDriver();
+            driver = section4VisaFormHandler.driver;
             String fileName = section4VisaFormHandler.getClass().getSimpleName();
             savePage(driver, fileName, "exception");
             return;
@@ -143,6 +146,20 @@ public class TerminFinder {
             return;
         }
 
+    }
+
+    private void setDriver() {
+        setMDCVariables();
+        if (driver == null) {
+            logger.info("Driver is null, initializing the driver");
+            driver = initDriver();
+        }
+
+        SessionId sessionId = driver.getSessionId();
+        if (sessionId == null) {
+            logger.info("Session is null, initializing the driver");
+            driver = initDriver();
+        }
     }
 
     private void getFormPage() throws InterruptedException {
@@ -168,9 +185,12 @@ public class TerminFinder {
 
     }
 
-    private void setMDCVariables(){
+    private void setMDCVariables() {
         MDC.put("visaForm", visaFormTO.toString());
+        MDC.put(MdcVariableEnum.elementDescription.name(), null);
+
     }
+
     private boolean isResidenceTitleInfoVerified(VisaFormTO visaFormTO) {
         logger.info("Verifying form: {}", visaFormTO);
         String serviceType = visaFormTO.getServiceType();
