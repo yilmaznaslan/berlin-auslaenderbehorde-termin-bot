@@ -16,7 +16,7 @@ import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECON
 /**
  * Business Access Layer for getting english landing page
  */
-public class Section1MainPageHandler {
+public class Section1MainPageHandler implements IFormHandler{
 
     private final Logger logger = LoggerFactory.getLogger(Section1MainPageHandler.class);
 
@@ -26,11 +26,12 @@ public class Section1MainPageHandler {
         this.driver = remoteWebDriver;
     }
 
-    public void fillAndSendForm() {
+    public boolean fillAndSendForm() {
         logger.info("Starting to fill the form");
         clickBookAppointment();
         clickToAcceptConsent();
         sendForm();
+        return true;
     }
 
     @VisibleForTesting
@@ -44,6 +45,7 @@ public class Section1MainPageHandler {
     private void clickToAcceptConsent() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
         WebElement webElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("input[type='checkbox']")));
+        wait.until(ExpectedConditions.elementToBeClickable(webElement));
         webElement.click();
     }
 

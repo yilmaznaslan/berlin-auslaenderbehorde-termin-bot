@@ -17,7 +17,7 @@ import static org.example.utils.IoUtils.savePage;
 /**
  * Business Access Layer for filling the Section 5: Reservation
  */
-public class Section5ReservationHandler {
+public class Section5ReservationHandler implements IFormHandler {
 
     private final Logger logger = LoggerFactory.getLogger(Section5ReservationHandler.class);
 
@@ -27,14 +27,14 @@ public class Section5ReservationHandler {
         this.driver = remoteWebDriver;
     }
 
-    public void sendForm() {
+    public boolean fillAndSendForm() {
         String elementId = Section5FormParameterEnum.SEND_FORM_BUTTON.getId();
         WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
                 .until(__ -> driver.findElement(By.id(elementId)));
         element.click();
         logger.info("BOOKED");
         savePage(driver, this.getClass().getSimpleName(), "aftersend");
-
+        return true;
     }
 
     public RemoteWebDriver getDriver() {

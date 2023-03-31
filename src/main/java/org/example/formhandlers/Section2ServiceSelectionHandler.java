@@ -1,6 +1,7 @@
 package org.example.formhandlers;
 
 
+import com.google.common.annotations.VisibleForTesting;
 import org.example.enums.MdcVariableEnum;
 import org.example.enums.Section2FormElementsEnum;
 import org.example.model.PersonalInfoFormTO;
@@ -19,12 +20,14 @@ import org.slf4j.MDC;
 import java.time.Duration;
 
 import static org.example.enums.Section2FormElementsEnum.FAMILY_STATUS;
+import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS;
 import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
+import static org.example.utils.IoUtils.savePage;
 
 /**
  * Business Access Layer for filling the form
  */
-public class Section2ServiceSelectionHandler {
+public class Section2ServiceSelectionHandler implements IFormHandler {
 
     private final Logger logger = LoggerFactory.getLogger(Section2ServiceSelectionHandler.class);
     private final String citizenshipValue;
@@ -48,7 +51,7 @@ public class Section2ServiceSelectionHandler {
         this.visaLabelValue = visaFormTO.getVisaLabelValue();
     }
 
-    public void fillAndSendForm() throws InterruptedException {
+    public boolean fillAndSendForm() throws InterruptedException {
         logger.info("Starting to fill the form in section 2");
         selectCitizenshipValue();
         selectApplicantsCount();
@@ -60,6 +63,12 @@ public class Section2ServiceSelectionHandler {
         clickToVisa();
         Thread.sleep(2000);
         sendForm();
+        return isCalenderFound();
+    }
+
+    @Override
+    public RemoteWebDriver getDriver() {
+        return driver;
     }
 
     private void selectCitizenshipValue() {
@@ -71,16 +80,26 @@ public class Section2ServiceSelectionHandler {
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
-        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("select[name='" + elementName + "']")));
 
-        Select select = new Select(element);
-        select.selectByVisibleText(citizenshipValue);
+        wait.until(__ -> {
+            try {
+                WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("select[name='" + elementName + "']")));
+                wait.until(ExpectedConditions.not(ExpectedConditions.stalenessOf(element)));
+                wait.until(ExpectedConditions.visibilityOf(element));
+                Select select = new Select(element);
+                select.selectByVisibleText(citizenshipValue);
+                WebElement option = select.getFirstSelectedOption();
+                String selectValue = option.getText();
+                if (selectValue.equals(citizenshipValue)) {
+                    logger.info("Successfully selected the citizenship value");
+                    return true;
+                }
+                return false;
+            } catch (Exception e) {
+                return false;
+            }
+        });
 
-        WebElement option = select.getFirstSelectedOption();
-        String selectValue = option.getText();
-        if (selectValue.equals(citizenshipValue)) {
-            logger.info("Successfully selected the citizenship value");
-        }
     }
 
     private void selectApplicantsCount() {
@@ -167,4 +186,20 @@ public class Section2ServiceSelectionHandler {
         logger.info(msg);
     }
 
+    @VisibleForTesting
+    protected boolean isCalenderFound() {
+        String elementDescription = "active step";
+        String activeTabXPath = "//*[@id=\"main\"]/div[2]/div[4]/div[2]/div/div[1]/ul/li[2]";
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS));
+        WebElement activeStepElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(activeTabXPath)));
+        String activeStepText = activeStepElement.getText();
+        logger.info(String.format("Value of the %s is: %s", elementDescription, activeStepText));
+        if (activeStepText.contains("Date selection")) {
+            savePage(driver, this.getClass().getSimpleName(), "date_selecntion_in");
+            logger.info("Calender page is opened");
+            return true;
+        }
+        logger.info("Calender page is not opened");
+        return false;
+    }
 }

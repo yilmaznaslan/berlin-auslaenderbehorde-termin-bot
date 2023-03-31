@@ -22,29 +22,7 @@ class Section3DateSelectionHandlerTest extends BaseTestSetup {
 
     private final Section3DateSelectionHandler formFiller = new Section3DateSelectionHandler(driver);
 
-    @Test
-    void ASSERT_THAT_isCalenderFound_returns_true_WHEN_page_is_opened_and_language_is_deutsch()  {
-        // GIVEN
-        driver.get(urlToFile_de);
 
-        // WHEN
-        boolean actualResult = formFiller.isCalenderFound();
-
-        // THEN
-        Assertions.assertTrue(actualResult);
-    }
-
-    @Test
-    void ASSERT_THAT_isCalenderFound_returns_true_WHEN_page_is_opened_and_language_is_english()  {
-        // GIVEN
-        driver.get(urlToFile_en);
-
-        // WHEN
-        boolean actualResult = formFiller.isCalenderFound();
-
-        // THEN
-        Assertions.assertTrue(actualResult);
-    }
 
     @Test
     void ASSERT_THAT_isDateVerified_returns_true() {

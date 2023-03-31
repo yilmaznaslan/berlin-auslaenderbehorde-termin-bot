@@ -25,7 +25,7 @@ import static org.example.utils.IoUtils.savePage;
 /**
  * Business Access Layer for filling the Section 4: Angaben
  */
-public class Section4VisaFormHandler {
+public class Section4VisaFormHandler implements IFormHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(Section4VisaFormHandler.class);
     private final String firstName;
@@ -36,6 +36,7 @@ public class Section4VisaFormHandler {
     private final String residencePermitId;
     private final String serviceType;
     public final RemoteWebDriver driver;
+    private boolean isHandlingSuccessful = false;
 
     public Section4VisaFormHandler(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO, RemoteWebDriver remoteWebDriver) {
         this.serviceType = visaFormTO.getServiceType();
@@ -48,13 +49,19 @@ public class Section4VisaFormHandler {
         this.isResidencePermitPresent = visaFormTO.getResidencePermitPresent();
     }
 
-    public void fillAndSendForm() {
+    public boolean fillAndSendForm() {
         savePage(driver, this.getClass().getSimpleName(), "");
         fillForm();
 
         savePage(driver, this.getClass().getSimpleName(), "after_filling");
         sendForm();
         savePage(driver, this.getClass().getSimpleName(), "after_send");
+        return isHandlingSuccessful;
+    }
+
+    @Override
+    public RemoteWebDriver getDriver() {
+        return driver;
     }
 
     protected void fillForm() {
@@ -144,6 +151,7 @@ public class Section4VisaFormHandler {
         WebElement option = select.getFirstSelectedOption();
         String selectValue = option.getText();
         logger.info("Selected value:", selectValue);
+        isHandlingSuccessful = true;
     }
 
 
