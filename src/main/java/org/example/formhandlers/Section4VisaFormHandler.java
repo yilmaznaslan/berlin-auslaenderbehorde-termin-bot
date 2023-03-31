@@ -1,34 +1,33 @@
 package org.example.formhandlers;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import com.google.common.annotations.VisibleForTesting;
 import org.example.enums.Section4FormParameterEnum;
-import org.example.enums.SeleniumProcessEnum;
-import org.example.enums.SeleniumProcessResultEnum;
-import org.example.exceptions.ElementNotFoundTimeoutException;
-import org.example.exceptions.InteractionFailedException;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
-import org.example.utils.DriverUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.stream.Collectors;
+import java.time.Duration;
 
 import static org.example.enums.Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER;
 import static org.example.enums.Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER_EXTENSION;
-import static org.example.utils.DriverUtils.SLEEP_DURATION_IN_MILLISECONDS;
 import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
+import static org.example.utils.DriverUtils.TIMEOUT_FOR_INTERACTING_IN_SECONDS;
 import static org.example.utils.IoUtils.savePage;
-import static org.example.utils.LogUtils.logWarn;
 
 /**
  * Business Access Layer for filling the Section 4: Angaben
  */
-public class Section4VisaFormHandler {
+public class Section4VisaFormHandler implements IFormHandler {
 
-    private final Logger logger = LogManager.getLogger(Section4VisaFormHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(Section4VisaFormHandler.class);
     private final String firstName;
     private final String lastName;
     private final String emailAddress;
@@ -36,7 +35,8 @@ public class Section4VisaFormHandler {
     private final Boolean isResidencePermitPresent;
     private final String residencePermitId;
     private final String serviceType;
-    private final RemoteWebDriver driver;
+    public final RemoteWebDriver driver;
+    private boolean isHandlingSuccessful = false;
 
     public Section4VisaFormHandler(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO, RemoteWebDriver remoteWebDriver) {
         this.serviceType = visaFormTO.getServiceType();
@@ -49,16 +49,22 @@ public class Section4VisaFormHandler {
         this.isResidencePermitPresent = visaFormTO.getResidencePermitPresent();
     }
 
-    public void fillAndSendForm() throws ElementNotFoundTimeoutException, InteractionFailedException, InterruptedException {
-        savePage(driver,this.getClass().getSimpleName(), "" );
+    public boolean fillAndSendForm() {
+        savePage(driver, this.getClass().getSimpleName(), "");
         fillForm();
 
-        savePage(driver,this.getClass().getSimpleName(), "after_filling" );
+        savePage(driver, this.getClass().getSimpleName(), "after_filling");
         sendForm();
-        savePage(driver,this.getClass().getSimpleName(), "after_send" );
+        savePage(driver, this.getClass().getSimpleName(), "after_send");
+        return isHandlingSuccessful;
     }
 
-    protected void fillForm() throws ElementNotFoundTimeoutException, InterruptedException{
+    @Override
+    public RemoteWebDriver getDriver() {
+        return driver;
+    }
+
+    protected void fillForm() {
         logger.info("Starting to fill the section 4 form: Angaben, for servicetype: {}.", serviceType);
         enterFirstName();
         enterLastName();
@@ -80,157 +86,81 @@ public class Section4VisaFormHandler {
         logger.error("This shouldn't happen");
         throw new RuntimeException("Failed to enter residence permit id");
 
- }
+    }
 
-    protected void enterFirstName() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementDescription = Section4FormParameterEnum.FIRSTNAME.name();
+    @VisibleForTesting
+    protected void enterFirstName() {
         String elementName = Section4FormParameterEnum.FIRSTNAME.getName();
-        int i = 1;
-        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            try {
-                WebElement element = driver.findElements(By.tagName("input")).stream().filter(element1 -> element1.getAttribute("name").equals(elementName)).collect(Collectors.toList()).get(0);
-                element.sendKeys(firstName);
-                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-                break;
-            } catch (Exception e) {
-                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
-            }
-            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-            i++;
-        }
-        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
-            throw new ElementNotFoundTimeoutException(elementDescription);
-        }
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+                .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("input[name='" + elementName + "']")));
+        element.sendKeys(firstName);
     }
 
-    protected void enterLastName() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementDescription = Section4FormParameterEnum.LASTNAME.name();
+    @VisibleForTesting
+    protected void enterLastName() {
         String elementName = Section4FormParameterEnum.LASTNAME.getName();
-        int i = 1;
-        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            try {
-                WebElement element = driver.findElements(By.tagName("input")).stream().
-                        filter(element1 -> element1.getAttribute("name").equals(elementName)).collect(Collectors.toList()).get(0);
-                element.sendKeys(lastName);
-                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-                break;
-            } catch (Exception e) {
-                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
-            }
-            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-            i++;
-        }
-        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
-            throw new ElementNotFoundTimeoutException(elementDescription);
-        }
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+                .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("input[name='" + elementName + "']")));
+        element.sendKeys(lastName);
     }
 
-    protected void enterEmail() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementDescription = Section4FormParameterEnum.EMAIL.name();
+    @VisibleForTesting
+    protected void enterEmail() {
         String elementName = Section4FormParameterEnum.EMAIL.getName();
-        int i = 1;
-        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            try {
-                WebElement element = driver.findElements(By.tagName("input")).stream()
-                        .filter(element1 -> element1.getAttribute("name").equals(elementName)).collect(Collectors.toList()).get(0);
-                element.sendKeys(emailAddress);
-                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-                break;
-            } catch (Exception e) {
-                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
-            }
-            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-            i++;
-        }
-        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
-            throw new ElementNotFoundTimeoutException(elementDescription);
-        }
-
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+                .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("input[name='" + elementName + "']")));
+        element.sendKeys(emailAddress);
     }
 
-    protected void enterBirthdate() throws InterruptedException, ElementNotFoundTimeoutException {
-        String elementDescription = Section4FormParameterEnum.BIRTHDATE.name();
+    @VisibleForTesting
+    protected void enterBirthdate() {
         String elementName = Section4FormParameterEnum.BIRTHDATE.getName();
-        int i = 1;
-        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            try {
-                WebElement element = driver.findElements(By.tagName("input")).stream()
-                        .filter(element1 -> element1.getAttribute("name").equals(elementName)).collect(Collectors.toList()).get(0);
-                element.sendKeys(birthdate);
-                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-                break;
-            } catch (Exception e) {
-                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
-            }
-            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-            i++;
-        }
-        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
-            throw new ElementNotFoundTimeoutException(elementDescription);
-        }
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+                .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("input[name='" + elementName + "']")));
+        element.sendKeys(birthdate);
     }
 
-    protected void enterResidencePermitId(String elementName) throws ElementNotFoundTimeoutException, InterruptedException {
+    @VisibleForTesting
+    protected void enterResidencePermitId(String elementName) {
         logger.info("Entering the residence permit id");
-        String elementDescription = "residenetPermit";
-        int i = 1;
-        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            try {
-                WebElement element = driver.findElements(By.tagName("input")).stream()
-                        .filter(element1 -> element1.getAttribute("name").equals(elementName)).collect(Collectors.toList()).get(0);
-                element.sendKeys(residencePermitId);
-                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-                break;
-            } catch (Exception e) {
-                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
-            }
-            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-            i++;
-        }
-        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
-            throw new ElementNotFoundTimeoutException(elementDescription);
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+                .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("input[name='" + elementName + "']")));
+        element.sendKeys(residencePermitId);
+    }
+
+    @VisibleForTesting
+    protected void selectResidencePermit() {
+        String elementName = Section4FormParameterEnum.RESIDENCE_PERMIT.getName();
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+                .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("select[name='" + elementName + "']")));
+        if (isResidencePermitPresent) {
+            selectOptionByValue(element, elementName, "1");
+        } else {
+            selectOptionByValue(element, elementName, "0");
         }
     }
 
-    protected void selectResidencePermit() throws InterruptedException, ElementNotFoundTimeoutException{
-        String elementDescription = Section4FormParameterEnum.RESIDENCE_PERMIT.getName();
-        int i = 1;
-        while (i <= TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            try {
-                WebElement element = driver.findElements(By.tagName("select")).stream().filter(element1 -> element1.getAttribute("name").equals(elementDescription)).collect(Collectors.toList()).get(0);
-                if (isResidencePermitPresent) {
-                    DriverUtils.selectOptionByValue(element, elementDescription, "1");
-                } else {
-                    DriverUtils.selectOptionByValue(element, elementDescription, "0");
-                }
-                Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-                break;
-            } catch (Exception e) {
-                //logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.firstName(), SeleniumProcessResultEnum.FAILED.firstName(), "");
-            }
-            Thread.sleep(SLEEP_DURATION_IN_MILLISECONDS);
-            i++;
+    private void selectOptionByValue(WebElement element, String elementDescription, String optionValue) {
+        if (element == null) {
+            logger.warn("Element:{} is null, Process: Select can not be continued", elementDescription);
+            return;
         }
-        if (i > TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
-            logWarn(elementDescription, SeleniumProcessEnum.GETTING_BY_ID.name(), SeleniumProcessResultEnum.FAILED.name(), "");
-            throw new ElementNotFoundTimeoutException(elementDescription);
-        }
-
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_IN_SECONDS));
+        Select select = new Select(wait.until(ExpectedConditions.elementToBeClickable(element)));
+        select.selectByValue(optionValue);
+        WebElement option = select.getFirstSelectedOption();
+        String selectValue = option.getText();
+        logger.info("Selected value:", selectValue);
+        isHandlingSuccessful = true;
     }
 
-    protected void sendForm() throws InterruptedException, ElementNotFoundTimeoutException, InteractionFailedException {
+
+    protected void sendForm() {
         String elementId = "applicationForm:managedForm:proceed";
-        String elementDescription = "weiter button".toUpperCase();
-        WebElement element = DriverUtils.getElementById(elementId, elementDescription, driver);
-        DriverUtils.clickToElement(element, elementDescription);
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+                .until(__ -> driver.findElement(By.id(elementId)));
+        element.click();
     }
 
-    public RemoteWebDriver getDriver() {
-        return this.driver;
-    }
+
 }

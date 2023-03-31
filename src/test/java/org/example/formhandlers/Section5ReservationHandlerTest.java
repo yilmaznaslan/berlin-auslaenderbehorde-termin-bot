@@ -17,7 +17,7 @@ class Section5ReservationHandlerTest extends BaseTestSetup {
         Section5ReservationHandler formFiller = new Section5ReservationHandler(driver);
 
         // WHEN && THEN
-        Assertions.assertDoesNotThrow(() -> formFiller.sendForm());
+        Assertions.assertDoesNotThrow(() -> formFiller.fillAndSendForm());
 
     }
 

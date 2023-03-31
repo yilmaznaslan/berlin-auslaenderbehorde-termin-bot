@@ -44,7 +44,13 @@ public class VisaFormTO {
 
     @Override
     public String toString() {
-        return "ResidenceTitleInfoDTO{" + "isResidencePermitPresent=" + isResidencePermitPresent + ", residencePermitId='" + residencePermitId + '\'' + ", serviceTyp=" + serviceType + '}';
+        return "VisaFormTO{" +
+                "isResidencePermitPresent=" + isResidencePermitPresent +
+                ", residencePermitId='" + residencePermitId + '\'' +
+                ", serviceType='" + serviceType + '\'' +
+                ", visaLabelValue='" + visaLabelValue + '\'' +
+                ", visaPurposeValue='" + visaPurposeValue + '\'' +
+                '}';
     }
 }
 

@@ -1,11 +1,10 @@
 package org.example.formhandlers;
 
 import org.example.BaseTestSetup;
-import org.example.exceptions.ElementNotFoundTimeoutException;
-import org.example.utils.DriverUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -23,36 +22,14 @@ class Section3DateSelectionHandlerTest extends BaseTestSetup {
 
     private final Section3DateSelectionHandler formFiller = new Section3DateSelectionHandler(driver);
 
-    @Test
-    void ASSERT_THAT_isCalenderFound_returns_true_WHEN_page_is_opened_and_language_is_deutsch() throws InterruptedException {
-        // GIVEN
-        driver.get(urlToFile_de);
 
-        // WHEN
-        boolean actualResult = formFiller.isCalenderFound();
-
-        // THEN
-        Assertions.assertTrue(actualResult);
-    }
 
     @Test
-    void ASSERT_THAT_isCalenderFound_returns_true_WHEN_page_is_opened_and_language_is_english() throws InterruptedException {
-        // GIVEN
-        driver.get(urlToFile_en);
-
-        // WHEN
-        boolean actualResult = formFiller.isCalenderFound();
-
-        // THEN
-        Assertions.assertTrue(actualResult);
-    }
-
-    @Test
-    void ASSERT_THAT_isDateVerified_returns_true() throws ElementNotFoundTimeoutException, InterruptedException {
+    void ASSERT_THAT_isDateVerified_returns_true() {
         // GIVEN
         driver.get(urlToFile_de);
         String cssSelector = "[data-handler=selectDay]";
-        WebElement element = DriverUtils.getElementByCssSelector(cssSelector, "elementDescription", driver);
+        WebElement element = driver.findElement(By.cssSelector(cssSelector));
 
         // WHEN
         boolean actualResult = formFiller.isDateVerified(element);
@@ -62,11 +39,11 @@ class Section3DateSelectionHandlerTest extends BaseTestSetup {
     }
 
     @Test
-    void ASSERT_THAT_isDateVerified_returns_true_WHEN_page_language_is_english() throws ElementNotFoundTimeoutException, InterruptedException {
+    void ASSERT_THAT_isDateVerified_returns_true_WHEN_page_language_is_english() {
         // GIVEN
         driver.get(urlToFile_en);
         String cssSelector = "[data-handler=selectDay]";
-        WebElement element = DriverUtils.getElementByCssSelector(cssSelector, "elementDescription", driver);
+        WebElement element = driver.findElement(By.cssSelector(cssSelector));
 
         // WHEN
         boolean actualResult = formFiller.isDateVerified(element);

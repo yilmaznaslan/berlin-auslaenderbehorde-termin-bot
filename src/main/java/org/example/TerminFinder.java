@@ -1,13 +1,16 @@
 package org.example;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.example.enums.MdcVariableEnum;
 import org.example.exceptions.FormValidationFailed;
 import org.example.formhandlers.*;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.SessionId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.util.Set;
 import java.util.Timer;
@@ -21,7 +24,7 @@ import static org.example.utils.IoUtils.savePage;
 
 public class TerminFinder {
 
-    private final Logger logger = LogManager.getLogger(TerminFinder.class);
+    private final Logger logger = LoggerFactory.getLogger(TerminFinder.class);
     private final VisaFormTO visaFormTO;
     private final PersonalInfoFormTO personalInfoFormTO;
     private final long FORM_REFRESH_PERIOD_IN_SECONDS = 1;
@@ -33,6 +36,7 @@ public class TerminFinder {
     public TerminFinder(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO) {
         this.personalInfoFormTO = personalInfoFormTO;
         this.visaFormTO = visaFormTO;
+        setMDCVariables();
     }
 
     public void startScanning() throws FormValidationFailed {
@@ -50,95 +54,66 @@ public class TerminFinder {
 
 
     private void run() {
-        // Section 1
+        setDriver();
         try {
             getFormPage();
         } catch (Exception e) {
             logger.error("Error in initializing a new session. Exception: ", e);
-            try {
-                driver = initDriver();
-            } catch (Exception ex) {
-                logger.error("Failed to initialize the driver. Quitting. Reason: ", ex);
-                if (driver != null) {
-                    driver.quit();
-                }
-                return;
-            }
+            handleException();
             return;
         }
 
-        // Section 1
         Section1MainPageHandler section1MainPageHandler = new Section1MainPageHandler(driver);
-        try {
-            section1MainPageHandler.fillAndSendForm();
-            driver = section1MainPageHandler.getDriver();
-        } catch (Exception e) {
-            logger.error("Error in initializing a new session. Exception: ", e);
-            //driver = DriverManager.initDriverHeadless();
-            return;
-        }
-
-        // Section 2
         Section2ServiceSelectionHandler section2ServiceSelectionHandler = new Section2ServiceSelectionHandler(visaFormTO, personalInfoFormTO, driver);
-        try {
-            section2ServiceSelectionHandler.fillAndSendForm();
-            driver = section2ServiceSelectionHandler.getDriver();
-        } catch (Exception e) {
-            logger.error("Exception occurred during handling section 2, quitting.", e);
-            driver = section2ServiceSelectionHandler.getDriver();
-            String fileName = section2ServiceSelectionHandler.getClass().getSimpleName();
-            savePage(driver, fileName, "exception");
-            return;
-        }
-
-        // Section 3
         Section3DateSelectionHandler section3DateSelectionHandler = new Section3DateSelectionHandler(driver);
-        try {
-            if (section3DateSelectionHandler.isCalenderFound()) {
-                logger.info("Calender section is opened");
-                section3DateSelectionHandler.fillAndSendForm();
-                driver = section3DateSelectionHandler.driver;
-            } else {
-                logger.info("Page section 3 is not opened, quitting.");
-                return;
-            }
-        } catch (Exception e) {
-            logger.error("Exception occurred during handling section 3, quitting.", e);
-            driver = section3DateSelectionHandler.driver;
-            String fileName = section3DateSelectionHandler.getClass().getSimpleName();
-            savePage(driver, fileName, "exception");
-            return;
-        }
-
-        // Section 4
         Section4VisaFormHandler section4VisaFormHandler = new Section4VisaFormHandler(personalInfoFormTO, visaFormTO, driver);
-        try {
-            section4VisaFormHandler.fillAndSendForm();
-            driver = section4VisaFormHandler.getDriver();
-        } catch (Exception e) {
-            logger.error("Exception occurred during handling section 4, quitting.", e);
-            driver = section4VisaFormHandler.getDriver();
-            String fileName = section4VisaFormHandler.getClass().getSimpleName();
-            savePage(driver, fileName, "exception");
-            return;
-        }
-
-        // Section 5
         Section5ReservationHandler section5ReservationHandler = new Section5ReservationHandler(driver);
+
+        if (!fillAndSendFormWithExceptionHandling(section1MainPageHandler)) return;
+        if (!fillAndSendFormWithExceptionHandling(section2ServiceSelectionHandler)) return;
+        if (!fillAndSendFormWithExceptionHandling(section3DateSelectionHandler)) return;
+        if (!fillAndSendFormWithExceptionHandling(section4VisaFormHandler)) return;
+        if (!fillAndSendFormWithExceptionHandling(section5ReservationHandler)) return;
+        driver.quit();
+        timer.cancel();
+
+    }
+
+    private boolean fillAndSendFormWithExceptionHandling(IFormHandler formHandler) {
         try {
-            section5ReservationHandler.sendForm();
-            driver = section5ReservationHandler.getDriver();
-            driver.quit();
-            timer.cancel();
-            return;
+            boolean isSuccessful = formHandler.fillAndSendForm();
+            driver = formHandler.getDriver();
+            return isSuccessful;
         } catch (Exception e) {
-            logger.error("Exception occurred during handling section 5, quitting.");
-            driver = section5ReservationHandler.getDriver();
-            String fileName = section5ReservationHandler.getClass().getSimpleName();
+            logger.error("Exception occurred during handling {}, quitting.", formHandler.getClass().getSimpleName(), e);
+            handleException();
+            String fileName = formHandler.getClass().getSimpleName();
             savePage(driver, fileName, "exception");
-            return;
+            return false;
+        } finally {
+            MDC.remove(MdcVariableEnum.elementDescription.name());
+        }
+    }
+
+    private void handleException() {
+        driver.quit();
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    private void setDriver() {
+        setMDCVariables();
+        if (driver == null) {
+            logger.info("Driver is null, initializing the driver");
+            driver = initDriver();
         }
 
+        SessionId sessionId = driver.getSessionId();
+        if (sessionId == null) {
+            logger.info("Session is null, initializing the driver");
+            driver = initDriver();
+        }
     }
 
     private void getFormPage() throws InterruptedException {
@@ -161,6 +136,12 @@ public class TerminFinder {
 
         currentWindowHandle = driver.getWindowHandle();
         driver.get(url);
+
+    }
+
+    private void setMDCVariables() {
+        MDC.put("visaForm", visaFormTO.toString());
+        MDC.put(MdcVariableEnum.elementDescription.name(), null);
 
     }
 
