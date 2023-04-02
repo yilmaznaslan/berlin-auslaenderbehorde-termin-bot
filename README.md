@@ -14,16 +14,7 @@ Instead of notifying the person like other solutions, this application automatic
 
 3. Start SeleniumHub server 
 ```shell 
-docker run \
-  --name selenium \
-  --net termin \
-  -p 4444:4444 -p 7900:7900 -p 5900:5900 \
-  --shm-size="1g" \
-  -d \
-  -e SE_NODE_MAX_SESSIONS=5 \
-  -e SE_NODE_OVERRIDE_MAX_SESSIONS=true \
-  -e SE_NODE_SESSION_TIMEOUT=120 \
-  -t selenium/standalone-chrome:latest
+docker run -p 4444:4444 -d -t selenium/standalone-chrome:latest
 ```
 
 ## How to run
