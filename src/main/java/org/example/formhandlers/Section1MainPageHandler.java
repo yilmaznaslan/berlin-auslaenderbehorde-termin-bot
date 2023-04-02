@@ -16,7 +16,7 @@ import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECON
 /**
  * Business Access Layer for getting english landing page
  */
-public class Section1MainPageHandler implements IFormHandler{
+public class Section1MainPageHandler implements IFormHandler {
 
     private final Logger logger = LoggerFactory.getLogger(Section1MainPageHandler.class);
 
@@ -37,9 +37,15 @@ public class Section1MainPageHandler implements IFormHandler{
     @VisibleForTesting
     protected void clickBookAppointment() {
         String labelValue = "Book Appointment";
-        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
-                .until(ExpectedConditions.elementToBeClickable(By.linkText(labelValue)));
-        element.click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
+        wait.until(__ -> {
+            try {
+                driver.findElement(By.linkText(labelValue)).click();
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        });
     }
 
     private void clickToAcceptConsent() {
@@ -51,8 +57,7 @@ public class Section1MainPageHandler implements IFormHandler{
 
     private void sendForm() {
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
-        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
-                .until(ExpectedConditions.presenceOfElementLocated(By.xpath(elementXpath)));
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(elementXpath)));
         element.click();
     }
 
