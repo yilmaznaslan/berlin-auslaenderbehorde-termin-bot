@@ -24,6 +24,7 @@ import static org.example.utils.IoUtils.savePage;
 
 public class TerminFinder {
 
+    public static int searchCount = 0;
     private final Logger logger = LoggerFactory.getLogger(TerminFinder.class);
     private final VisaFormTO visaFormTO;
     private final PersonalInfoFormTO personalInfoFormTO;

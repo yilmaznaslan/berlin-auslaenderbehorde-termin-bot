@@ -19,6 +19,7 @@ import org.slf4j.MDC;
 
 import java.time.Duration;
 
+import static org.example.TerminFinder.searchCount;
 import static org.example.enums.Section2FormElementsEnum.FAMILY_STATUS;
 import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS;
 import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
@@ -37,7 +38,6 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
     private final String visaLabelValue;
     private final String visaPurposeLabelValue;
     private final RemoteWebDriver driver;
-    private int searchCount = 0;
 
     public Section2ServiceSelectionHandler(VisaFormTO visaFormTO, PersonalInfoFormTO personalInfoFormTO, RemoteWebDriver remoteWebDriver) {
         this.visaPurposeLabelValue = visaFormTO.getVisaPurposeValue();
@@ -212,8 +212,8 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
             try {
                 WebElement element = driver.findElement(By.xpath(elementXpath));
                 element.click();
-                searchCount++;
-                String msg = String.format("SuccessfullyFormSenCount:%s", searchCount);
+                searchCount = searchCount + 1;
+                String msg = String.format("Successfully send form  count is:%s", searchCount);
                 logger.info(msg);
                 return true;
             } catch (Exception exception) {
