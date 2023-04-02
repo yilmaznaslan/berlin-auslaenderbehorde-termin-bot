@@ -19,6 +19,7 @@ import org.slf4j.MDC;
 
 import java.time.Duration;
 
+import static org.example.TerminFinder.searchCount;
 import static org.example.enums.Section2FormElementsEnum.FAMILY_STATUS;
 import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS;
 import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
@@ -36,10 +37,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
     private final String serviceTypeLabelValue;
     private final String visaLabelValue;
     private final String visaPurposeLabelValue;
-
-    private static int searchCount = 0;
-
-    public RemoteWebDriver driver;
+    private final RemoteWebDriver driver;
 
     public Section2ServiceSelectionHandler(VisaFormTO visaFormTO, PersonalInfoFormTO personalInfoFormTO, RemoteWebDriver remoteWebDriver) {
         this.visaPurposeLabelValue = visaFormTO.getVisaPurposeValue();
@@ -56,7 +54,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         selectCitizenshipValue();
         selectApplicantsCount();
         selectFamilyStatus();
-        if (familyStatus.equals("1")){
+        if (familyStatus.equals("1")) {
             selectCitizenshipValueOfFamilyMember();
         }
         clickServiceType();
@@ -77,18 +75,13 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
     private void selectCitizenshipValue() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to " + methodName);
-
         String elementDescription = Section2FormElementsEnum.COUNTRY.name();
         String elementName = Section2FormElementsEnum.COUNTRY.getName();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
-
         wait.until(__ -> {
             try {
-                WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("select[name='" + elementName + "']")));
-                wait.until(ExpectedConditions.not(ExpectedConditions.stalenessOf(element)));
-                wait.until(ExpectedConditions.visibilityOf(element));
+                WebElement element = driver.findElement(By.cssSelector("select[name='" + elementName + "']"));
                 Select select = new Select(element);
                 select.selectByVisibleText(citizenshipValue);
                 WebElement option = select.getFirstSelectedOption();
@@ -102,24 +95,18 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
                 return false;
             }
         });
-
     }
 
     private void selectCitizenshipValueOfFamilyMember() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to " + methodName);
-
         String elementDescription = Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.name();
         String elementName = Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.getName();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
-
         wait.until(__ -> {
             try {
-                WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("select[name='" + elementName + "']")));
-                wait.until(ExpectedConditions.not(ExpectedConditions.stalenessOf(element)));
-                wait.until(ExpectedConditions.visibilityOf(element));
+                WebElement element = driver.findElement(By.cssSelector("select[name='" + elementName + "']"));
                 Select select = new Select(element);
                 select.selectByVisibleText(citizenshipValue);
                 WebElement option = select.getFirstSelectedOption();
@@ -133,33 +120,30 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
                 return false;
             }
         });
-
     }
 
     private void selectApplicantsCount() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to " + methodName);
-
         String elementDescription = Section2FormElementsEnum.APPLICANT_COUNT.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
-        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("select[name='personenAnzahl_normal']")));
-        wait.until(ExpectedConditions.not(ExpectedConditions.stalenessOf(element)));
+        wait.until(__ -> {
+            try {
+                WebElement element = driver.findElement(By.cssSelector("select[name='personenAnzahl_normal']"));
+                Select select = new Select(element);
+                select.selectByValue(applicantNumber);
+                return true;
+            } catch (Exception exception) {
+                return false;
+            }
+        });
 
-        Select select = new Select(element);
-        select.selectByValue(applicantNumber);
-        WebElement option = select.getFirstSelectedOption();
-        String selectValue = option.getText();
-        if (selectValue.equals(applicantNumber)) {
-            logger.info("Successfully selected the applicants number");
-        }
     }
 
     private void selectFamilyStatus() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to " + methodName);
-
         String elementDescription = FAMILY_STATUS.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
         WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
@@ -171,7 +155,6 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
     protected void clickServiceType() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to " + methodName);
-
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
@@ -182,51 +165,68 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
                 return false;
             }
         });
-
     }
 
     private void clickVisaPurpose() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to " + methodName);
-
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
-        WebElement element = wait.until(__ -> {
-            WebElement selectElement = driver.findElements(By.tagName("label")).stream().filter(webElement -> webElement.getText().equals(visaPurposeLabelValue)).findFirst().orElseThrow(() -> new NoSuchElementException("Unable to locate element with text: " + serviceTypeLabelValue));
-            return selectElement;
+        wait.until(__ -> {
+            try {
+                driver.findElements(By.tagName("label")).stream()
+                        .filter(webElement -> webElement.getText().equals(visaPurposeLabelValue))
+                        .findFirst()
+                        .get()
+                        .click();
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
         });
-        wait.until(ExpectedConditions.not(ExpectedConditions.stalenessOf(element)));
-        wait.until(ExpectedConditions.elementToBeClickable(element)).click();
     }
 
     private void clickToVisa() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to " + methodName);
-
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
-        WebElement element = wait.until(__ -> {
-            WebElement selectElement = driver.findElements(By.tagName("label")).stream().filter(webElement -> webElement.getText().equals(visaLabelValue)).findFirst().orElseThrow(() -> new NoSuchElementException("Unable to locate element with text: " + serviceTypeLabelValue));
-            return selectElement;
+        wait.until(__ -> {
+            try {
+                driver.findElements(By.tagName("label")).stream()
+                        .filter(webElement -> webElement.getText().equals(visaLabelValue))
+                        .findFirst()
+                        .get()
+                        .click();
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
         });
-        wait.until(ExpectedConditions.not(ExpectedConditions.stalenessOf(element)));
-        wait.until(ExpectedConditions.elementToBeClickable(element)).click();
     }
 
     private void sendForm() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to " + methodName);
-
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
-        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(elementXpath)));
-        element.click();
-        searchCount++;
-        String msg = String.format("SuccessfullyFormSenCount:%s", searchCount);
-        logger.info(msg);
+        wait.until(__ -> {
+            try {
+                WebElement element = driver.findElement(By.xpath(elementXpath));
+                element.click();
+                searchCount = searchCount + 1;
+                String msg = String.format("Successfully send form  count is:%s", searchCount);
+                logger.info(msg);
+                return true;
+            } catch (Exception exception) {
+                return false;
+            }
+        });
     }
 
     @VisibleForTesting
     protected boolean isCalenderFound() {
         String elementDescription = "active step";
+        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+
         String activeTabXPath = "//*[@id=\"main\"]/div[2]/div[4]/div[2]/div/div[1]/ul/li[2]";
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS));
         WebElement activeStepElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(activeTabXPath)));

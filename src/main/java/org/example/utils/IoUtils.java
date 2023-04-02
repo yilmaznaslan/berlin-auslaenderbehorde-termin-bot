@@ -93,11 +93,13 @@ public class IoUtils {
             } catch (Exception e) {
                 logger.error("Error occurred during s3 operation. Exception: ", e);
             }
-
+        } else{
+            logger.info("S3 is not  enabled");
         }
     }
 
     private static File saveSourceCodeToFile(String content, String fileName) throws IOException {
+        logger.info("Saving source code to file");
         File file = new File(fileName);
         FileWriter fw;
         fw = new FileWriter(file);
@@ -107,6 +109,7 @@ public class IoUtils {
     }
 
     private static File saveScreenshot(WebDriver driver, String fileName) throws IOException {
+        logger.info("Saving screenshot");
         File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         File file = new File(fileName);
         FileUtils.copyFile(scrFile1, file);

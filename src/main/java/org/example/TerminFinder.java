@@ -24,6 +24,7 @@ import static org.example.utils.IoUtils.savePage;
 
 public class TerminFinder {
 
+    public static int searchCount = 0;
     private final Logger logger = LoggerFactory.getLogger(TerminFinder.class);
     private final VisaFormTO visaFormTO;
     private final PersonalInfoFormTO personalInfoFormTO;
@@ -37,6 +38,12 @@ public class TerminFinder {
         this.personalInfoFormTO = personalInfoFormTO;
         this.visaFormTO = visaFormTO;
         setMDCVariables();
+    }
+
+    public TerminFinder(VisaFormTO visaFormTO, PersonalInfoFormTO personalInfoFormTO, RemoteWebDriver driver) {
+        this.visaFormTO = visaFormTO;
+        this.personalInfoFormTO = personalInfoFormTO;
+        this.driver = driver;
     }
 
     public void startScanning() throws FormValidationFailed {
@@ -74,21 +81,23 @@ public class TerminFinder {
         if (!fillAndSendFormWithExceptionHandling(section3DateSelectionHandler)) return;
         if (!fillAndSendFormWithExceptionHandling(section4VisaFormHandler)) return;
         if (!fillAndSendFormWithExceptionHandling(section5ReservationHandler)) return;
+
+        logger.info("End of process");
         driver.quit();
         timer.cancel();
 
     }
 
-    private boolean fillAndSendFormWithExceptionHandling(IFormHandler formHandler) {
+    boolean fillAndSendFormWithExceptionHandling(IFormHandler formHandler) {
         try {
             boolean isSuccessful = formHandler.fillAndSendForm();
             driver = formHandler.getDriver();
             return isSuccessful;
         } catch (Exception e) {
             logger.error("Exception occurred during handling {}, quitting.", formHandler.getClass().getSimpleName(), e);
-            handleException();
             String fileName = formHandler.getClass().getSimpleName();
             savePage(driver, fileName, "exception");
+            logger.info("page is saved");
             return false;
         } finally {
             MDC.remove(MdcVariableEnum.elementDescription.name());
@@ -96,7 +105,6 @@ public class TerminFinder {
     }
 
     private void handleException() {
-        driver.quit();
         if (driver != null) {
             driver.quit();
         }
