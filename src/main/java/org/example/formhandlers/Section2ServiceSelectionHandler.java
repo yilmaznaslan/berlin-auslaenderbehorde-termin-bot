@@ -43,7 +43,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         this.visaPurposeLabelValue = visaFormTO.getVisaPurposeValue();
         this.driver = remoteWebDriver;
         this.citizenshipValue = personalInfoFormTO.getCitizenshipValue();
-        this.applicantNumber = personalInfoFormTO.getApplicationsNumber();
+        this.applicantNumber = personalInfoFormTO.getNumberOfApplicants();
         this.familyStatus = personalInfoFormTO.getFamilyStatus();
         this.serviceTypeLabelValue = visaFormTO.getServiceType();
         this.visaLabelValue = visaFormTO.getVisaLabelValue();
@@ -52,7 +52,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
     public boolean fillAndSendForm() throws InterruptedException {
         logger.info("Starting to fill the form in section 2");
         selectCitizenshipValue();
-        selectApplicantsCount();
+        selectNumberOfApplicants();
         selectFamilyStatus();
         if (familyStatus.equals("1")) {
             selectCitizenshipValueOfFamilyMember();
@@ -122,7 +122,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         });
     }
 
-    private void selectApplicantsCount() {
+    private void selectNumberOfApplicants() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to " + methodName);
         String elementDescription = Section2FormElementsEnum.APPLICANT_COUNT.name();
@@ -132,7 +132,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
             try {
                 WebElement element = driver.findElement(By.cssSelector("select[name='personenAnzahl_normal']"));
                 Select select = new Select(element);
-                select.selectByValue(applicantNumber);
+                select.selectByVisibleText(applicantNumber);
                 return true;
             } catch (Exception exception) {
                 return false;
@@ -146,10 +146,18 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         logger.info("Starting to " + methodName);
         String elementDescription = FAMILY_STATUS.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
-                .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("select[name='lebnBrMitFmly']")));
-        Select select = new Select(element);
-        select.selectByValue(familyStatus);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
+        wait.until(__ -> {
+            try {
+                WebElement webElement = driver.findElement(By.cssSelector("select[name='lebnBrMitFmly']"));
+                Select select = new Select(webElement);
+                select.selectByVisibleText(familyStatus);
+                return true;
+            } catch (Exception e) {
+                return false;
+
+            }
+        });
     }
 
     protected void clickServiceType() {
