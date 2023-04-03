@@ -1,5 +1,6 @@
 package org.example;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.example.enums.MdcVariableEnum;
 import org.example.exceptions.FormValidationFailed;
 import org.example.formhandlers.*;
@@ -60,12 +61,13 @@ public class TerminFinder {
     }
 
 
-    private void run() {
+    protected void run() {
         setDriver();
+
         try {
             getFormPage();
         } catch (Exception e) {
-            logger.error("Error in initializing a new session. Exception: ", e);
+            logger.error("Error in getting the home page. Exception: ", e);
             handleException();
             return;
         }
@@ -124,7 +126,8 @@ public class TerminFinder {
         }
     }
 
-    private void getFormPage() throws InterruptedException {
+    @VisibleForTesting
+    protected void getFormPage() throws InterruptedException {
         currentWindowHandle = driver.getWindowHandle();
         logger.info("Switching to a new tab");
         driver.switchTo().newWindow(WindowType.TAB);
@@ -150,7 +153,6 @@ public class TerminFinder {
     private void setMDCVariables() {
         MDC.put("visaForm", visaFormTO.toString());
         MDC.put(MdcVariableEnum.elementDescription.name(), null);
-
     }
 
     private boolean isResidenceTitleInfoVerified(VisaFormTO visaFormTO) {
@@ -175,9 +177,7 @@ public class TerminFinder {
 
         if (serviceType.equals("Extend a residence title")) {
 
-            if (residencePermitId == null) {
-                return false;
-            }
+            return residencePermitId != null;
         }
 
         return true;
