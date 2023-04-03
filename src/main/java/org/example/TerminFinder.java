@@ -1,5 +1,6 @@
 package org.example;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.example.enums.MdcVariableEnum;
 import org.example.exceptions.FormValidationFailed;
 import org.example.formhandlers.*;
@@ -30,7 +31,6 @@ public class TerminFinder {
     private final PersonalInfoFormTO personalInfoFormTO;
     private final long FORM_REFRESH_PERIOD_IN_SECONDS = 1;
     private RemoteWebDriver driver;
-    private String currentWindowHandle;
     private final Timer timer = new Timer(true);
 
 
@@ -60,13 +60,18 @@ public class TerminFinder {
     }
 
 
-    private void run() {
+    protected void run() {
         setDriver();
+
         try {
             getFormPage();
         } catch (Exception e) {
-            logger.error("Error in initializing a new session. Exception: ", e);
-            handleException();
+            logger.error("Error in getting the home page. Exception: ", e);
+            if (driver != null) {
+                logger.info("Quiting the driver");
+                driver.quit();
+            }
+            logger.error("Returning");
             return;
         }
 
@@ -104,12 +109,6 @@ public class TerminFinder {
         }
     }
 
-    private void handleException() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
-
     private void setDriver() {
         setMDCVariables();
         if (driver == null) {
@@ -124,25 +123,24 @@ public class TerminFinder {
         }
     }
 
-    private void getFormPage() throws InterruptedException {
-        currentWindowHandle = driver.getWindowHandle();
+    @VisibleForTesting
+    protected void getFormPage() throws InterruptedException {
         logger.info("Switching to a new tab");
         driver.switchTo().newWindow(WindowType.TAB);
         Thread.sleep(2000);
 
-        currentWindowHandle = driver.getWindowHandle();
+        String currentWindowHandle = driver.getWindowHandle();
 
         String url = "https://otv.verwalt-berlin.de/ams/TerminBuchen?lang=en";
-        logger.info(String.format("Getting the URL: %s", url));
         Set<String> handle = driver.getWindowHandles();
-        handle.forEach((asd) -> logger.info(String.format("Window handle: " + asd)));
-        logger.info(String.format("Closing the  window handle: %s", handle.stream().collect(Collectors.toList()).get(0)));
+        handle.forEach(asd -> logger.debug(String.format("Window handle: " + asd)));
+        logger.debug(String.format("Closing the  window handle: %s", handle.stream().collect(Collectors.toList()).get(0)));
         driver.switchTo().window(handle.stream().collect(Collectors.toList()).get(0)).close();
-        logger.info(String.format("Switching to window handle: %s", currentWindowHandle));
+        logger.debug(String.format("Switching to window handle: %s", currentWindowHandle));
         driver.switchTo().window(currentWindowHandle);
 
 
-        currentWindowHandle = driver.getWindowHandle();
+        logger.info(String.format("Getting the URL: %s", url));
         driver.get(url);
 
     }
@@ -150,7 +148,6 @@ public class TerminFinder {
     private void setMDCVariables() {
         MDC.put("visaForm", visaFormTO.toString());
         MDC.put(MdcVariableEnum.elementDescription.name(), null);
-
     }
 
     private boolean isResidenceTitleInfoVerified(VisaFormTO visaFormTO) {
@@ -175,9 +172,7 @@ public class TerminFinder {
 
         if (serviceType.equals("Extend a residence title")) {
 
-            if (residencePermitId == null) {
-                return false;
-            }
+            return residencePermitId != null;
         }
 
         return true;

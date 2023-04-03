@@ -3,21 +3,18 @@ package org.example;
 import org.example.formhandlers.Section2ServiceSelectionHandler;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-class TerminFinderTest {
+class TerminFinderTest extends BaseTestSetup{
 
     static String pathToScreenShot = TerminFinder.class.getClassLoader().getResource("screenshot.png").getPath();
 
@@ -53,5 +50,20 @@ class TerminFinderTest {
 
         // Then
         assertFalse(actual);
+    }
+
+
+    @Test
+    void testFillAndSendFormWithExceptionHandlingWhenIFormHandlerThrowsExceptionl() throws InterruptedException {
+        // Given
+        TerminFinder terminFinderSpy = spy(new TerminFinder(personalInfoFormTO, visaFormTO));
+        doThrow(new WebDriverException()).when(terminFinderSpy).getFormPage();
+
+        // When && Then
+        Assertions.assertDoesNotThrow(() -> terminFinderSpy.run());
+
+        // Then
+        verify(terminFinderSpy, never()).fillAndSendFormWithExceptionHandling(any());
+
     }
 }

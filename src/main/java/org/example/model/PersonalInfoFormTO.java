@@ -3,7 +3,7 @@ package org.example.model;
 public class PersonalInfoFormTO {
     private String citizenshipValue;
     private String citizenshipValueOfFamilyMember;
-    private String applicationsNumber;
+    private String numberOfApplicants;
     private String familyStatus;
     private String firstName;
     private String lastName;
@@ -13,10 +13,10 @@ public class PersonalInfoFormTO {
     public PersonalInfoFormTO() {
     }
 
-    public PersonalInfoFormTO(String citizenshipValue, String citizenshipValueOfFamilyMember, String applicationsNumber, String familyStatus, String firstName, String lastName, String emailAddress, String birthdate) {
+    public PersonalInfoFormTO(String citizenshipValue, String citizenshipValueOfFamilyMember, String numberOfApplicants, String familyStatus, String firstName, String lastName, String emailAddress, String birthdate) {
         this.citizenshipValue = citizenshipValue;
         this.citizenshipValueOfFamilyMember = citizenshipValueOfFamilyMember;
-        this.applicationsNumber = applicationsNumber;
+        this.numberOfApplicants = numberOfApplicants;
         this.familyStatus = familyStatus;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -28,8 +28,8 @@ public class PersonalInfoFormTO {
         return citizenshipValue;
     }
 
-    public String getApplicationsNumber() {
-        return applicationsNumber;
+    public String getNumberOfApplicants() {
+        return numberOfApplicants;
     }
 
     public String getFamilyStatus() {
@@ -56,8 +56,8 @@ public class PersonalInfoFormTO {
         this.citizenshipValue = citizenshipValue;
     }
 
-    public void setApplicationsNumber(String applicationsNumber) {
-        this.applicationsNumber = applicationsNumber;
+    public void setNumberOfApplicants(String numberOfApplicants) {
+        this.numberOfApplicants = numberOfApplicants;
     }
 
     public void setFamilyStatus(String familyStatus) {
@@ -93,7 +93,7 @@ public class PersonalInfoFormTO {
         return "PersonalInfoFormTO{" +
                 "citizenshipValue='" + citizenshipValue + '\'' +
                 ", citizenshipValueOfFamilyMember='" + citizenshipValueOfFamilyMember + '\'' +
-                ", applicationsNumber='" + applicationsNumber + '\'' +
+                ", applicationsNumber='" + numberOfApplicants + '\'' +
                 ", familyStatus='" + familyStatus + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

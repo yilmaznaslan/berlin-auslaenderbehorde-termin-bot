@@ -1,7 +1,7 @@
 {
   "citizenshipValue": "Turkey",
-  "applicationsNumber": "1",
-  "familyStatus": "2",
+  "numberOfApplicants": "one person",
+  "familyStatus": "no",
   "firstName": "firstname",
   "lastName": "lastname",
   "emailAddress": "yilmazn.aslan@gmail.com",
