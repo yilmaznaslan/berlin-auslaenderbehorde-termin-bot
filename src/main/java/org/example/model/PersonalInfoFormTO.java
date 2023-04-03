@@ -4,7 +4,7 @@ public class PersonalInfoFormTO {
     private String citizenshipValue;
     private String citizenshipValueOfFamilyMember;
     private String numberOfApplicants;
-    private String familyStatus;
+    private String isThereFamilyMember;
     private String firstName;
     private String lastName;
     private String emailAddress;
@@ -13,11 +13,11 @@ public class PersonalInfoFormTO {
     public PersonalInfoFormTO() {
     }
 
-    public PersonalInfoFormTO(String citizenshipValue, String citizenshipValueOfFamilyMember, String numberOfApplicants, String familyStatus, String firstName, String lastName, String emailAddress, String birthdate) {
+    public PersonalInfoFormTO(String citizenshipValue, String citizenshipValueOfFamilyMember, String numberOfApplicants, String isThereFamilyMember, String firstName, String lastName, String emailAddress, String birthdate) {
         this.citizenshipValue = citizenshipValue;
         this.citizenshipValueOfFamilyMember = citizenshipValueOfFamilyMember;
         this.numberOfApplicants = numberOfApplicants;
-        this.familyStatus = familyStatus;
+        this.isThereFamilyMember = isThereFamilyMember;
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
@@ -32,8 +32,8 @@ public class PersonalInfoFormTO {
         return numberOfApplicants;
     }
 
-    public String getFamilyStatus() {
-        return familyStatus;
+    public String getIsThereFamilyMember() {
+        return isThereFamilyMember;
     }
 
     public String getFirstName() {
@@ -60,8 +60,8 @@ public class PersonalInfoFormTO {
         this.numberOfApplicants = numberOfApplicants;
     }
 
-    public void setFamilyStatus(String familyStatus) {
-        this.familyStatus = familyStatus;
+    public void setIsThereFamilyMember(String isThereFamilyMember) {
+        this.isThereFamilyMember = isThereFamilyMember;
     }
 
     public void setFirstName(String firstName) {
@@ -94,7 +94,7 @@ public class PersonalInfoFormTO {
                 "citizenshipValue='" + citizenshipValue + '\'' +
                 ", citizenshipValueOfFamilyMember='" + citizenshipValueOfFamilyMember + '\'' +
                 ", applicationsNumber='" + numberOfApplicants + '\'' +
-                ", familyStatus='" + familyStatus + '\'' +
+                ", familyStatus='" + isThereFamilyMember + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", emailAddress='" + emailAddress + '\'' +

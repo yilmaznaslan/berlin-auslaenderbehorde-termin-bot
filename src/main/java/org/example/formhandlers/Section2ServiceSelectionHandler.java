@@ -44,7 +44,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         this.driver = remoteWebDriver;
         this.citizenshipValue = personalInfoFormTO.getCitizenshipValue();
         this.applicantNumber = personalInfoFormTO.getNumberOfApplicants();
-        this.familyStatus = personalInfoFormTO.getFamilyStatus();
+        this.familyStatus = personalInfoFormTO.getIsThereFamilyMember();
         this.serviceTypeLabelValue = visaFormTO.getServiceType();
         this.visaLabelValue = visaFormTO.getVisaLabelValue();
     }
