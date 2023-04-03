@@ -54,7 +54,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         selectCitizenshipValue();
         selectNumberOfApplicants();
         selectFamilyStatus();
-        if (familyStatus.equals("1")) {
+        if (familyStatus.equals("yes")) {
             selectCitizenshipValueOfFamilyMember();
         }
         clickServiceType();

@@ -1,6 +1,6 @@
 {
   "citizenshipValue": "Turkey",
-  "citizenshipValueOfFamilyMember": null,
+  "citizenshipValueOfFamilyMember": "Turkey",
   "numberOfApplicants": "one person",
   "isThereFamilyMember": "yes",
   "firstName": "firstname",
