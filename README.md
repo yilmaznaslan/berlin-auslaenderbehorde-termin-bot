@@ -41,7 +41,7 @@ become an increasingly valuable commodity. The berlin-auslaenderbehorde-termin-b
 and frustration associated with the registration process, enabling individuals to focus on other tasks or simply take a
 break from the stress of trying to secure an appointment.
 
-![](/Users/yilmaznaci.aslan/repositories/form-automation/berlin-auslaenderbehorde-termin-bot/doc/form.gif)
+![](doc/form.gif)
 ### Ethical Considerations
 
 There are ethical concerns surrounding the automation of the growing black market for obtaining online appointments.
