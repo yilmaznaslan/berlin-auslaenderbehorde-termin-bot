@@ -21,7 +21,7 @@ docker run -p 4444:4444 -d -t selenium/standalone-chrome:latest
 - Fill the [personInfoDTO.Json](src/main/resources/DEFAULT_PERSONAL_INFO_FORM.json) file with **your** personal information
   - Write the Country value in **English** as displayed on the browser
 - Fill the [visaFormTO.Json](src/main/resources/DEFAULT_VISA_APPLICATION_FORM.json) with your visa request.
-  - You can also copy-paste from a [template](src/main/resources/en/) that matches your request.  
+  - You can also copy-paste from a [template](src/main/resources/) that matches your request.  
  
 - Run the application in terminal by `./gradlew run`.
   - You will get the email from *LEA* once the bot booked the termin. 
