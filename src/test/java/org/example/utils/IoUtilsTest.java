@@ -1,35 +1,35 @@
 package org.example.utils;
 
-import org.example.BaseTestSetup;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import static org.example.utils.IoUtils.savePage;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class IoUtilsTest extends BaseTestSetup {
 
-    static RemoteWebDriver remoteWebDriver;
+class IoUtilsTest {
+
+    private final RemoteWebDriver remoteWebDriver = mock(RemoteWebDriver.class);
 
 
     @BeforeAll
     static void setup() {
         IoUtils.isLocalSaveEnabled = true;
         IoUtils.isS3Enabled = true;
-        remoteWebDriver = mock(RemoteWebDriver.class);
 
     }
 
     @Test
-    void ASSERT_THAT_isCalenderFound_returns_true() {
+    void ASSERT_THAT_save_is_completed_without_error_GIVEN_driveR_throws_exception() {
         // GIVEN
-        when(remoteWebDriver.getPageSource()).thenReturn("");
+        when(remoteWebDriver.getPageSource()).thenThrow(new WebDriverException());
 
         // WHEN && THEN
-        Assertions.assertDoesNotThrow(() -> savePage(driver, "testPage", "demo"));
+        Assertions.assertDoesNotThrow(() -> savePage(remoteWebDriver, "testPage", "demo"));
 
     }
 

@@ -26,32 +26,27 @@ public class IoUtils {
 
     private final static Logger logger = LoggerFactory.getLogger(IoUtils.class);
     private final static String S3_BUCKET_NAME = "auslander-termin-files";
-    private static AmazonS3 client;
     public static boolean isS3Enabled = true;
     public static boolean isLocalSaveEnabled = true;
+    private static AmazonS3 client;
 
-    public static PersonalInfoFormTO readPersonalInfoFromFile() {
-        ObjectMapper mapper = new ObjectMapper();
-        InputStream is = PersonalInfoFormTO.class.getResourceAsStream("/DEFAULT_PERSONAL_INFO_FORM.json");
-        try {
-            return mapper.readValue(is, PersonalInfoFormTO.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private IoUtils() {
     }
 
-    public static VisaFormTO readVisaInfoFromFile() {
+    public static PersonalInfoFormTO readPersonalInfoFromFile() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        InputStream is = PersonalInfoFormTO.class.getResourceAsStream("/DEFAULT_PERSONAL_INFO_FORM.json");
+        return mapper.readValue(is, PersonalInfoFormTO.class);
+    }
+
+    public static VisaFormTO readVisaInfoFromFile() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         InputStream is = VisaFormTO.class.getResourceAsStream("/DEFAULT_VISA_APPLICATION_FORM.json");
-        try {
-            return mapper.readValue(is, VisaFormTO.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return mapper.readValue(is, VisaFormTO.class);
     }
 
     public static void savePage(WebDriver driver, String pageDescriber, String suffix) {
-        if (!isLocalSaveEnabled){
+        if (!isLocalSaveEnabled) {
             logger.info("Saving is disabled");
             return;
         }
@@ -63,7 +58,17 @@ public class IoUtils {
         String screenshotFileName = fileName + ".png";
         logger.info("File name :{}, {}", pagesourceFileName, screenshotFileName);
 
-        String content = driver.getPageSource();
+        String content;
+        try {
+            logger.info("Getting the page content");
+            content = driver.getPageSource();
+
+        } catch (Exception exception) {
+            logger.error("Error occurred during getting the page source. Reason: ", exception);
+            return;
+        }
+
+
         File sourceFile;
         try {
             sourceFile = saveSourceCodeToFile(content, pagesourceFileName);
@@ -93,7 +98,7 @@ public class IoUtils {
             } catch (Exception e) {
                 logger.error("Error occurred during s3 operation. Exception: ", e);
             }
-        } else{
+        } else {
             logger.info("S3 is not  enabled");
         }
     }
