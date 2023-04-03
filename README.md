@@ -15,6 +15,7 @@ find that the system is constantly overloaded and crashes frequently.
 
 ### Appointment System
 
+<img src="https://www.tagesspiegel.de/berlin/images/terminvereinbarung-online-burgeramt-bezirksamt-berlin-aufgenommen-am-27-september-2019foto-kitty-kleist-heinrich/alternates/BASE_21_9_W1000/terminvereinbarung-online-buergeramt-bezirksamt-berlin-aufgenommen-am-27-september-2019foto-kitty-kleist-heinrich.jpeg"/>
 The reasons behind the long wait times and difficulty in obtaining appointments at the Ausländerbehörde are many.
 Firstly, the sheer volume of people who need to use the service is overwhelming. Berlin is a popular destination for
 foreigners, and the city's growing popularity has put a strain on the already limited resources of the Ausländerbehörde.
@@ -31,6 +32,8 @@ an appointment. One such solution is the berlin-auslaenderbehorde-termin-bot, a 
 automate the appointment booking process. This application constantly searches for available appointment times, saving
 people significant amounts of time that would otherwise be spent manually refreshing the appointment page.
 
+
+
 ### Automation
 
 The benefits of such a tool cannot be overstated. With the growing number of people needing to use the service, time has
@@ -38,6 +41,7 @@ become an increasingly valuable commodity. The berlin-auslaenderbehorde-termin-b
 and frustration associated with the registration process, enabling individuals to focus on other tasks or simply take a
 break from the stress of trying to secure an appointment.
 
+![](/Users/yilmaznaci.aslan/repositories/form-automation/berlin-auslaenderbehorde-termin-bot/doc/form.gif)
 ### Ethical Considerations
 
 There are ethical concerns surrounding the automation of the growing black market for obtaining online appointments.
