@@ -1,21 +1,20 @@
 # Berlin Auslaenderbehorde Termin Bot
 
 This application uses Selenium library to automate the process of getting an appointment in Berlin Ausländerbehörde.
-Instead of notifying the person like other solutions, this application automatically **books** for you the requested *Termin*
+Instead of notifying the person like other solutions, this application automatically **books** for you the requested *Termin*. For more info please visit [github pages](https://yilmaznaslan.github.io/berlin-auslaenderbehorde-termin-bot/ )
 
-![recording](/doc/form.gif)
+<img src="/doc/form.gif"  width="60%" height="30%">
 
-## How to setup
-1. In order to run selenium server you will need to install docket first. See [Get Docker](https://docs.docker.com/get-docker/) for more info.
- 
-2. Make sure that JDK version in your machine is above > 11
-   - Check the java version `java --version`. 
-   - If it is below 11,  [install](https://docs.oracle.com/en/java/javase/11/install/installation-jdk-macos.html#GUID-2FE451B0-9572-4E38-A1A5-568B77B146DE) a newer version of java. After installation check again the version by `java --version` 
+## Prerequisites
+1. In order to run selenium server you will need to install docker first. See [Get Docker](https://docs.docker.com/get-docker/) for more info. After installing the docker run the selenium server as below
 
-3. Start SeleniumHub server 
 ```shell 
 docker run -p 4444:4444 -d -t selenium/standalone-chrome:latest
 ```
+
+2. Make sure that JDK version in your machine is above > 11
+   - Check the java version `java --version`. 
+   - If it is below 11,  [install](https://docs.oracle.com/en/java/javase/11/install/installation-jdk-macos.html#GUID-2FE451B0-9572-4E38-A1A5-568B77B146DE) a newer version of java. After installation check again the version by `java --version` 
 
 ## How to run
 - Fill the [personInfoDTO.Json](src/main/resources/DEFAULT_PERSONAL_INFO_FORM.json) file with **your** personal information
