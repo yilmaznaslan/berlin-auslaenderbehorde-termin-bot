@@ -95,3 +95,31 @@ automating the booking process and making it available for free, this project ai
 frustration experienced by those seeking appointments at the Berlin Immigration Office.
 
 _Written by ChatGPT3_
+
+### GPT3 Prompt
+
+```
+I want you to write me an blog about the problematic process of getting appointment in Berlin Foreigner’s Office a.k.a Berlin Immigration Office.
+In each section I want you give some details so that each section is at least 6-7 sentences long.
+Remember this article will published on personal blog so don’t make it sound very formal. It should be written like a LinkedIn post
+In this article I would like to mention the following topics.
+
+In this first part of the blog focus on the explaining the problem and reasons behind it.This section should be at least 8-9 sentence filled with rich information
+- Explain the current procedure for getting an appointment from Berlin Foreigner’s Office
+- Explain the problem about it and people’s complaints and struggles of people getting an appointment
+- I want you to point out how it effects people‘s life as a result of not getting a visa. Provide some real life examples who suffered from not getting an appointment on time. Tell very shortly their stories and how people are effected
+- Make a research about the reasons behind the issue and explain them in detail
+- Make a short research to compare the process with other cities and states from Germany and discuss if it is a problem special to Berlin or not. Explain how this is handled in other cities
+
+In this part of the blogI want you to focus on possible solution that people came up to get a Termin from AuslanderBehorde Berlin. This section should be at least 8-9 sentence filled with rich information In the regard;
+- Make a research and find out all the method people use to get an appointment
+- The possible solutions might include facebook groups, non profit organisations. Please search for such groups and organisations that people use. Give some example of such organisations and groups and explain how they help
+- Mention the companies or business that sells people appointment. Try to give some example websites that does this.
+- Point out  discussion around automating the growing black market for getting online appointments.
+
+In the last part of the blog I want you focus on the following part. This section should be at least 8-9 sentence filled with rich information
+- I want you mention about the a new project(berlin-auslaenderbehorde-termin-bot and can be accessible  https://yilmaznaslan.github.io/berlin-auslaenderbehorde-termin-bot/) that automates the process of getting an appointment from Berlin Immigrations office. This project is using software tools(Selenium Framework) that periodically fills and applies for an appointment on behalf of the person
+-  But in  ethical discussion that is mentioned in the previous section, I would like you to back up this project by highlighting that it only runs upon request and it is free. I know that this solution is not perfect and not the best method to over come this issue. 
+
+```
+
