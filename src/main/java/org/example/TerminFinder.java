@@ -20,6 +20,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static org.example.Config.FORM_REFRESH_PERIOD_IN_SECONDS;
 import static org.example.utils.DriverUtils.initDriver;
 import static org.example.utils.IoUtils.savePage;
 
@@ -29,7 +30,6 @@ public class TerminFinder {
     private final Logger logger = LoggerFactory.getLogger(TerminFinder.class);
     private final VisaFormTO visaFormTO;
     private final PersonalInfoFormTO personalInfoFormTO;
-    private final long FORM_REFRESH_PERIOD_IN_SECONDS = 1;
     private RemoteWebDriver driver;
     private final Timer timer = new Timer(true);
 
@@ -37,6 +37,7 @@ public class TerminFinder {
     public TerminFinder(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO) {
         this.personalInfoFormTO = personalInfoFormTO;
         this.visaFormTO = visaFormTO;
+        Config.getPropValues();
         setMDCVariables();
     }
 
