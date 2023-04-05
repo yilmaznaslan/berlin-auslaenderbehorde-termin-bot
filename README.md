@@ -37,25 +37,17 @@ implications for their lives and well-being. While these issues appear to be mor
 German cities, it's crucial to understand the reasons behind these challenges and explore potential solutions that could
 improve the process and lessen the burden on those seeking visas.
 
-## Possible Solutions and Ethical Concerns:
-
-Fortunately, there are some solutions available for those struggling to secure an appointment. Facebook groups such as
-“Berlin Immigrants and Expats” and “Getting a Visa Appointment at Auslanderbehörde Berlin” are great resources for
-sharing tips and advice. Non-profit organizations like “Moabit Hilft” also offer assistance and support to those in
-need.
-
-Unfortunately, there are also companies and businesses that sell appointments, which is unethical and takes advantage of
-people's desperation. There is also a growing black market for online appointment bookings, which is an alarming trend.
-
 ## Exploring Possible Solutions to Get a Termin from Ausländerbehörde Berlin:
 
 As people grapple with the difficulties of securing appointments at the Berlin Immigration Office, a variety of creative
 solutions have emerged. Many turn to online platforms and social networks for help, information sharing, and support.
 
 One popular approach is joining Facebook groups, where members post about appointment cancellations or newly available
-slots. A notable example is the "Appointments for Ausländerbehörde Berlin" group, where people can exchange information,
+slots. A notable example is the "Problems and Challenges with Ausländerbehorde and Einbürgerungsamt (Berlin)" group,
+where people can exchange information,
 ask for advice, and stay up-to-date on appointment availability.
 
+![](doc/fb_group.png)
 In addition, non-profit organizations such as "Migrant Support Berlin" and “Moabit Hilft” offer assistance to those
 struggling with the appointment process. These organizations provide guidance, resources, and even legal support,
 helping individuals
@@ -76,9 +68,9 @@ is addressed by [American Economic Association](https://www.aeaweb.org/articles?
 
 ## Introducing the Berlin-Ausländerbehörde-Termin-Bot Project:
 
-An exciting new project that has recently emerged is the berlin-auslaenderbehorde-termin-bot, which can be found
-at https://yilmaznaslan.github.io/berlin-auslaenderbehorde-termin-bot/. This innovative solution aims to automate the
-process of getting an appointment at the Berlin Immigration Office. By utilizing the Selenium Framework, a powerful
+An exciting new project that has recently emerged is the *berlin-auslaenderbehorde-termin-bot*, which can be found
+at https://yilmaznaslan.github.io/berlin-auslaenderbehorde-termin-bot/. This solution aims to automate the
+process of getting an appointment at the Berlin Immigration Office. By utilizing the *Selenium Framework*, a powerful
 suite of software tools, the bot periodically fills out and submits appointment requests on behalf of users, increasing
 their chances of securing a slot.
 
@@ -89,7 +81,8 @@ differently from the exploitative businesses selling appointments. The bot only 
 used deliberately by those who need it, and doesn't contribute to the black market. Additionally, the service is
 completely free, further distinguishing it from less ethical solutions.
 
-While the berlin-auslaenderbehorde-termin-bot may not be a perfect or comprehensive solution to the appointment-booking
+While the *berlin-auslaenderbehorde-termin-bot* may not be a perfect or comprehensive solution to the
+appointment-booking
 challenges faced by many, it offers a promising approach for those struggling to navigate the existing system. By
 automating the booking process and making it available for free, this project aims to alleviate some of the stress and
 frustration experienced by those seeking appointments at the Berlin Immigration Office.
