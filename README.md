@@ -82,7 +82,7 @@ process of getting an appointment at the Berlin Immigration Office. By utilizing
 suite of software tools, the bot periodically fills out and submits appointment requests on behalf of users, increasing
 their chances of securing a slot.
 
-<img src="/doc/form.gif"  width="60%" height="30%">
+<img src="https://github.com/yilmaznaslan/berlin-auslaenderbehorde-termin-bot/blob/gh_pages/doc/form.gif"  width="60%" height="30%">
 
 In the context of the ethical concerns mentioned earlier, it's important to recognize that this project operates
 differently from the exploitative businesses selling appointments. The bot only runs upon request, ensuring that it's
