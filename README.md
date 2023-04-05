@@ -65,7 +65,7 @@ Unfortunately, some businesses have taken advantage of the situation, selling ap
 Websites like "https://fastisus.com" (not recommended) are known to charge fees for booking appointments. This
 practice not only exacerbates the issue but also raises ethical concerns.
 
-<img src="https://www.fatbit.com/fab/wp-content/uploads/2017/12/Online-Appointment-Booking-Business.png"  width="60%" height="30%">
+<img src="https://www.fatbit.com/fab/wp-content/uploads/2017/12/Online-Appointment-Booking-Business.png">
 
 The growing black market for online appointments has sparked debates around automating the appointment booking process.
 While automation could potentially streamline the process and improve accessibility, it may also contribute to the
@@ -93,3 +93,5 @@ While the berlin-auslaenderbehorde-termin-bot may not be a perfect or comprehens
 challenges faced by many, it offers a promising approach for those struggling to navigate the existing system. By
 automating the booking process and making it available for free, this project aims to alleviate some of the stress and
 frustration experienced by those seeking appointments at the Berlin Immigration Office.
+
+_Written by ChatGPT3_
