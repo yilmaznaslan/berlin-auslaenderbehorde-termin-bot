@@ -9,7 +9,16 @@ Instead of notifying the person like other solutions, this application automatic
 1. In order to run selenium server you will need to install docker first. See [Get Docker](https://docs.docker.com/get-docker/) for more info. After installing the docker run the selenium server as below
 
 ```shell 
-docker run -p 4444:4444 -d -t selenium/standalone-chrome:latest
+docker run \
+  -d \
+  --name selenium \
+  --net termin \
+  -p 4444:4444 -p 7900:7900\
+  --shm-size="2g" \
+  -e SE_NODE_MAX_SESSIONS=5 \
+  -e SE_NODE_OVERRIDE_MAX_SESSIONS=true \
+  -e SE_NODE_SESSION_TIMEOUT=120 \
+  -t selenium/standalone-chrome:latest
 ```
 
 2. Make sure that JDK version in your machine is above > 11

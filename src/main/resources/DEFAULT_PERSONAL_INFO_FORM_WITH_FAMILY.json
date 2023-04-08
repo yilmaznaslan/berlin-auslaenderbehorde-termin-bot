@@ -1,8 +1,8 @@
 {
   "citizenshipValue": "Turkey",
-  "citizenshipValueOfFamilyMember": null,
+  "citizenshipValueOfFamilyMember": "Turkey",
   "numberOfApplicants": "one person",
-  "isThereFamilyMember": "no",
+  "isThereFamilyMember": "yes",
   "firstName": "firstname",
   "lastName": "lastname",
   "emailAddress": "yilmazn.aslan@gmail.com",
