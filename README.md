@@ -34,3 +34,5 @@ docker run \
 - Run the application in terminal by `./gradlew run`.
   - You will get the email from *LEA* once the bot booked the termin. 
   - REMEMBER: Due to very limited number of available spots, you might need to run the script for a week !
+
+- To see what is happening inside the container, head to http://localhost:7900/?autoconnect=1&resize=scale&password=secret.
