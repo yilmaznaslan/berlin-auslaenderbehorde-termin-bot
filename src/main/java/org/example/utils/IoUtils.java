@@ -93,8 +93,8 @@ public class IoUtils {
                     .build();
 
             try {
-                client.putObject(new PutObjectRequest(S3_BUCKET_NAME, fileName, sourceFile));
-                client.putObject(new PutObjectRequest(S3_BUCKET_NAME, fileName, screenShotFile));
+                client.putObject(new PutObjectRequest(S3_BUCKET_NAME, pagesourceFileName, sourceFile));
+                client.putObject(new PutObjectRequest(S3_BUCKET_NAME, screenshotFileName, screenShotFile));
             } catch (Exception e) {
                 logger.error("Error occurred during s3 operation. Exception: ", e);
             }
