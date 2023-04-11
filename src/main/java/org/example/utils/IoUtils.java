@@ -26,7 +26,7 @@ public class IoUtils {
 
     private final static Logger logger = LoggerFactory.getLogger(IoUtils.class);
     private final static String S3_BUCKET_NAME = "auslander-termin-files";
-    public static boolean isS3Enabled = true;
+    public static boolean isS3Enabled = false;
     public static boolean isLocalSaveEnabled = true;
     private static AmazonS3 client;
 
