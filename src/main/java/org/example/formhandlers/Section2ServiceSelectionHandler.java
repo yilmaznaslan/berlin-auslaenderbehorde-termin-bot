@@ -30,6 +30,8 @@ import static org.example.utils.IoUtils.savePage;
  */
 public class Section2ServiceSelectionHandler implements IFormHandler {
 
+    private int searchCountWithCalenderOpened = 0;
+
     private final Logger logger = LoggerFactory.getLogger(Section2ServiceSelectionHandler.class);
     private final String citizenshipValue;
     private final String applicantNumber;
@@ -241,11 +243,13 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         String activeStepText = activeStepElement.getText();
         logger.info(String.format("Value of the %s is: %s", elementDescription, activeStepText));
         if (activeStepText.contains("Date selection")) {
-            savePage(driver, this.getClass().getSimpleName(), "date_selecntion_in");
+            searchCountWithCalenderOpened++;
+            savePage(driver, this.getClass().getSimpleName(), "date_selection_in");
             logger.info("Calender page is opened");
             return true;
         }
         logger.info("Calender page is not opened");
+        logger.info("Search count: {}. Search count with calender page opened: {}", searchCount, searchCountWithCalenderOpened);
         return false;
     }
 }
