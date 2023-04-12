@@ -1,7 +1,6 @@
 ## Get the branch name
-branch=$(git describe --contains --all HEAD)
+branch=$(git branch --show-current)
 echo "Branch name is $branch"
-
 
 # Build the fatjar
 echo "building the fatjar"
