@@ -12,7 +12,6 @@ Instead of notifying the person like other solutions, this application automatic
 docker run \
   -d \
   --name selenium \
-  --net termin \
   -p 4444:4444 -p 7900:7900\
   --shm-size="2g" \
   -e SE_NODE_MAX_SESSIONS=5 \
