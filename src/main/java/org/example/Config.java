@@ -7,6 +7,7 @@ import java.util.Properties;
 
 public class Config {
     public static long FORM_REFRESH_PERIOD_IN_SECONDS;
+    public static long TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
     static InputStream inputStream;
 
     public static void getPropValues(){
@@ -20,6 +21,7 @@ public class Config {
                 throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
             }
             FORM_REFRESH_PERIOD_IN_SECONDS = Long.parseLong(prop.getProperty("FORM_REFRESH_PERIOD_IN_SECONDS"));
+            TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS = Long.parseLong(prop.getProperty("TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS"));
         } catch (Exception e) {
             System.out.println("Exception: " + e);
         } finally {

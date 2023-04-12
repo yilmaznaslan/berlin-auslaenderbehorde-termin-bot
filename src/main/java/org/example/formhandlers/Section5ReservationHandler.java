@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
-import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
+import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 import static org.example.utils.IoUtils.savePage;
 
 /**
@@ -29,7 +29,7 @@ public class Section5ReservationHandler implements IFormHandler {
 
     public boolean fillAndSendForm() {
         String elementId = Section5FormParameterEnum.SEND_FORM_BUTTON.getId();
-        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS))
                 .until(__ -> driver.findElement(By.id(elementId)));
         element.click();
         logger.info("BOOKED");

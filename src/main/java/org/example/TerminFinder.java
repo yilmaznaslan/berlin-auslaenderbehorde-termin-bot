@@ -22,7 +22,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.example.Config.FORM_REFRESH_PERIOD_IN_SECONDS;
-import static org.example.utils.DriverUtils.*;
+import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
+import static org.example.utils.DriverUtils.initDriver;
+import static org.example.utils.DriverUtils.resetDriverGracefully;
 import static org.example.utils.IoUtils.savePage;
 
 public class TerminFinder {
@@ -121,7 +123,7 @@ public class TerminFinder {
     protected void getHomePage() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to {}", methodName);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(webDriver -> {
             try {
                 logger.debug("Switching to a new tab");

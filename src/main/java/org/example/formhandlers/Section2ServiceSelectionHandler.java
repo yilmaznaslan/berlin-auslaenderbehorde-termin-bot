@@ -19,10 +19,10 @@ import org.slf4j.MDC;
 
 import java.time.Duration;
 
+import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 import static org.example.TerminFinder.searchCount;
 import static org.example.enums.Section2FormElementsEnum.FAMILY_STATUS;
 import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS;
-import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
 import static org.example.utils.IoUtils.savePage;
 
 /**
@@ -80,7 +80,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         String elementDescription = Section2FormElementsEnum.COUNTRY.name();
         String elementName = Section2FormElementsEnum.COUNTRY.getName();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
                 WebElement element = driver.findElement(By.cssSelector("select[name='" + elementName + "']"));
@@ -105,7 +105,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         String elementDescription = Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.name();
         String elementName = Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.getName();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
                 WebElement element = driver.findElement(By.cssSelector("select[name='" + elementName + "']"));
@@ -129,7 +129,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         logger.info("Starting to " + methodName);
         String elementDescription = Section2FormElementsEnum.APPLICANT_COUNT.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
                 WebElement element = driver.findElement(By.cssSelector("select[name='personenAnzahl_normal']"));
@@ -148,7 +148,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         logger.info("Starting to " + methodName);
         String elementDescription = FAMILY_STATUS.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
                 WebElement webElement = driver.findElement(By.cssSelector("select[name='lebnBrMitFmly']"));
@@ -165,7 +165,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
     protected void clickServiceType() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to " + methodName);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
                 WebElement selectElement = driver.findElements(By.tagName("label")).stream().filter(webElement -> webElement.getText().equals(serviceTypeLabelValue)).findFirst().orElseThrow(() -> new NoSuchElementException("Unable to locate element with text: " + serviceTypeLabelValue));
@@ -180,7 +180,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
     private void clickVisaPurpose() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to " + methodName);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
                 driver.findElements(By.tagName("label")).stream()
@@ -198,7 +198,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
     private void clickToVisa() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to " + methodName);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
                 driver.findElements(By.tagName("label")).stream()
@@ -217,7 +217,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to " + methodName);
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
                 WebElement element = driver.findElement(By.xpath(elementXpath));

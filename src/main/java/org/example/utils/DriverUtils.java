@@ -14,10 +14,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
+
 public class DriverUtils {
-    public static final int TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS = 25;
     public static final int TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS = 5;
-    public static final int TIMEOUT_FOR_INTERACTING_IN_SECONDS = 25;
     private static final Logger logger = LoggerFactory.getLogger(DriverUtils.class);
 
     private DriverUtils() {
@@ -29,7 +29,7 @@ public class DriverUtils {
         RemoteWebDriver driver = null;
         int i = 0;
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        while (i < TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS) {
+        while (i < TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS) {
             try {
                 logger.info("Initializing the driver. Host: {}, try: {}", seleniumDriverHost, i);
                 driver = new RemoteWebDriver(new URL(remoteUrl), getChromeOptions());
@@ -54,7 +54,7 @@ public class DriverUtils {
     public static void resetDriverGracefully(RemoteWebDriver driver) {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to {}", methodName);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(webDriver -> {
             try {
                 webDriver.close();

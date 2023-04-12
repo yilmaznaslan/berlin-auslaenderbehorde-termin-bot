@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
-import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
+import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 
 /**
  * Business Access Layer for getting english landing page
@@ -37,7 +37,7 @@ public class Section1MainPageHandler implements IFormHandler {
     @VisibleForTesting
     protected void clickBookAppointment() {
         String labelValue = "Book Appointment";
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
                 driver.findElement(By.linkText(labelValue)).click();
@@ -49,7 +49,7 @@ public class Section1MainPageHandler implements IFormHandler {
     }
 
     private void clickToAcceptConsent() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         WebElement webElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("input[type='checkbox']")));
         wait.until(ExpectedConditions.elementToBeClickable(webElement));
         webElement.click();
@@ -57,7 +57,7 @@ public class Section1MainPageHandler implements IFormHandler {
 
     private void sendForm() {
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
-        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(elementXpath)));
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(elementXpath)));
         element.click();
     }
 

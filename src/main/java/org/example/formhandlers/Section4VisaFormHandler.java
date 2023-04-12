@@ -16,10 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
+import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 import static org.example.enums.Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER;
 import static org.example.enums.Section4FormParameterEnum.RESIDENCE_PERMIT_NUMBER_EXTENSION;
-import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
-import static org.example.utils.DriverUtils.TIMEOUT_FOR_INTERACTING_IN_SECONDS;
 import static org.example.utils.IoUtils.savePage;
 
 /**
@@ -91,7 +90,7 @@ public class Section4VisaFormHandler implements IFormHandler {
     @VisibleForTesting
     protected void enterFirstName() {
         String elementName = Section4FormParameterEnum.FIRSTNAME.getName();
-        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS))
                 .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("input[name='" + elementName + "']")));
         element.sendKeys(firstName);
     }
@@ -99,7 +98,7 @@ public class Section4VisaFormHandler implements IFormHandler {
     @VisibleForTesting
     protected void enterLastName() {
         String elementName = Section4FormParameterEnum.LASTNAME.getName();
-        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS))
                 .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("input[name='" + elementName + "']")));
         element.sendKeys(lastName);
     }
@@ -107,7 +106,7 @@ public class Section4VisaFormHandler implements IFormHandler {
     @VisibleForTesting
     protected void enterEmail() {
         String elementName = Section4FormParameterEnum.EMAIL.getName();
-        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS))
                 .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("input[name='" + elementName + "']")));
         element.sendKeys(emailAddress);
     }
@@ -115,7 +114,7 @@ public class Section4VisaFormHandler implements IFormHandler {
     @VisibleForTesting
     protected void enterBirthdate() {
         String elementName = Section4FormParameterEnum.BIRTHDATE.getName();
-        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS))
                 .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("input[name='" + elementName + "']")));
         element.sendKeys(birthdate);
     }
@@ -123,7 +122,7 @@ public class Section4VisaFormHandler implements IFormHandler {
     @VisibleForTesting
     protected void enterResidencePermitId(String elementName) {
         logger.info("Entering the residence permit id");
-        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS))
                 .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("input[name='" + elementName + "']")));
         element.sendKeys(residencePermitId);
     }
@@ -131,7 +130,7 @@ public class Section4VisaFormHandler implements IFormHandler {
     @VisibleForTesting
     protected void selectResidencePermit() {
         String elementName = Section4FormParameterEnum.RESIDENCE_PERMIT.getName();
-        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS))
                 .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("select[name='" + elementName + "']")));
         if (isResidencePermitPresent) {
             selectOptionByValue(element, elementName, "1");
@@ -145,7 +144,7 @@ public class Section4VisaFormHandler implements IFormHandler {
             logger.warn("Element:{} is null, Process: Select can not be continued", elementDescription);
             return;
         }
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         Select select = new Select(wait.until(ExpectedConditions.elementToBeClickable(element)));
         select.selectByValue(optionValue);
         WebElement option = select.getFirstSelectedOption();
@@ -157,7 +156,7 @@ public class Section4VisaFormHandler implements IFormHandler {
 
     protected void sendForm() {
         String elementId = "applicationForm:managedForm:proceed";
-        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS))
                 .until(__ -> driver.findElement(By.id(elementId)));
         element.click();
     }

@@ -17,7 +17,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS;
+import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 import static org.example.utils.IoUtils.savePage;
 
 public class Section3DateSelectionHandler implements IFormHandler {
@@ -60,7 +60,7 @@ public class Section3DateSelectionHandler implements IFormHandler {
         handledDateCount++;
         String cssSelector = "[data-handler=selectDay]";
         savePage(driver, this.getClass().getSimpleName(), "handleAppointmentSelection");
-        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS))
                 .until(__ -> driver.findElement(By.cssSelector(cssSelector)));
         if (isDateVerified(element)) {
             logger.info("Date is verified");
@@ -89,7 +89,7 @@ public class Section3DateSelectionHandler implements IFormHandler {
     @VisibleForTesting
     protected Select getAvailableTimeslotOptions() {
         String elementName = Section3FormElements.TIME_SLOT.getName();
-        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS))
                 .until(__ -> {
                     WebElement selectElement = driver.findElements(By.tagName("select")).stream()
                             .filter(element1 -> element1.getAttribute("name").equals(elementName))
@@ -119,7 +119,7 @@ public class Section3DateSelectionHandler implements IFormHandler {
     @VisibleForTesting
     protected void sendForm() {
         String elementId = "applicationForm:managedForm:proceed";
-        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_ELEMENT_IN_SECONDS))
+        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS))
                 .until(__ -> driver.findElement(By.id(elementId)));
         Actions actions = new Actions(driver);
         actions.moveToElement(element).click().build().perform();
