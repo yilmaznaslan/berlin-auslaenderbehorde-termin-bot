@@ -103,6 +103,7 @@ public class TerminFinder {
             } catch (Exception e2) {
                 logger.error("Exception occurred during the process, driver initializing", e2);
             }
+        } finally {
             MDC.remove(MdcVariableEnum.elementDescription.name());
         }
 
