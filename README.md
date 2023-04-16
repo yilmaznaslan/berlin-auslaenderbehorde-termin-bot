@@ -20,6 +20,19 @@ docker run \
   -t selenium/standalone-chrome:latest
 ```
 
+**For MacOS with M1 chip**
+```
+docker run \
+  -d \
+  --name selenium \
+  -p 4444:4444 -p 7900:7900\
+  --shm-size="2g" \
+  -e SE_NODE_MAX_SESSIONS=5 \
+  -e SE_NODE_OVERRIDE_MAX_SESSIONS=true \
+  -e SE_NODE_SESSION_TIMEOUT=120 \
+  -t seleniarm/standalone-chromium:latest
+```
+
 2. Make sure that JDK version in your machine is above > 11
    - Check the java version `java --version`. 
    - If it is below 11,  [install](https://docs.oracle.com/en/java/javase/11/install/installation-jdk-macos.html#GUID-2FE451B0-9572-4E38-A1A5-568B77B146DE) a newer version of java. After installation check again the version by `java --version` 
