@@ -34,6 +34,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
 
     private final Logger logger = LoggerFactory.getLogger(Section2ServiceSelectionHandler.class);
     private final String citizenshipValue;
+    private final String citizenshipValueOfFamilyMember;
     private final String applicantNumber;
     private final String familyStatus;
     private final String serviceTypeLabelValue;
@@ -45,6 +46,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         this.visaPurposeLabelValue = visaFormTO.getVisaPurposeValue();
         this.driver = remoteWebDriver;
         this.citizenshipValue = personalInfoFormTO.getCitizenshipValue();
+        this.citizenshipValueOfFamilyMember = personalInfoFormTO.getCitizenshipValueOfFamilyMember();
         this.applicantNumber = personalInfoFormTO.getNumberOfApplicants();
         this.familyStatus = personalInfoFormTO.getIsThereFamilyMember();
         this.serviceTypeLabelValue = visaFormTO.getServiceType();
@@ -110,7 +112,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
             try {
                 WebElement element = driver.findElement(By.cssSelector("select[name='" + elementName + "']"));
                 Select select = new Select(element);
-                select.selectByVisibleText(citizenshipValue);
+                select.selectByVisibleText(citizenshipValueOfFamilyMember);
                 WebElement option = select.getFirstSelectedOption();
                 String selectValue = option.getText();
                 if (selectValue.equals(citizenshipValue)) {
