@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.time.Duration;
 
 import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
+import static org.example.utils.IoUtils.increaseReservationDoneMetric;
 import static org.example.utils.IoUtils.savePage;
 
 /**
@@ -34,6 +35,7 @@ public class Section5ReservationHandler implements IFormHandler {
         element.click();
         logger.info("BOOKED");
         savePage(driver, this.getClass().getSimpleName(), "aftersend");
+        increaseReservationDoneMetric();
         return true;
     }
 

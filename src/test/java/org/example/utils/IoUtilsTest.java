@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import static org.example.utils.IoUtils.savePage;
+import static org.example.utils.IoUtils.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -20,7 +20,7 @@ class IoUtilsTest {
     static void setup() {
         IoUtils.isLocalSaveEnabled = true;
         IoUtils.isS3Enabled = true;
-
+        setAWSCredentials();
     }
 
     @Test
@@ -33,5 +33,16 @@ class IoUtilsTest {
 
     }
 
+
+    @Test
+    void asd() throws InterruptedException {
+
+        int sent_metric_count = 20;
+        while (sent_metric_count != 0) {
+            increaseReservationDoneMetric();
+            Thread.sleep(5000);
+            sent_metric_count = sent_metric_count - 1;
+        }
+    }
 
 }

@@ -24,6 +24,9 @@ dependencies {
 
 
     implementation 'com.amazonaws:aws-java-sdk-s3:1.12.415'
+    implementation 'com.amazonaws:aws-java-sdk-cloudwatch:1.12.455'
+    implementation 'software.amazon.awssdk:secretsmanager:2.20.52'
+
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.seleniumhq.selenium:selenium-java:4.8.1'
 

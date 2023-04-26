@@ -23,6 +23,7 @@ import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS
 import static org.example.TerminFinder.searchCount;
 import static org.example.enums.Section2FormElementsEnum.FAMILY_STATUS;
 import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS;
+import static org.example.utils.IoUtils.increaseCalenderOpenedMetric;
 import static org.example.utils.IoUtils.savePage;
 
 /**
@@ -246,6 +247,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         logger.info(String.format("Value of the %s is: %s", elementDescription, activeStepText));
         if (activeStepText.contains("Date selection")) {
             searchCountWithCalenderOpened++;
+            increaseCalenderOpenedMetric();
             savePage(driver, this.getClass().getSimpleName(), "date_selection_in");
             logger.info("Calender page is opened");
             return true;
