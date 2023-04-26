@@ -1,10 +1,18 @@
 package org.example.utils;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClientBuilder;
+import com.amazonaws.services.cloudwatch.model.MetricDatum;
+import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest;
+import com.amazonaws.services.cloudwatch.model.StandardUnit;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.example.model.PersonalInfoFormTO;
@@ -14,6 +22,10 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
+import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
+import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -26,11 +38,109 @@ public class IoUtils {
 
     private final static Logger logger = LoggerFactory.getLogger(IoUtils.class);
     private final static String S3_BUCKET_NAME = "auslander-termin-files";
+    private final static String secretName = "iam-credentials-for-termin-bot";
+    private static final String AWS_REGION = "eu-central-1";
+    private static final AmazonCloudWatchClientBuilder amazonCloudWatchClientBuilder = AmazonCloudWatchClient.builder()
+            .withRegion(Regions.fromName(AWS_REGION));
+    public static String CLOUDWATCH_METRIC_FOR_CALENDER_OPENED = "calender opened";
+    public static String CLOUDWATCH_METRIC_FOR_VERIFIED_TIMESLOT = "verified timeslot";
+    public static String CLOUDWATCH_METRIC_FOR_RESERVATION_COMPLETED = "reservation completed";
     public static boolean isS3Enabled = false;
+    public static String CLOUDWATCH_METRIC_NAMESPACE = "termin-bot";
     public static boolean isLocalSaveEnabled = true;
     private static AmazonS3 client;
+    public static boolean isCloudwatchEnabled = true;
+    private static String AWS_ACCESS_KEY_ID;
+    private static String AWS_SECRET_ACCESS_KEY;
+    private static BasicAWSCredentials awsCreds;
 
     private IoUtils() {
+    }
+
+    public static void setAWSCredentials() {
+        if (AWS_ACCESS_KEY_ID == null || AWS_SECRET_ACCESS_KEY == null) {
+            SecretsManagerClient client = SecretsManagerClient.builder()
+                    .region(Region.of(AWS_REGION))
+                    .build();
+            GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
+                    .secretId(secretName)
+                    .build();
+            GetSecretValueResponse getSecretValueResponse;
+            try {
+                getSecretValueResponse = client.getSecretValue(getSecretValueRequest);
+                String secret = getSecretValueResponse.secretString();
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode actualObj = mapper.readTree(secret);
+                AWS_ACCESS_KEY_ID = actualObj.findValue("AWS_ACCESS_KEY_ID").textValue();
+                AWS_SECRET_ACCESS_KEY = actualObj.findValue("AWS_SECRET_ACCESS_KEY").textValue();
+                awsCreds = new BasicAWSCredentials(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
+                amazonCloudWatchClientBuilder.withCredentials(new AWSStaticCredentialsProvider(awsCreds));
+
+                logger.info("Successfully retrieved the secrets");
+            } catch (Exception e) {
+                logger.info("error occurred during getting the secret");
+            }
+        }
+    }
+
+    public static void increaseCalenderOpenedMetric() {
+        try {
+            setAWSCredentials();
+
+            MetricDatum datum = new MetricDatum()
+                    .withMetricName(CLOUDWATCH_METRIC_FOR_CALENDER_OPENED)
+                    .withUnit(StandardUnit.Count)
+                    .withValue(1.0);
+
+            PutMetricDataRequest request = new PutMetricDataRequest()
+                    .withNamespace(CLOUDWATCH_METRIC_NAMESPACE)
+                    .withMetricData(datum);
+
+            amazonCloudWatchClientBuilder.build().putMetricData(request);
+            logger.info("Successfully increased the metric:{}", CLOUDWATCH_METRIC_FOR_CALENDER_OPENED);
+        } catch (Exception e) {
+            logger.info("Failed to send metric to cloud watch, ignoring.", e);
+        }
+    }
+
+    public static void increaseReservationDoneMetric() {
+        try {
+            setAWSCredentials();
+
+            MetricDatum datum = new MetricDatum()
+                    .withMetricName(CLOUDWATCH_METRIC_FOR_RESERVATION_COMPLETED)
+                    .withUnit(StandardUnit.Count)
+                    .withValue(1.0);
+
+            PutMetricDataRequest request = new PutMetricDataRequest()
+                    .withNamespace(CLOUDWATCH_METRIC_NAMESPACE)
+                    .withMetricData(datum);
+            amazonCloudWatchClientBuilder.build().putMetricData(request);
+            logger.info("Successfully increased the metric:{}", CLOUDWATCH_METRIC_FOR_RESERVATION_COMPLETED);
+        } catch (Exception e) {
+            logger.info("Failed to send metric to cloud watch, ignoring.");
+        }
+    }
+
+    public static void increaseVerifiedTimeslotMetric() {
+        try {
+            setAWSCredentials();
+
+            MetricDatum datum = new MetricDatum()
+                    .withMetricName(CLOUDWATCH_METRIC_FOR_VERIFIED_TIMESLOT)
+                    .withUnit(StandardUnit.Count)
+                    .withValue(1.0);
+
+            PutMetricDataRequest request = new PutMetricDataRequest()
+                    .withNamespace(CLOUDWATCH_METRIC_NAMESPACE)
+                    .withMetricData(datum);
+
+            amazonCloudWatchClientBuilder.build().putMetricData(request);
+            logger.info("Successfully increased the metric:{}", CLOUDWATCH_METRIC_FOR_VERIFIED_TIMESLOT);
+
+        } catch (Exception e) {
+            logger.info("Failed to send metric to cloud watch, ignoring.");
+        }
     }
 
     public static PersonalInfoFormTO readPersonalInfoFromFile() throws IOException {
