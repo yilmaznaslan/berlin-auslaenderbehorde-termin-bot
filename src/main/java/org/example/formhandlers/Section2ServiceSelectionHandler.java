@@ -31,8 +31,6 @@ import static org.example.utils.IoUtils.savePage;
  */
 public class Section2ServiceSelectionHandler implements IFormHandler {
 
-    private int searchCountWithCalenderOpened = 0;
-
     private final Logger logger = LoggerFactory.getLogger(Section2ServiceSelectionHandler.class);
     private final String citizenshipValue;
     private final String citizenshipValueOfFamilyMember;
@@ -42,6 +40,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
     private final String visaLabelValue;
     private final String visaPurposeLabelValue;
     private final RemoteWebDriver driver;
+    private int searchCountWithCalenderOpened = 0;
 
     public Section2ServiceSelectionHandler(VisaFormTO visaFormTO, PersonalInfoFormTO personalInfoFormTO, RemoteWebDriver remoteWebDriver) {
         this.visaPurposeLabelValue = visaFormTO.getVisaPurposeValue();
@@ -69,6 +68,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         clickToVisa();
         Thread.sleep(2000);
         sendForm();
+        Thread.sleep(2000);
         return isCalenderFound();
     }
 
@@ -224,16 +224,39 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         wait.until(__ -> {
             try {
                 WebElement element = driver.findElement(By.xpath(elementXpath));
-                element.click();
-                searchCount = searchCount + 1;
-                String msg = String.format("Successfully send form  count is:%s", searchCount);
-                logger.info(msg);
-                return true;
+                if (element.isEnabled() && element.isDisplayed()) {
+                    element.click();
+                    boolean result = isErrorMessageShow();
+                    if(result){
+                        searchCount = searchCount + 1;
+                        String msg = String.format("Successfully send form  count is:%s", searchCount);
+                        logger.info(msg);
+                    }
+                    return result;
+                }
+                return false;
             } catch (Exception exception) {
                 return false;
             }
         });
     }
+
+    private boolean isErrorMessageShow(){
+        String elementXPath = "//*[@id=\"messagesBox\"]/ul/li";
+        String errorMsg = "There are currently no dates available for the selected service! Please try again later.";
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+        wait.until(__ -> {
+            try {
+                WebElement element = driver.findElement(By.xpath(elementXPath));
+                logger.info("ErrorMessage: {}", element.getText());
+                return element.getText().contains(errorMsg);
+            } catch (Exception exception) {
+                return false;
+            }
+        });
+        return true;
+    }
+
 
     @VisibleForTesting
     protected boolean isCalenderFound() {
