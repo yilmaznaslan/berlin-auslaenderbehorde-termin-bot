@@ -69,7 +69,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         Thread.sleep(2000);
         sendForm();
         Thread.sleep(2000);
-        return isCalenderFound();
+        return !isErrorMessageShow();
     }
 
     @Override
@@ -224,24 +224,21 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         wait.until(__ -> {
             try {
                 WebElement element = driver.findElement(By.xpath(elementXpath));
-                if (element.isEnabled() && element.isDisplayed()) {
-                    element.click();
-                    boolean result = isErrorMessageShow();
-                    if(result){
-                        searchCount = searchCount + 1;
-                        String msg = String.format("Successfully send form  count is:%s", searchCount);
-                        logger.info(msg);
-                    }
-                    return result;
+                element.click();
+                boolean result = isErrorMessageShow();
+                if (result) {
+                    searchCount = searchCount + 1;
+                    String msg = String.format("Successfully send form  count is:%s", searchCount);
+                    logger.info(msg);
                 }
-                return false;
+                return result;
             } catch (Exception exception) {
                 return false;
             }
         });
     }
 
-    private boolean isErrorMessageShow(){
+    private boolean isErrorMessageShow() {
         String elementXPath = "//*[@id=\"messagesBox\"]/ul/li";
         String errorMsg = "There are currently no dates available for the selected service! Please try again later.";
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
