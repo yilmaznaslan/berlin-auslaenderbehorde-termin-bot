@@ -9,6 +9,7 @@ import org.example.model.VisaFormTO;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -19,6 +20,7 @@ import org.slf4j.MDC;
 
 import java.time.Duration;
 
+import static org.example.Config.FORM_REFRESH_PERIOD_IN_SECONDS;
 import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 import static org.example.TerminFinder.searchCount;
 import static org.example.enums.Section2FormElementsEnum.FAMILY_STATUS;
@@ -67,9 +69,16 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         }
         clickToVisa();
         Thread.sleep(2000);
-        sendForm();
-        Thread.sleep(2000);
-        return !isErrorMessageShow();
+
+        while (true) {
+            sendForm();
+            if (!isErrorMessageShow()) {
+                break;
+            }
+            Thread.sleep(FORM_REFRESH_PERIOD_IN_SECONDS * 1000);
+        }
+
+        return true;
     }
 
     @Override
@@ -89,6 +98,10 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
                 WebElement element = driver.findElement(By.cssSelector("select[name='" + elementName + "']"));
                 Select select = new Select(element);
                 select.selectByVisibleText(citizenshipValue);
+
+                // Double check if it is selected
+                element = driver.findElement(By.cssSelector("select[name='" + elementName + "']"));
+                select = new Select(element);
                 WebElement option = select.getFirstSelectedOption();
                 String selectValue = option.getText();
                 if (selectValue.equals(citizenshipValue)) {
@@ -224,7 +237,12 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         wait.until(__ -> {
             try {
                 WebElement element = driver.findElement(By.xpath(elementXpath));
-                element.click();
+                if (element.isDisplayed() && element.isEnabled()) {
+                    Actions actions = new Actions(driver);
+                    actions.moveToElement(element).click().build().perform();
+                } else {
+                    return false;
+                }
                 boolean result = isErrorMessageShow();
                 if (result) {
                     searchCount = searchCount + 1;
@@ -253,7 +271,6 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         });
         return true;
     }
-
 
     @VisibleForTesting
     protected boolean isCalenderFound() {
