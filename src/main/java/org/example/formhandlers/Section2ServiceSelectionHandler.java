@@ -12,6 +12,7 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
@@ -246,6 +247,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
                 } else {
                     return false;
                 }
+
             } catch (Exception exception) {
                 return false;
             }
@@ -279,21 +281,20 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
     protected boolean isCalenderFound() {
         String elementDescription = "active step";
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+
         String activeTabXPath = "//*[@id=\"main\"]/div[2]/div[4]/div[2]/div/div[1]/ul/li[2]";
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        return wait.until(__ -> {
-            WebElement activeStepElement = driver.findElement(By.xpath(activeTabXPath));
-            String activeStepText = activeStepElement.getText();
-            logger.info(String.format("Value of the %s is: %s", elementDescription, activeStepText));
-            if (activeStepText.contains("Date selection")) {
-                searchCountWithCalenderOpened++;
-                increaseCalenderOpenedMetric();
-                savePage(driver, this.getClass().getSimpleName(), "date_selection_in");
-                logger.info("Calender page is opened");
-                return true;
-            }
-            logger.info("Calender not opened.Search count: {}. ", searchCount);
-            return false;
-        });
+        WebElement activeStepElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(activeTabXPath)));
+        String activeStepText = activeStepElement.getText();
+        logger.info(String.format("Value of the %s is: %s", elementDescription, activeStepText));
+        if (activeStepText.contains("Date selection")) {
+            searchCountWithCalenderOpened++;
+            increaseCalenderOpenedMetric();
+            savePage(driver, this.getClass().getSimpleName(), "date_selection_in");
+            logger.info("Calender page is opened");
+            return true;
+        }
+        logger.info("Calender page is not opened. Search count: {}", searchCount);
+        return false;
     }
 }
