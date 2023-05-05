@@ -8,10 +8,10 @@ import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
@@ -24,7 +24,6 @@ import static org.example.Config.FORM_REFRESH_PERIOD_IN_SECONDS;
 import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 import static org.example.TerminFinder.searchCount;
 import static org.example.enums.Section2FormElementsEnum.FAMILY_STATUS;
-import static org.example.utils.DriverUtils.TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS;
 import static org.example.utils.IoUtils.increaseCalenderOpenedMetric;
 import static org.example.utils.IoUtils.savePage;
 
@@ -72,7 +71,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
 
         while (true) {
             sendForm();
-            if (!isErrorMessageShow()) {
+            if (isCalenderFound()) {
                 break;
             }
             Thread.sleep(FORM_REFRESH_PERIOD_IN_SECONDS * 1000);
@@ -240,57 +239,61 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
                 if (element.isDisplayed() && element.isEnabled()) {
                     Actions actions = new Actions(driver);
                     actions.moveToElement(element).click().build().perform();
-                } else {
-                    return false;
-                }
-                boolean result = isErrorMessageShow();
-                if (result) {
                     searchCount = searchCount + 1;
                     String msg = String.format("Successfully send form  count is:%s", searchCount);
                     logger.info(msg);
+                    return true;
+                } else {
+                    return false;
                 }
-                return result;
             } catch (Exception exception) {
                 return false;
             }
         });
     }
 
-    private boolean isErrorMessageShow() {
+    // This method is slow 10 seconds
+    @VisibleForTesting
+    protected boolean isErrorMessageShow() {
         String elementXPath = "//*[@id=\"messagesBox\"]/ul/li";
         String errorMsg = "There are currently no dates available for the selected service! Please try again later.";
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
-        wait.until(__ -> {
-            try {
-                WebElement element = driver.findElement(By.xpath(elementXPath));
-                logger.info("ErrorMessage: {}", element.getText());
-                return element.getText().contains(errorMsg);
-            } catch (Exception exception) {
-                return false;
-            }
-        });
-        return true;
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        boolean result = false;
+        try {
+            result = wait.until(__ -> {
+                try {
+                    WebElement element = driver.findElement(By.xpath(elementXPath));
+                    logger.info("ErrorMessage: {}", element.getText());
+                    return element.getText().contains(errorMsg);
+                } catch (Exception exception) {
+                    return false;
+                }
+            });
+        } catch (TimeoutException exception) {
+            // do nothing and continue
+        }
+        return result;
     }
 
     @VisibleForTesting
     protected boolean isCalenderFound() {
         String elementDescription = "active step";
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-
         String activeTabXPath = "//*[@id=\"main\"]/div[2]/div[4]/div[2]/div/div[1]/ul/li[2]";
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS));
-        WebElement activeStepElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(activeTabXPath)));
-        String activeStepText = activeStepElement.getText();
-        logger.info(String.format("Value of the %s is: %s", elementDescription, activeStepText));
-        if (activeStepText.contains("Date selection")) {
-            searchCountWithCalenderOpened++;
-            increaseCalenderOpenedMetric();
-            savePage(driver, this.getClass().getSimpleName(), "date_selection_in");
-            logger.info("Calender page is opened");
-            return true;
-        }
-        logger.info("Calender page is not opened");
-        logger.info("Search count: {}. Search count with calender page opened: {}", searchCount, searchCountWithCalenderOpened);
-        return false;
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        return wait.until(__ -> {
+            WebElement activeStepElement = driver.findElement(By.xpath(activeTabXPath));
+            String activeStepText = activeStepElement.getText();
+            logger.info(String.format("Value of the %s is: %s", elementDescription, activeStepText));
+            if (activeStepText.contains("Date selection")) {
+                searchCountWithCalenderOpened++;
+                increaseCalenderOpenedMetric();
+                savePage(driver, this.getClass().getSimpleName(), "date_selection_in");
+                logger.info("Calender page is opened");
+                return true;
+            }
+            logger.info("Calender not opened.Search count: {}. ", searchCount);
+            return false;
+        });
     }
 }

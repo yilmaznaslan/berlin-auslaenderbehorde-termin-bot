@@ -31,6 +31,7 @@ public class BaseTestSetup {
 
     @BeforeAll
     static void initDriver() {
+        Config.getPropValues();
         ChromeOptions chromeOptions = getChromeOptions();
         chromeOptions.addArguments("--headless");
         driver = new ChromeDriver(chromeOptions);
