@@ -39,7 +39,7 @@ class IoUtilsTest {
 
         int sent_metric_count = 20;
         while (sent_metric_count != 0) {
-            increaseReservationDoneMetric();
+            sendEventToAWS(new EventDetail("reservation", "completed"));
             Thread.sleep(5000);
             sent_metric_count = sent_metric_count - 1;
         }
