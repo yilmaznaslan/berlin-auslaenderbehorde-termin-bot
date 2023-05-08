@@ -1,14 +1,8 @@
 package org.example.utils;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClientBuilder;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,11 +17,14 @@ import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.eventbridge.EventBridgeClient;
 import software.amazon.awssdk.services.eventbridge.model.PutEventsRequest;
 import software.amazon.awssdk.services.eventbridge.model.PutEventsRequestEntry;
 import software.amazon.awssdk.services.eventbridge.model.PutEventsResponse;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
@@ -51,14 +48,13 @@ public class IoUtils {
     public static String CLOUDWATCH_METRIC_FOR_CALENDER_OPENED = "calender opened";
     public static String CLOUDWATCH_METRIC_FOR_VERIFIED_TIMESLOT = "verified timeslot";
     public static String CLOUDWATCH_METRIC_FOR_RESERVATION_COMPLETED = "reservation completed";
-    public static boolean isS3Enabled = false;
+    public static boolean isS3Enabled = true;
     public static String CLOUDWATCH_METRIC_NAMESPACE = "termin-bot";
     public static boolean isLocalSaveEnabled = true;
     public static boolean isCloudwatchEnabled = true;
-    private static AmazonS3 client;
+    private static S3Client s3Client;
     private static String AWS_ACCESS_KEY_ID;
     private static String AWS_SECRET_ACCESS_KEY;
-    private static BasicAWSCredentials awsCreds;
     private static AwsCredentials awsCredentials;
 
     private IoUtils() {
@@ -120,9 +116,7 @@ public class IoUtils {
                 JsonNode actualObj = mapper.readTree(secret);
                 AWS_ACCESS_KEY_ID = actualObj.findValue("AWS_ACCESS_KEY_ID").textValue();
                 AWS_SECRET_ACCESS_KEY = actualObj.findValue("AWS_SECRET_ACCESS_KEY").textValue();
-                awsCreds = new BasicAWSCredentials(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
                 awsCredentials = AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
-                amazonCloudWatchClientBuilder.withCredentials(new AWSStaticCredentialsProvider(awsCreds));
 
                 logger.info("Successfully retrieved the secrets");
             } catch (Exception e) {
@@ -141,10 +135,11 @@ public class IoUtils {
         sendEventToAWS(eventDetail);
     }
 
-    public static void increaseReservationDoneMetric(){
+    public static void increaseReservationDoneMetric() {
         EventDetail eventDetail = new EventDetail("reservation", "completed");
         sendEventToAWS(eventDetail);
     }
+
     public static PersonalInfoFormTO readPersonalInfoFromFile() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         InputStream is = PersonalInfoFormTO.class.getResourceAsStream("/DEFAULT_PERSONAL_INFO_FORM.json");
@@ -198,15 +193,14 @@ public class IoUtils {
 
         if (isS3Enabled) {
             logger.info("Storing files to s3");
-            client = AmazonS3ClientBuilder
-                    .standard()
-                    .withCredentials(new EnvironmentVariableCredentialsProvider())
-                    .withRegion(Regions.US_EAST_1)
+            s3Client = S3Client.builder()
+                    .region(Region.of(AWS_REGION))
+                    .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
                     .build();
 
             try {
-                client.putObject(new PutObjectRequest(S3_BUCKET_NAME, pagesourceFileName, sourceFile));
-                client.putObject(new PutObjectRequest(S3_BUCKET_NAME, screenshotFileName, screenShotFile));
+                s3Client.putObject(PutObjectRequest.builder().bucket(S3_BUCKET_NAME).key(pagesourceFileName).build(), RequestBody.fromFile(sourceFile));
+                s3Client.putObject(PutObjectRequest.builder().bucket(S3_BUCKET_NAME).key(screenshotFileName).build(), RequestBody.fromFile(screenShotFile));
             } catch (Exception e) {
                 logger.error("Error occurred during s3 operation. Exception: ", e);
             }
