@@ -1,5 +1,7 @@
 package org.example.utils;
 
+import org.example.BaseTestSetup;
+import org.example.formhandlers.Section2ServiceSelectionHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -11,10 +13,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-class IoUtilsTest {
+class IoUtilsTest extends BaseTestSetup {
 
     private final RemoteWebDriver remoteWebDriver = mock(RemoteWebDriver.class);
 
+    static String pathToFile_en_successful = Section2ServiceSelectionHandler.class.getClassLoader().getResource("Section3DateSelectionHandler_2023-03-28_07:18:30_handleTimeSelection.html").getPath();
+
+    static String urlToFile_en = "file:".concat(pathToFile_en_successful);
 
     @BeforeAll
     static void setup() {
@@ -30,6 +35,18 @@ class IoUtilsTest {
 
         // WHEN && THEN
         Assertions.assertDoesNotThrow(() -> savePage(remoteWebDriver, "testPage", "demo"));
+
+    }
+
+    @Test
+    void ASSERT_THAT_save_is_completed_without_error_GIVEN_driver_does_not_throws_exception() {
+        // GIVEN
+
+        // WHEN &&
+        driver.get(urlToFile_en);
+
+        // THEN
+        Assertions.assertDoesNotThrow(() -> savePage(driver, "testPage", "demo"));
 
     }
 
