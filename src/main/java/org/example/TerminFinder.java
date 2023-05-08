@@ -26,6 +26,7 @@ import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS
 import static org.example.utils.DriverUtils.initDriver;
 import static org.example.utils.DriverUtils.resetDriverGracefully;
 import static org.example.utils.IoUtils.savePage;
+import static org.example.utils.IoUtils.setAWSCredentials;
 
 public class TerminFinder {
 
@@ -48,6 +49,7 @@ public class TerminFinder {
     }
 
     public void startScanning() throws FormValidationFailed {
+        setAWSCredentials();
         setMDCVariables();
         Config.getPropValues();
 
