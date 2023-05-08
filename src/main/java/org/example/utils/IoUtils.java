@@ -61,6 +61,7 @@ public class IoUtils {
     }
 
     public static void sendEventToAWS(EventDetail eventDetail) {
+        try {
         setAWSCredentials();
         EventBridgeClient eventBrClient = EventBridgeClient.builder()
                 .region(Region.of(AWS_REGION))
@@ -97,7 +98,10 @@ public class IoUtils {
                             }
                         }
                 );
-
+        }
+        catch (Exception e){
+            logger.info("Error occurred during sending event to AWS.Reason ", e);
+        }
     }
 
     public static void setAWSCredentials() {
@@ -153,59 +157,66 @@ public class IoUtils {
     }
 
     public static void savePage(WebDriver driver, String pageDescriber, String suffix) {
-        if (!isLocalSaveEnabled) {
-            logger.info("Saving is disabled");
-            return;
-        }
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        String dateAsStr = dtf.format(now);
-        String fileName = pageDescriber + "_" + dateAsStr + "_" + suffix;
-        String pagesourceFileName = fileName + ".html";
-        String screenshotFileName = fileName + ".png";
-        logger.info("File name :{}, {}", pagesourceFileName, screenshotFileName);
-
-        String content;
         try {
-            logger.info("Getting the page content");
-            content = driver.getPageSource();
-
-        } catch (Exception exception) {
-            logger.error("Error occurred during getting the page source. Reason: ", exception);
-            return;
-        }
 
 
-        File sourceFile;
-        try {
-            sourceFile = saveSourceCodeToFile(content, pagesourceFileName);
-        } catch (IOException e) {
-            logger.error("Error occurred during IO operation. Exception: ", e);
-            return;
-        }
-        File screenShotFile;
-        try {
-            screenShotFile = saveScreenshot(driver, screenshotFileName);
-        } catch (IOException e) {
-            logger.error("Error occurred during IO operation. Exception: ", e);
-            return;
-        }
-
-        if (isS3Enabled) {
-            logger.info("Storing files to s3");
-            s3Client = S3Client.builder()
-                    .region(Region.of(AWS_REGION))
-                    .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
-                    .build();
-
-            try {
-                s3Client.putObject(PutObjectRequest.builder().bucket(S3_BUCKET_NAME).key(pagesourceFileName).build(), RequestBody.fromFile(sourceFile));
-                s3Client.putObject(PutObjectRequest.builder().bucket(S3_BUCKET_NAME).key(screenshotFileName).build(), RequestBody.fromFile(screenShotFile));
-            } catch (Exception e) {
-                logger.error("Error occurred during s3 operation. Exception: ", e);
+            if (!isLocalSaveEnabled) {
+                logger.info("Saving is disabled");
+                return;
             }
-        } else {
-            logger.info("S3 is not  enabled");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            String dateAsStr = dtf.format(now);
+            String fileName = pageDescriber + "_" + dateAsStr + "_" + suffix;
+            String pagesourceFileName = fileName + ".html";
+            String screenshotFileName = fileName + ".png";
+            logger.info("File name :{}, {}", pagesourceFileName, screenshotFileName);
+
+            String content;
+            try {
+                logger.info("Getting the page content");
+                content = driver.getPageSource();
+
+            } catch (Exception exception) {
+                logger.error("Error occurred during getting the page source. Reason: ", exception);
+                return;
+            }
+
+
+            File sourceFile;
+            try {
+                sourceFile = saveSourceCodeToFile(content, pagesourceFileName);
+            } catch (IOException e) {
+                logger.error("Error occurred during IO operation. Exception: ", e);
+                return;
+            }
+            File screenShotFile;
+            try {
+                screenShotFile = saveScreenshot(driver, screenshotFileName);
+            } catch (IOException e) {
+                logger.error("Error occurred during IO operation. Exception: ", e);
+                return;
+            }
+
+            if (isS3Enabled) {
+                logger.info("Storing files to s3");
+                s3Client = S3Client.builder()
+                        .region(Region.of(AWS_REGION))
+                        .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
+                        .build();
+
+                try {
+                    s3Client.putObject(PutObjectRequest.builder().bucket(S3_BUCKET_NAME).key(pagesourceFileName).build(), RequestBody.fromFile(sourceFile));
+                    s3Client.putObject(PutObjectRequest.builder().bucket(S3_BUCKET_NAME).key(screenshotFileName).build(), RequestBody.fromFile(screenShotFile));
+                } catch (Exception e) {
+                    logger.error("Error occurred during s3 operation. Exception: ", e);
+                }
+            } else {
+                logger.info("S3 is not  enabled");
+            }
+
+        } catch (Exception e) {
+            logger.info("Saving has failed. Reason: ", e);
         }
     }
 
