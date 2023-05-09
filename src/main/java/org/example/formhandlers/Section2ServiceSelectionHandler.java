@@ -10,7 +10,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -56,6 +55,18 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
     }
 
     public boolean fillAndSendForm() throws InterruptedException {
+        while (true) {
+            fillForm();
+            sendForm();
+            if (isCalenderFound()) {
+                break;
+            }
+            Thread.sleep(FORM_REFRESH_PERIOD_IN_SECONDS * 1000);
+        }
+        return true;
+    }
+
+    private void fillForm() throws InterruptedException {
         logger.info("Starting to fill the form in section 2");
         selectCitizenshipValue();
         selectNumberOfApplicants();
@@ -69,16 +80,6 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         }
         clickToVisa();
         Thread.sleep(2000);
-
-        while (true) {
-            sendForm();
-            if (isCalenderFound()) {
-                break;
-            }
-            Thread.sleep(FORM_REFRESH_PERIOD_IN_SECONDS * 1000);
-        }
-
-        return true;
     }
 
     @Override
@@ -229,7 +230,8 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         });
     }
 
-    private void sendForm() {
+
+    protected void sendForm() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to " + methodName);
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
@@ -238,8 +240,9 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
             try {
                 WebElement element = driver.findElement(By.xpath(elementXpath));
                 if (element.isDisplayed() && element.isEnabled()) {
-                    Actions actions = new Actions(driver);
-                    actions.moveToElement(element).click().build().perform();
+                    //Actions actions = new Actions(driver);
+                    //actions.moveToElement(element).click().build().perform();
+                    element.click();
                     searchCount = searchCount + 1;
                     String msg = String.format("Successfully send form  count is:%s", searchCount);
                     logger.info(msg);

@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 import static org.example.Config.FORM_REFRESH_PERIOD_IN_SECONDS;
 import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 import static org.example.utils.DriverUtils.initDriver;
-import static org.example.utils.DriverUtils.resetDriverGracefully;
 import static org.example.utils.IoUtils.savePage;
 import static org.example.utils.IoUtils.setAWSCredentials;
 
@@ -97,11 +96,6 @@ public class TerminFinder {
             String fileName = "exception";
             savePage(driver, fileName, "exception");
             logger.info("page is saved");
-            try {
-                resetDriverGracefully(driver);
-            } catch (Exception e1) {
-                logger.error("Exception occurred during the process, driver resetting", e1);
-            }
             try {
                 driver = initDriver();
             } catch (Exception e2) {
