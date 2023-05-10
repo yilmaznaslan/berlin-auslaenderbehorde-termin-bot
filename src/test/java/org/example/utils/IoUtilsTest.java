@@ -15,11 +15,9 @@ import static org.mockito.Mockito.when;
 
 class IoUtilsTest extends BaseTestSetup {
 
-    private final RemoteWebDriver remoteWebDriver = mock(RemoteWebDriver.class);
-
     static String pathToFile_en_successful = Section2ServiceSelectionHandler.class.getClassLoader().getResource("Section3DateSelectionHandler_2023-03-28_07:18:30_handleTimeSelection.html").getPath();
-
     static String urlToFile_en = "file:".concat(pathToFile_en_successful);
+    private final RemoteWebDriver remoteWebDriver = mock(RemoteWebDriver.class);
 
     @BeforeAll
     static void setup() {
@@ -53,13 +51,8 @@ class IoUtilsTest extends BaseTestSetup {
 
     @Test
     void asd() throws InterruptedException {
-
-        int sent_metric_count = 20;
-        while (sent_metric_count != 0) {
-            sendEventToAWS(new EventDetail("reservation", "completed"));
-            Thread.sleep(5000);
-            sent_metric_count = sent_metric_count - 1;
-        }
+        sendEventToAWS(new EventDetail("reservation", "completed"));
     }
+
 
 }
