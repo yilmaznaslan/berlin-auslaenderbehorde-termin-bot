@@ -297,7 +297,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
             logger.info("Calender page is opened");
             return true;
         }
-        logger.info("Calender page is not opened. Search count: {}", searchCount);
+        logger.info("Calender page is not opened. Search count: {}. SearchCountWithCalenderOpened: {}", searchCount, searchCountWithCalenderOpened);
         return false;
     }
 }
