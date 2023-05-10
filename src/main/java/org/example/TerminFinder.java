@@ -93,7 +93,7 @@ public class TerminFinder {
             timer.cancel();
         } catch (Exception e) {
             logger.error("Exception occurred during the process, quitting.", e);
-            String fileName = "exception";
+            String fileName = getClass().getSimpleName();
             savePage(driver, fileName, "exception");
             logger.info("page is saved");
             try {
