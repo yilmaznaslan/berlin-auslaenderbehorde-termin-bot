@@ -158,8 +158,7 @@ public class IoUtils {
 
     public static void savePage(WebDriver driver, String pageDescriber, String suffix) {
         try {
-
-
+            setAWSCredentials();
             if (!isLocalSaveEnabled) {
                 logger.info("Saving is disabled");
                 return;
