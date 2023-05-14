@@ -130,7 +130,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
                 select.selectByVisibleText(citizenshipValueOfFamilyMember);
                 WebElement option = select.getFirstSelectedOption();
                 String selectValue = option.getText();
-                if (selectValue.equals(citizenshipValue)) {
+                if (selectValue.equals(citizenshipValueOfFamilyMember)) {
                     logger.info("Successfully selected the citizenship value");
                     return true;
                 }
