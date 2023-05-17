@@ -242,7 +242,9 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
                 if (element.isDisplayed() && element.isEnabled()) {
                     //Actions actions = new Actions(driver);
                     //actions.moveToElement(element).click().build().perform();
-                    element.click();
+                    if (!isErrorMessageShow()) {
+                        element.click();
+                    }
                     searchCount = searchCount + 1;
                     String msg = String.format("Successfully send form  count is:%s", searchCount);
                     logger.info(msg);
