@@ -230,35 +230,6 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         });
     }
 
-
-    protected void sendForm() {
-        String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-        logger.info("Starting to " + methodName);
-        String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
-        wait.until(__ -> {
-            try {
-                WebElement element = driver.findElement(By.xpath(elementXpath));
-                if (element.isDisplayed() && element.isEnabled()) {
-                    //Actions actions = new Actions(driver);
-                    //actions.moveToElement(element).click().build().perform();
-                    if (!isErrorMessageShow()) {
-                        element.click();
-                    }
-                    searchCount = searchCount + 1;
-                    String msg = String.format("Successfully send form  count is:%s", searchCount);
-                    logger.info(msg);
-                    return true;
-                } else {
-                    return false;
-                }
-
-            } catch (Exception exception) {
-                return false;
-            }
-        });
-    }
-
     // This method is slow 10 seconds
     @VisibleForTesting
     protected boolean isErrorMessageShow() {
@@ -280,6 +251,34 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
             // do nothing and continue
         }
         return result;
+    }
+
+    protected void sendForm() {
+        String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+        logger.info("Starting to " + methodName);
+        String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+        wait.until(__ -> {
+            try {
+                WebElement element = driver.findElement(By.xpath(elementXpath));
+                if (element.isDisplayed() && element.isEnabled()) {
+                    //Actions actions = new Actions(driver);
+                    //actions.moveToElement(element).click().build().perform();
+                    if (!isErrorMessageShow()) {
+                        element.click();
+                    }
+                    searchCount = searchCount + 1;
+                    String msg = String.format("Successfully send form  count is: %s", searchCount);
+                    logger.info(msg);
+                    return true;
+                } else {
+                    return false;
+                }
+
+            } catch (Exception exception) {
+                return false;
+            }
+        });
     }
 
     @VisibleForTesting
