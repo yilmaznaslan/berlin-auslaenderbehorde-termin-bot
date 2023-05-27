@@ -20,10 +20,10 @@ import org.slf4j.MDC;
 
 import java.time.Duration;
 
-import static org.example.Config.FORM_REFRESH_PERIOD_IN_SECONDS;
 import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 import static org.example.TerminFinder.searchCount;
-import static org.example.enums.Section2FormElementsEnum.FAMILY_STATUS;
+import static org.example.enums.Section2FormElementsEnum.*;
+import static org.example.formhandlers.Section3DateSelectionHandler.handledDateCount;
 import static org.example.utils.IoUtils.increaseCalenderOpenedMetric;
 import static org.example.utils.IoUtils.savePage;
 
@@ -55,15 +55,8 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
     }
 
     public boolean fillAndSendForm() throws InterruptedException {
-        while (true) {
-            fillForm();
-            sendForm();
-            if (isCalenderFound()) {
-                break;
-            }
-            Thread.sleep(FORM_REFRESH_PERIOD_IN_SECONDS * 1000);
-        }
-        return true;
+        fillForm();
+        return isCalenderFound();
     }
 
     private void fillForm() throws InterruptedException {
@@ -79,6 +72,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
             clickVisaPurpose();
         }
         clickToVisa();
+        searchCount = searchCount + 1;
         Thread.sleep(2000);
     }
 
@@ -89,10 +83,11 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
 
     private void selectCitizenshipValue() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-        logger.info("Starting to " + methodName);
         String elementDescription = Section2FormElementsEnum.COUNTRY.name();
-        String elementName = Section2FormElementsEnum.COUNTRY.getName();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+        logger.info("Starting to " + methodName);
+
+        String elementName = Section2FormElementsEnum.COUNTRY.getName();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
@@ -118,10 +113,11 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
 
     private void selectCitizenshipValueOfFamilyMember() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-        logger.info("Starting to " + methodName);
         String elementDescription = Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.name();
-        String elementName = Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.getName();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+        logger.info("Starting to " + methodName);
+
+        String elementName = Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.getName();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
@@ -143,9 +139,10 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
 
     private void selectNumberOfApplicants() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-        logger.info("Starting to " + methodName);
         String elementDescription = Section2FormElementsEnum.APPLICANT_COUNT.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+        logger.info("Starting to " + methodName);
+
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
@@ -162,9 +159,10 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
 
     private void selectFamilyStatus() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-        logger.info("Starting to " + methodName);
         String elementDescription = FAMILY_STATUS.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+        logger.info("Starting to " + methodName);
+
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
@@ -181,7 +179,10 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
 
     protected void clickServiceType() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+        String elementDescription = SERVICE_TYPE.name();
+        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
         logger.info("Starting to " + methodName);
+
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
@@ -197,6 +198,9 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
     private void clickVisaPurpose() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to " + methodName);
+        String elementDescription = VISA_PURPOSE.name();
+        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
@@ -214,7 +218,10 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
 
     private void clickToVisa() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+        String elementDescription = VISA.name();
+        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
         logger.info("Starting to " + methodName);
+
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
             try {
@@ -230,7 +237,6 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         });
     }
 
-
     protected void sendForm() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to " + methodName);
@@ -242,11 +248,15 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
                 if (element.isDisplayed() && element.isEnabled()) {
                     //Actions actions = new Actions(driver);
                     //actions.moveToElement(element).click().build().perform();
-                    element.click();
-                    searchCount = searchCount + 1;
-                    String msg = String.format("Successfully send form  count is:%s", searchCount);
-                    logger.info(msg);
-                    return true;
+                    if (isErrorMessageShow()) {
+                        searchCount = searchCount + 1;
+                        String msg = String.format("Successfully send form  count is:%s", searchCount);
+                        logger.info(msg);
+                        return true;
+                    } else {
+                        element.click();
+                        return true;
+                    }
                 } else {
                     return false;
                 }
@@ -282,8 +292,10 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
 
     @VisibleForTesting
     protected boolean isCalenderFound() {
-        String elementDescription = "active step";
+        String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+        String elementDescription = ACTIVE_STEP.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+        logger.info("Starting to " + methodName);
 
         String activeTabXPath = "//*[@id=\"main\"]/div[2]/div[4]/div[2]/div/div[1]/ul/li[2]";
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -297,7 +309,11 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
             logger.info("Calender page is opened");
             return true;
         }
-        logger.info("Calender page is not opened. Search count: {}. SearchCountWithCalenderOpened: {}", searchCount, searchCountWithCalenderOpened);
+        logger.info("Calender page is not opened. Search count: {}. SearchCountWithCalenderOpened: {}. Handled " +
+                        "date: {}: ",
+                searchCount,
+                searchCountWithCalenderOpened,
+                handledDateCount);
         return false;
     }
 }

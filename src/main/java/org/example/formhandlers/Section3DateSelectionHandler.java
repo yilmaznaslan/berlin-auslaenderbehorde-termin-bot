@@ -1,6 +1,7 @@
 package org.example.formhandlers;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.example.enums.MdcVariableEnum;
 import org.example.enums.Section3FormElements;
 import org.example.exceptions.FormValidationFailed;
 import org.openqa.selenium.By;
@@ -26,7 +27,7 @@ public class Section3DateSelectionHandler implements IFormHandler {
     private final Logger logger = LoggerFactory.getLogger(Section3DateSelectionHandler.class);
 
     public int handledTimeslotCount = 0;
-    public int handledDateCount = 0;
+    public static  int handledDateCount = 0;
     public boolean isHandlingSuccessful = false;
 
     public RemoteWebDriver driver;
@@ -52,12 +53,10 @@ public class Section3DateSelectionHandler implements IFormHandler {
     @VisibleForTesting
     protected void handleAppointmentSelection() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+        String elementDescription = "DateSelection".toUpperCase();
+        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
         logger.info("Starting to " + methodName);
 
-        String elementDescription = "DateSelection".toUpperCase();
-        MDC.put("elementDescription", elementDescription);
-
-        logger.info("Starting to find an appointment date");
         handledDateCount++;
         String cssSelector = "[data-handler=selectDay]";
         savePage(driver, this.getClass().getSimpleName(), "handleAppointmentSelection");
