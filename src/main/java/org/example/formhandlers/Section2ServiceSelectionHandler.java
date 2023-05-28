@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import java.time.Duration;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 import static org.example.TerminFinder.searchCount;
@@ -56,10 +57,11 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
 
     public boolean fillAndSendForm() throws InterruptedException {
         fillForm();
-        return isCalenderFound();
+        Thread.sleep(5000);
+        return isCalenderOpened();
     }
 
-    private void fillForm() throws InterruptedException {
+    private void fillForm() {
         logger.info("Starting to fill the form in section 2");
         selectCitizenshipValue();
         selectNumberOfApplicants();
@@ -73,7 +75,6 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         }
         clickToVisa();
         searchCount = searchCount + 1;
-        Thread.sleep(2000);
     }
 
     @Override
@@ -315,5 +316,30 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
                 searchCountWithCalenderOpened,
                 handledDateCount);
         return false;
+    }
+
+    private boolean isCalenderOpened() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        String errorElementXpath = "//*[@id=\"messagesBox\"]/ul/li";
+        String activeTabXPath = "//*[@id=\"main\"]/div[2]/div[4]/div[2]/div/div[1]/ul/li[2]";
+        String errorMsg = "There are currently no dates available";
+        AtomicBoolean result = new AtomicBoolean(false);
+        wait.until(__ -> {
+
+            WebElement errorMessage = driver.findElement(By.xpath(errorElementXpath));
+            if (errorMessage != null) {
+                logger.info("ErrorMessage: {}", errorMessage.getText());
+                result.set(!errorMessage.getText().contains(errorMsg));
+                return true;
+            }
+            WebElement activeStepElement = driver.findElement(By.xpath(activeTabXPath));
+            if( activeStepElement != null) {
+                String activeStepText = activeStepElement.getText();
+                result.set(activeStepText.contains("Date selection"));
+                return true;
+            }
+            return false;
+        });
+        return result.get();
     }
 }

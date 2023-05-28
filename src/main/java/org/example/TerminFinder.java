@@ -16,6 +16,7 @@ import org.slf4j.MDC;
 import java.time.Duration;
 import java.util.Set;
 import java.util.Timer;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -30,18 +31,21 @@ import static org.example.utils.IoUtils.setAWSCredentials;
 public class TerminFinder {
 
     public static int searchCount = 0;
+    private final UUID id;
     private final Logger logger = LoggerFactory.getLogger(TerminFinder.class);
     private final VisaFormTO visaFormTO;
     private final PersonalInfoFormTO personalInfoFormTO;
     private final Timer timer = new Timer(true);
     private RemoteWebDriver driver;
 
-    public TerminFinder(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO) {
+    public TerminFinder(UUID id, PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO) {
+        this.id = id;
         this.personalInfoFormTO = personalInfoFormTO;
         this.visaFormTO = visaFormTO;
     }
 
-    public TerminFinder(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO, RemoteWebDriver driver) {
+    public TerminFinder(UUID id, PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO, RemoteWebDriver driver) {
+        this.id = id;
         this.visaFormTO = visaFormTO;
         this.personalInfoFormTO = personalInfoFormTO;
         this.driver = driver;
@@ -108,10 +112,10 @@ public class TerminFinder {
     }
 
     boolean fillAndSendFormWithExceptionHandling(IFormHandler formHandler) throws FormValidationFailed, InterruptedException {
-        boolean isSuccessful = formHandler.fillAndSendForm();
+        Boolean isSuccessful = formHandler.fillAndSendForm();
+        logger.info(String.format("Form handling result: %s", isSuccessful));
         driver = formHandler.getDriver();
         return isSuccessful;
-
     }
 
 
@@ -119,35 +123,60 @@ public class TerminFinder {
     protected void getHomePage() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to {}", methodName);
+
+
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(webDriver -> {
             try {
-                logger.debug("Switching to a new tab");
+                // Create a new tab
+                logger.info("Switching to a new tab");
                 webDriver.switchTo().newWindow(WindowType.TAB);
-
                 String currentWindowHandle = webDriver.getWindowHandle();
                 Set<String> handle = webDriver.getWindowHandles();
+                Thread.sleep(1000);
 
                 // Closing the first tab
                 webDriver.switchTo().window(handle.stream().collect(Collectors.toList()).get(0)).close();
+                Thread.sleep(1000);
 
                 // Switching to the second tab
-                logger.debug(String.format("Switching to window handle: %s", currentWindowHandle));
+                logger.info(String.format("Switching to window handle: %s", currentWindowHandle));
                 webDriver.switchTo().window(currentWindowHandle);
 
                 // Getting the home page
                 String url = "https://otv.verwalt-berlin.de/ams/TerminBuchen?lang=en";
                 logger.info(String.format("Getting the URL: %s", url));
-                webDriver.get(url);
+                driver.get(url);
                 return true;
             } catch (Exception e) {
                 return false;
             }
+
         });
+
+        String url = "https://otv.verwalt-berlin.de/ams/TerminBuchen?lang=en";
+        logger.info(String.format("Getting the URL: %s", url));
+/*
+        String urlBefore = driver.getCurrentUrl();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+        wait.until(__ -> {
+            try {
+                driver.get(url);
+                String urlAfter = driver.getCurrentUrl();
+                return !urlBefore.equals(urlAfter);
+            } catch (Exception e) {
+                return false;
+            }
+        });
+
+
+ */
+
     }
 
     private void setMDCVariables() {
         MDC.put("visaForm", visaFormTO.toString());
+        MDC.put("id", id.toString());
     }
 
     private boolean isResidenceTitleInfoVerified(VisaFormTO visaFormTO) {
