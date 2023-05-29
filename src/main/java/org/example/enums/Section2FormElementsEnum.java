@@ -10,7 +10,8 @@ public enum Section2FormElementsEnum {
     SERVICE_TYPE("",""),
     VISA_PURPOSE("",""),
     ACTIVE_STEP("",""),
-    VISA("","");
+    VISA("",""),
+    ERROR_MESSAGE("","");
 
     private final String id;
     private final String name;

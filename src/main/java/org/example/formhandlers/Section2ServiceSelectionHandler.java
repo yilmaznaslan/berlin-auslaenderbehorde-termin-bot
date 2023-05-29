@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 import static org.example.TerminFinder.searchCount;
 import static org.example.enums.Section2FormElementsEnum.*;
-import static org.example.formhandlers.Section3DateSelectionHandler.handledDateCount;
 import static org.example.utils.IoUtils.increaseCalenderOpenedMetric;
 import static org.example.utils.IoUtils.savePage;
 
@@ -42,7 +41,6 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
     private final String visaLabelValue;
     private final String visaPurposeLabelValue;
     private final RemoteWebDriver driver;
-    private int searchCountWithCalenderOpened = 0;
 
     public Section2ServiceSelectionHandler(VisaFormTO visaFormTO, PersonalInfoFormTO personalInfoFormTO, RemoteWebDriver remoteWebDriver) {
         this.visaPurposeLabelValue = visaFormTO.getVisaPurposeValue();
@@ -304,17 +302,12 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         String activeStepText = activeStepElement.getText();
         logger.info(String.format("Value of the %s is: %s", elementDescription, activeStepText));
         if (activeStepText.contains("Date selection")) {
-            searchCountWithCalenderOpened++;
             increaseCalenderOpenedMetric();
             savePage(driver, this.getClass().getSimpleName(), "date_selection_in");
             logger.info("Calender page is opened");
             return true;
         }
-        logger.info("Calender page is not opened. Search count: {}. SearchCountWithCalenderOpened: {}. Handled " +
-                        "date: {}: ",
-                searchCount,
-                searchCountWithCalenderOpened,
-                handledDateCount);
+
         return false;
     }
 
@@ -325,21 +318,30 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         String errorMsg = "There are currently no dates available";
         AtomicBoolean result = new AtomicBoolean(false);
         wait.until(__ -> {
-
+            String elementDescription = ERROR_MESSAGE.getName();
+            MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
             WebElement errorMessage = driver.findElement(By.xpath(errorElementXpath));
             if (errorMessage != null) {
                 logger.info("ErrorMessage: {}", errorMessage.getText());
                 result.set(!errorMessage.getText().contains(errorMsg));
                 return true;
             }
+
+            elementDescription = ACTIVE_STEP.name();
+            MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
             WebElement activeStepElement = driver.findElement(By.xpath(activeTabXPath));
             if( activeStepElement != null) {
                 String activeStepText = activeStepElement.getText();
                 result.set(activeStepText.contains("Date selection"));
+                logger.info(String.format("Value of the %s is: %s", elementDescription, activeStepText));
                 return true;
             }
             return false;
         });
+
+        if(result.get()){
+            increaseCalenderOpenedMetric();
+        }
         return result.get();
     }
 }

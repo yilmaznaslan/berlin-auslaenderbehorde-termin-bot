@@ -57,6 +57,9 @@ public class IoUtils {
     private static String AWS_SECRET_ACCESS_KEY;
     private static AwsCredentials awsCredentials;
 
+    public static int searchCountWithCalenderOpened = 0;
+
+
     private IoUtils() {
     }
 
@@ -130,6 +133,7 @@ public class IoUtils {
     }
 
     public static void increaseCalenderOpenedMetric() {
+        searchCountWithCalenderOpened++;
         EventDetail eventDetail = new EventDetail("calender", "completed");
         sendEventToAWS(eventDetail);
     }

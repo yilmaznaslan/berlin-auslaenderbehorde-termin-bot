@@ -24,9 +24,9 @@ import java.util.stream.Collectors;
 
 import static org.example.Config.FORM_REFRESH_PERIOD_IN_SECONDS;
 import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
+import static org.example.formhandlers.Section3DateSelectionHandler.handledDateCount;
 import static org.example.utils.DriverUtils.initDriver;
-import static org.example.utils.IoUtils.savePage;
-import static org.example.utils.IoUtils.setAWSCredentials;
+import static org.example.utils.IoUtils.*;
 
 public class TerminFinder {
 
@@ -113,8 +113,14 @@ public class TerminFinder {
 
     boolean fillAndSendFormWithExceptionHandling(IFormHandler formHandler) throws FormValidationFailed, InterruptedException {
         Boolean isSuccessful = formHandler.fillAndSendForm();
-        logger.info(String.format("Form handling result: %s", isSuccessful));
+        logger.info(String.format("Form :%s, Form handling result: %s", formHandler.getClass().getSimpleName(), isSuccessful));
         driver = formHandler.getDriver();
+        logger.info("Calender page is not opened. Search count: {}. " +
+                        "SearchCountWithCalenderOpened: {}. " +
+                        "Handled date: {} ",
+                searchCount,
+                searchCountWithCalenderOpened,
+                handledDateCount);
         return isSuccessful;
     }
 
