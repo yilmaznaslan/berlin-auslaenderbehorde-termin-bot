@@ -8,10 +8,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.util.UUID;
+
 import static org.example.utils.DriverUtils.getChromeOptions;
 
 public class BaseTestSetup {
 
+    public static UUID id = UUID.randomUUID();
     public static ChromeDriver driver;
     public static String citizenshipValue = "Türkei";
     public static String firstName = "firstName";

@@ -5,8 +5,24 @@ plugins {
     id 'maven-publish'
 }
 
+// Fetch the current git branch name
+def getGitBranchName() {
+    def branch = ''
+    try {
+        def proc = "git rev-parse --abbrev-ref HEAD".execute()
+        proc.in.eachLine { line -> branch = line }
+        proc.err.eachLine { line -> println line }
+        proc.waitFor()
+    } catch (Exception e) {
+        println "Error getting git branch name: ${e.message}"
+    }
+    branch
+}
+// Update the version based on the git branch name
+version = getGitBranchName()
+
 group 'org.example'
-version '1.0-SNAPSHOT'
+
 mainClassName = 'org.example.Main'
 
 repositories {
@@ -16,12 +32,9 @@ test {
     testLogging.showStandardStreams = false
 }
 dependencies {
-
-    implementation 'org.slf4j:slf4j-api:1.7.32'
-    implementation 'org.apache.logging.log4j:log4j-api:2.17.0'
-    implementation 'org.apache.logging.log4j:log4j-core:2.17.0'
-    implementation 'org.apache.logging.log4j:log4j-slf4j18-impl:2.17.0'
-
+    // Logging
+    implementation 'org.slf4j:slf4j-api:2.0.6'
+    implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.20.0'
 
     // AWS SDK's
     implementation 'com.amazonaws:aws-java-sdk-cloudwatch:1.12.455'
@@ -32,10 +45,7 @@ dependencies {
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.seleniumhq.selenium:selenium-java:4.8.1'
 
-
-
     testImplementation 'org.mockito:mockito-core:5.2.0'
-
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.2'
@@ -46,11 +56,12 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+            version = getGitBranchName() // set the version here too if required
         }
     }
     repositories {
         maven {
-            url 'https://yilmaznaslan-250602908823.d.codeartifact.us-east-1.amazonaws.com/maven/berlintermin/'
+            url 'https://yilmaznaslan-250602908823.d.codeartifact.eu-central-1.amazonaws.com/maven/berlin-auslaenderbehorde-termin-bot/'
             credentials {
                 username "aws"
                 password System.env.CODEARTIFACT_AUTH_TOKEN

@@ -6,7 +6,6 @@ import org.example.exceptions.FormValidationFailed;
 import org.example.formhandlers.*;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
-import org.openqa.selenium.WindowType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
@@ -14,34 +13,36 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import java.time.Duration;
-import java.util.Set;
 import java.util.Timer;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static org.example.Config.FORM_REFRESH_PERIOD_IN_SECONDS;
 import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
+import static org.example.formhandlers.Section3DateSelectionHandler.handledDateCount;
 import static org.example.utils.DriverUtils.initDriver;
-import static org.example.utils.IoUtils.savePage;
-import static org.example.utils.IoUtils.setAWSCredentials;
+import static org.example.utils.IoUtils.*;
 
 public class TerminFinder {
 
     public static int searchCount = 0;
+    private final UUID id;
     private final Logger logger = LoggerFactory.getLogger(TerminFinder.class);
     private final VisaFormTO visaFormTO;
     private final PersonalInfoFormTO personalInfoFormTO;
     private final Timer timer = new Timer(true);
     private RemoteWebDriver driver;
 
-    public TerminFinder(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO) {
+    public TerminFinder(UUID id, PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO) {
+        this.id = id;
         this.personalInfoFormTO = personalInfoFormTO;
         this.visaFormTO = visaFormTO;
     }
 
-    public TerminFinder(PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO, RemoteWebDriver driver) {
+    public TerminFinder(UUID id, PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO, RemoteWebDriver driver) {
+        this.id = id;
         this.visaFormTO = visaFormTO;
         this.personalInfoFormTO = personalInfoFormTO;
         this.driver = driver;
@@ -108,46 +109,48 @@ public class TerminFinder {
     }
 
     boolean fillAndSendFormWithExceptionHandling(IFormHandler formHandler) throws FormValidationFailed, InterruptedException {
-        boolean isSuccessful = formHandler.fillAndSendForm();
+        Boolean isSuccessful = formHandler.fillAndSendForm();
+        logger.info(String.format("Form :%s, Form handling result: %s", formHandler.getClass().getSimpleName(), isSuccessful));
         driver = formHandler.getDriver();
+        Class formClass = formHandler.getClass();
+        if (formClass.equals(Section2ServiceSelectionHandler.class)) {
+            logger.info("Calender page is not opened. Search count: {}. " +
+                            "SearchCountWithCalenderOpened: {}. " +
+                            "Handled date: {} ",
+                    searchCount,
+                    searchCountWithCalenderOpened,
+                    handledDateCount);
+        }
         return isSuccessful;
-
     }
-
 
     @VisibleForTesting
     protected void getHomePage() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("Starting to {}", methodName);
+
+        String urlBefore = driver.getCurrentUrl();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(webDriver -> {
             try {
-                logger.debug("Switching to a new tab");
-                webDriver.switchTo().newWindow(WindowType.TAB);
-
-                String currentWindowHandle = webDriver.getWindowHandle();
-                Set<String> handle = webDriver.getWindowHandles();
-
-                // Closing the first tab
-                webDriver.switchTo().window(handle.stream().collect(Collectors.toList()).get(0)).close();
-
-                // Switching to the second tab
-                logger.debug(String.format("Switching to window handle: %s", currentWindowHandle));
-                webDriver.switchTo().window(currentWindowHandle);
-
                 // Getting the home page
                 String url = "https://otv.verwalt-berlin.de/ams/TerminBuchen?lang=en";
                 logger.info(String.format("Getting the URL: %s", url));
-                webDriver.get(url);
-                return true;
+                driver.get(url);
+                String urlAfter = driver.getCurrentUrl();
+                return !urlBefore.equals(urlAfter);
             } catch (Exception e) {
+                logger.error("Getting home page failed. Reason: ", e);
                 return false;
             }
         });
+
     }
+
 
     private void setMDCVariables() {
         MDC.put("visaForm", visaFormTO.toString());
+        MDC.put("id", id.toString());
     }
 
     private boolean isResidenceTitleInfoVerified(VisaFormTO visaFormTO) {

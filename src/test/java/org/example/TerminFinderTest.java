@@ -32,7 +32,7 @@ class TerminFinderTest extends BaseTestSetup{
     void setUp() {
         personalInfoFormTO = mock(PersonalInfoFormTO.class);
         visaFormTO = mock(VisaFormTO.class);
-        terminFinder = new TerminFinder(personalInfoFormTO, visaFormTO, remoteWebDriver);
+        terminFinder = new TerminFinder(id, personalInfoFormTO, visaFormTO, remoteWebDriver);
     }
 
     @AfterEach
@@ -60,7 +60,7 @@ class TerminFinderTest extends BaseTestSetup{
     //@Test
     void testFillAndSendFormWithExceptionHandlingWhenIFormHandlerThrowsExceptionl() throws InterruptedException, FormValidationFailed {
         // Given
-        TerminFinder terminFinderSpy = spy(new TerminFinder(personalInfoFormTO, visaFormTO));
+        TerminFinder terminFinderSpy = spy(new TerminFinder(id, personalInfoFormTO, visaFormTO));
         doThrow(new WebDriverException()).when(terminFinderSpy).getHomePage();
 
         // When && Then
