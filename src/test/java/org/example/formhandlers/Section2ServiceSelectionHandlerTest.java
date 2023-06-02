@@ -23,7 +23,7 @@ class Section2ServiceSelectionHandlerTest extends BaseTestSetup {
         driver.get(urlToFile_successful);
 
         // WHEN
-        boolean actualResult = formFiller.isCalenderFound();
+        boolean actualResult = formFiller.isDateSelectionOpened();
 
         // THEN
         Assertions.assertTrue(actualResult);

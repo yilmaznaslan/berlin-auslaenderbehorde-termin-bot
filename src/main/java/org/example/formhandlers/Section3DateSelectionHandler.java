@@ -5,6 +5,7 @@ import org.example.enums.MdcVariableEnum;
 import org.example.enums.Section3FormElements;
 import org.example.exceptions.FormValidationFailed;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
+import static org.example.enums.Section2FormElementsEnum.ERROR_MESSAGE;
 import static org.example.utils.IoUtils.increaseVerifiedTimeslotMetric;
 import static org.example.utils.IoUtils.savePage;
 
@@ -42,8 +44,27 @@ public class Section3DateSelectionHandler implements IFormHandler {
         handleTimeSelection();
         Thread.sleep(2000);
         sendForm();
-        return isHandlingSuccessful;
+        return isErrorMessageShow();
     }
+
+    @VisibleForTesting
+    protected boolean isErrorMessageShow() {
+        String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+        String elementDescription = ERROR_MESSAGE.getName();
+        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+        logger.info("Starting to " + methodName);
+        String elementXPath = "//*[@id=\"messagesBox\"]/ul/li";
+        String errorMsg = "There are currently no dates available for the selected service! Please try again later.";
+        try {
+            WebElement element = driver.findElement(By.xpath(elementXPath));
+            logger.info("ErrorMessage: {}", element.getText());
+            return true;
+        } catch (NoSuchElementException exception) {
+            logger.info("Error message is NOT found");
+            return false;
+        }
+    }
+
 
     @Override
     public RemoteWebDriver getDriver() {

@@ -8,10 +8,8 @@ import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
@@ -19,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import java.time.Duration;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 import static org.example.TerminFinder.searchCount;
@@ -55,8 +53,16 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
 
     public boolean fillAndSendForm() throws InterruptedException {
         fillForm();
-        Thread.sleep(5000);
-        return isCalenderOpened();
+        if (serviceTypeLabelValue.equals("Apply for a permanent settlement permit")) {
+            sendForm();
+        }
+        try {
+            verifyFormSubmission();
+        } catch (Exception e) {
+            logger.error("Exception occured during verification of the form submission. REason :", e);
+            sendForm();
+        }
+        return isDateSelectionOpened();
     }
 
     private void fillForm() {
@@ -84,7 +90,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         String elementDescription = Section2FormElementsEnum.COUNTRY.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-        logger.info("Starting to " + methodName);
+        logger.debug("Starting to " + methodName);
 
         String elementName = Section2FormElementsEnum.COUNTRY.getName();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
@@ -114,7 +120,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         String elementDescription = Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-        logger.info("Starting to " + methodName);
+        logger.debug("Starting to " + methodName);
 
         String elementName = Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.getName();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
@@ -126,7 +132,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
                 WebElement option = select.getFirstSelectedOption();
                 String selectValue = option.getText();
                 if (selectValue.equals(citizenshipValueOfFamilyMember)) {
-                    logger.info("Successfully selected the citizenship value");
+                    logger.debug("Successfully selected the citizenship value");
                     return true;
                 }
                 return false;
@@ -140,7 +146,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         String elementDescription = Section2FormElementsEnum.APPLICANT_COUNT.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-        logger.info("Starting to " + methodName);
+        logger.debug("Starting to " + methodName);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
@@ -160,7 +166,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         String elementDescription = FAMILY_STATUS.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-        logger.info("Starting to " + methodName);
+        logger.debug("Starting to " + methodName);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
@@ -180,7 +186,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         String elementDescription = SERVICE_TYPE.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-        logger.info("Starting to " + methodName);
+        logger.debug("Starting to " + methodName);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
@@ -196,7 +202,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
 
     private void clickVisaPurpose() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-        logger.info("Starting to " + methodName);
+        logger.debug("Starting to " + methodName);
         String elementDescription = VISA_PURPOSE.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
 
@@ -219,7 +225,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         String elementDescription = VISA.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-        logger.info("Starting to " + methodName);
+        logger.debug("Starting to " + methodName);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
@@ -238,7 +244,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
 
     protected void sendForm() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-        logger.info("Starting to " + methodName);
+        logger.debug("Starting to " + methodName);
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(__ -> {
@@ -247,15 +253,8 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
                 if (element.isDisplayed() && element.isEnabled()) {
                     //Actions actions = new Actions(driver);
                     //actions.moveToElement(element).click().build().perform();
-                    if (isErrorMessageShow()) {
-                        searchCount = searchCount + 1;
-                        String msg = String.format("Successfully send form  count is:%s", searchCount);
-                        logger.info(msg);
-                        return true;
-                    } else {
-                        element.click();
-                        return true;
-                    }
+                    element.click();
+                    return true;
                 } else {
                     return false;
                 }
@@ -266,82 +265,60 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
         });
     }
 
-    // This method is slow 10 seconds
     @VisibleForTesting
     protected boolean isErrorMessageShow() {
+        String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+        String elementDescription = ERROR_MESSAGE.getName();
+        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+        logger.info("Starting to " + methodName);
         String elementXPath = "//*[@id=\"messagesBox\"]/ul/li";
         String errorMsg = "There are currently no dates available for the selected service! Please try again later.";
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        boolean result = false;
         try {
-            result = wait.until(__ -> {
-                try {
-                    WebElement element = driver.findElement(By.xpath(elementXPath));
-                    logger.info("ErrorMessage: {}", element.getText());
-                    return element.getText().contains(errorMsg);
-                } catch (Exception exception) {
-                    return false;
-                }
-            });
-        } catch (TimeoutException exception) {
-            // do nothing and continue
+            WebElement element = driver.findElement(By.xpath(elementXPath));
+            logger.info("ErrorMessage: {}", element.getText());
+            return true;
+        } catch (NoSuchElementException exception) {
+            logger.info("Error message is NOT found");
+            return false;
         }
-        return result;
     }
 
     @VisibleForTesting
-    protected boolean isCalenderFound() {
+    protected boolean isDateSelectionOpened() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         String elementDescription = ACTIVE_STEP.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
         logger.info("Starting to " + methodName);
 
-        String activeTabXPath = "//*[@id=\"main\"]/div[2]/div[4]/div[2]/div/div[1]/ul/li[2]";
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement activeStepElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(activeTabXPath)));
-        String activeStepText = activeStepElement.getText();
-        logger.info(String.format("Value of the %s is: %s", elementDescription, activeStepText));
-        if (activeStepText.contains("Date selection")) {
-            increaseCalenderOpenedMetric();
-            savePage(driver, this.getClass().getSimpleName(), "date_selection_in");
-            logger.info("Calender page is opened");
-            return true;
+        try {
+            String elementXPath = "//*[@id=\"main\"]/div[2]/div[4]/div[2]/div/div[1]/ul/li[2]";
+            WebElement element = driver.findElement(By.xpath(elementXPath));
+            String activeStepText = element.getText().replace("\n", "");
+            logger.info(String.format("Value of the %s is: %s", elementDescription, activeStepText));
+            boolean result = activeStepText.contains("Date selection");
+            if (result) {
+                increaseCalenderOpenedMetric();
+                savePage(driver, this.getClass().getSimpleName(), "date_selection_in");
+                logger.info("Calender page is opened");
+            }
+            logger.info("Calender page is NOT opened");
+            return result;
+        } catch (NoSuchElementException exception) {
+            logger.info("Active tab info is not available");
+            return false;
         }
 
-        return false;
     }
 
-    private boolean isCalenderOpened() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        String errorElementXpath = "//*[@id=\"messagesBox\"]/ul/li";
-        String activeTabXPath = "//*[@id=\"main\"]/div[2]/div[4]/div[2]/div/div[1]/ul/li[2]";
-        String errorMsg = "There are currently no dates available";
-        AtomicBoolean result = new AtomicBoolean(false);
+    private void verifyFormSubmission() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
+        AtomicInteger i = new AtomicInteger();
         wait.until(__ -> {
-            String elementDescription = ERROR_MESSAGE.getName();
-            MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-            WebElement errorMessage = driver.findElement(By.xpath(errorElementXpath));
-            if (errorMessage != null) {
-                logger.info("ErrorMessage: {}", errorMessage.getText());
-                result.set(!errorMessage.getText().contains(errorMsg));
-                return true;
-            }
-
-            elementDescription = ACTIVE_STEP.name();
-            MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
-            WebElement activeStepElement = driver.findElement(By.xpath(activeTabXPath));
-            if( activeStepElement != null) {
-                String activeStepText = activeStepElement.getText();
-                result.set(activeStepText.contains("Date selection"));
-                logger.info(String.format("Value of the %s is: %s", elementDescription, activeStepText));
-                return true;
-            }
-            return false;
+            i.getAndIncrement();
+            logger.info("iteration: " + i);
+            boolean result = isErrorMessageShow() || isDateSelectionOpened();
+            logger.info("\n");
+            return result;
         });
-
-        if(result.get()){
-            increaseCalenderOpenedMetric();
-        }
-        return result.get();
     }
 }

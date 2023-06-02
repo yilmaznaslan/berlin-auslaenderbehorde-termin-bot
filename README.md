@@ -1,3 +1,7 @@
+# ATTENTION
+
+AFTER THE IMPLEMENTATION OF THE CAPTCHA, THIS BOT IS NO MORE WORKING !
+
 # Berlin Auslaenderbehorde Termin Bot
 
 This application uses Selenium library to automate the process of getting an appointment in Berlin Ausländerbehörde.

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.example.model.PersonalInfoFormTO;
 import org.example.model.VisaFormTO;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -235,10 +236,19 @@ public class IoUtils {
 
     private static File saveScreenshot(WebDriver driver, String fileName) throws IOException {
         logger.info("Saving screenshot");
+        scrollUp(driver);
         File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         File file = new File(fileName);
         FileUtils.copyFile(scrFile1, file);
         return file;
+    }
+
+    private static void scrollUp(WebDriver driver) {
+        // Create a JavascriptExecutor object
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+        // Execute JavaScript to scroll up
+        js.executeScript("window.scrollTo(0, 0);");
     }
 
 }
