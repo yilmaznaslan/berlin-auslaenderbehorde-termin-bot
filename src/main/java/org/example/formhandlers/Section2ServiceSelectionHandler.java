@@ -53,7 +53,7 @@ public class Section2ServiceSelectionHandler implements IFormHandler {
 
     public boolean fillAndSendForm() throws InterruptedException {
         fillForm();
-        if (serviceTypeLabelValue.equals("Apply for a permanent settlement permit")) {
+        if (serviceTypeLabelValue.equals("Apply for a permanent settlement permit") || serviceTypeLabelValue.equals("Extend a residence title")) {
             sendForm();
         }
         try {
