@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example.forms;
 
 public class PersonalInfoFormTO {
     private String citizenshipValue;

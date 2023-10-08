@@ -7,8 +7,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
-import org.example.model.PersonalInfoFormTO;
-import org.example.model.VisaFormTO;
+import org.example.forms.PersonalInfoFormTO;
+import org.example.forms.VisaFormTO;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -30,6 +30,8 @@ import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -59,7 +61,6 @@ public class IoUtils {
     private static AwsCredentials awsCredentials;
 
     public static int searchCountWithCalenderOpened = 0;
-
 
     private IoUtils() {
     }
@@ -144,11 +145,6 @@ public class IoUtils {
         sendEventToAWS(eventDetail);
     }
 
-    public static void increaseReservationDoneMetric() {
-        EventDetail eventDetail = new EventDetail("reservation", "completed");
-        sendEventToAWS(eventDetail);
-    }
-
     public static PersonalInfoFormTO readPersonalInfoFromFile() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         InputStream is = PersonalInfoFormTO.class.getResourceAsStream("/DEFAULT_PERSONAL_INFO_FORM.json");
@@ -161,7 +157,7 @@ public class IoUtils {
         return mapper.readValue(is, VisaFormTO.class);
     }
 
-    public static void savePage(WebDriver driver, String pageDescriber, String suffix) {
+    public static void savePage(WebDriver driver, String pageDescriber) {
         try {
             setAWSCredentials();
             if (!isLocalSaveEnabled) {
@@ -171,7 +167,7 @@ public class IoUtils {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
             String dateAsStr = dtf.format(now);
-            String fileName = pageDescriber + "_" + dateAsStr + "_" + suffix;
+            String fileName = pageDescriber + "_" + dateAsStr;
             String pagesourceFileName = fileName + ".html";
             String screenshotFileName = fileName + ".png";
             logger.info("File name :{}, {}", pagesourceFileName, screenshotFileName);
@@ -234,21 +230,46 @@ public class IoUtils {
         return file;
     }
 
-    private static File saveScreenshot(WebDriver driver, String fileName) throws IOException {
+    private static File saveScreenshot(WebDriver driver, String fileName) throws Exception {
         logger.info("Saving screenshot");
-        scrollUp(driver);
         File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        //capture(driver, fileName);
         File file = new File(fileName);
         FileUtils.copyFile(scrFile1, file);
         return file;
     }
 
-    private static void scrollUp(WebDriver driver) {
-        // Create a JavascriptExecutor object
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+    public static void capture(WebDriver driver, String savePath) throws Exception {
+        // Get total width and height
+        int totalWidth = ((Long) ((JavascriptExecutor) driver).executeScript("return document.body.offsetWidth")).intValue();
+        int totalHeight = ((Long) ((JavascriptExecutor) driver).executeScript("return document.body.scrollHeight")).intValue();
 
-        // Execute JavaScript to scroll up
-        js.executeScript("window.scrollTo(0, 0);");
+        BufferedImage fullImg = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_ARGB);
+
+        // Split the screen capture on multiple screens if the total height is too large
+        int screens = (int) Math.ceil(((double) totalHeight) / driver.manage().window().getSize().getHeight());
+
+        int scrolled = 0;
+        for (int screen = 0; screen < screens; screen++) {
+            byte[] screenShot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+            BufferedImage img = ImageIO.read(new java.io.ByteArrayInputStream(screenShot));
+
+            // Stitch the image
+            int height = img.getHeight();
+            if (scrolled + img.getHeight() > totalHeight) {
+                height = totalHeight - scrolled;
+            }
+            fullImg.getGraphics().drawImage(img, 0, scrolled, totalWidth, scrolled + height, 0, 0, totalWidth, height, null);
+
+            scrolled += img.getHeight();
+
+            if (screen + 1 != screens) {
+                ((JavascriptExecutor) driver).executeScript("window.scrollBy(0," + img.getHeight() + ");");
+                Thread.sleep(200);
+            }
+        }
+
+        ImageIO.write(fullImg, "PNG", new File(savePath));
     }
 
 }
