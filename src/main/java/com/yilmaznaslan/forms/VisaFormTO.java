@@ -1,4 +1,4 @@
-package org.example.forms;
+package com.yilmaznaslan.forms;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -1,6 +1,6 @@
-package org.example.errorhandling;
+package com.yilmaznaslan.errorhandling;
 
-import org.example.forms.VisaFormTO;
+import com.yilmaznaslan.forms.VisaFormTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

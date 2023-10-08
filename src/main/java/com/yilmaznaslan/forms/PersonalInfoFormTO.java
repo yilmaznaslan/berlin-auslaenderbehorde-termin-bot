@@ -1,4 +1,4 @@
-package org.example.forms;
+package com.yilmaznaslan.forms;
 
 public class PersonalInfoFormTO {
     private String citizenshipValue;

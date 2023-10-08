@@ -1,4 +1,4 @@
-package org.example.utils;
+package com.yilmaznaslan.utils;
 
 import java.util.Objects;
 

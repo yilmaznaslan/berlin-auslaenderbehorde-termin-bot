@@ -21,9 +21,9 @@ def getGitBranchName() {
 // Update the version based on the git branch name
 version = getGitBranchName()
 
-group 'org.example'
+group 'com.yilmaznaslan'
 
-mainClassName = 'org.example.Main'
+mainClassName = 'com.yilmaznaslan.Main'
 
 repositories {
     mavenCentral()
@@ -80,5 +80,5 @@ test {
     useJUnitPlatform()
 }
 tasks.jar {
-    manifest.attributes["Main-Class"] = "org.example.Main"
+    manifest.attributes["Main-Class"] = "com.yilmaznaslan.Main"
 }
