@@ -1,4 +1,4 @@
-package org.example.utils;
+package com.yilmaznaslan.utils;
 
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
@@ -7,8 +7,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
-import org.example.forms.PersonalInfoFormTO;
-import org.example.forms.VisaFormTO;
+import com.yilmaznaslan.forms.PersonalInfoFormTO;
+import com.yilmaznaslan.forms.VisaFormTO;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;

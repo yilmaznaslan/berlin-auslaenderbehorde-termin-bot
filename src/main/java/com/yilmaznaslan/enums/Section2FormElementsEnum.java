@@ -1,4 +1,4 @@
-package org.example.enums;
+package com.yilmaznaslan.enums;
 
 public enum Section2FormElementsEnum {
 

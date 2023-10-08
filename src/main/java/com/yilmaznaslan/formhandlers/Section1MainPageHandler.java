@@ -1,5 +1,6 @@
-package org.example.formhandlers;
+package com.yilmaznaslan.formhandlers;
 
+import com.yilmaznaslan.utils.DriverUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -10,8 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.example.TerminFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
-import static org.example.utils.DriverUtils.waitUntilFinished;
+import static com.yilmaznaslan.TerminFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 
 /**
  * Business Access Layer for getting english landing page
@@ -28,7 +28,7 @@ public class Section1MainPageHandler {
 
     public String fillAndSendForm() {
         getHomePage();
-        waitUntilFinished(driver);
+        DriverUtils.waitUntilFinished(driver);
         LOGGER.info("Starting to fill the form");
         clickBookAppointment();
         clickToAcceptConsent();

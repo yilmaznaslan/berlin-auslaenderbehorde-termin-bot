@@ -1,10 +1,11 @@
-package org.example;
+package com.yilmaznaslan;
 
-import org.example.formhandlers.Section1MainPageHandler;
-import org.example.formhandlers.Section2ServiceSelectionHandler;
-import org.example.forms.PersonalInfoFormTO;
-import org.example.forms.VisaFormTO;
-import org.example.notification.NotificationAdapter;
+import com.yilmaznaslan.formhandlers.Section1MainPageHandler;
+import com.yilmaznaslan.notification.NotificationAdapter;
+import com.yilmaznaslan.utils.IoUtils;
+import com.yilmaznaslan.formhandlers.Section2ServiceSelectionHandler;
+import com.yilmaznaslan.forms.PersonalInfoFormTO;
+import com.yilmaznaslan.forms.VisaFormTO;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +14,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import static org.example.utils.IoUtils.savePage;
-import static org.example.utils.IoUtils.setAWSCredentials;
 
 public class TerminFinder {
 
@@ -42,7 +40,7 @@ public class TerminFinder {
     public CompletableFuture<Boolean> startScanning() {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
 
-        setAWSCredentials();
+        IoUtils.setAWSCredentials();
 
         executor.scheduleWithFixedDelay(() -> {
             try {
@@ -71,7 +69,7 @@ public class TerminFinder {
 
         } catch (Exception e) {
             LOGGER.error("Exception occurred during getting the home page", e);
-            savePage(driver, "exception_home_page");
+            IoUtils.savePage(driver, "exception_home_page");
             return;
         }
 
@@ -81,7 +79,7 @@ public class TerminFinder {
             if (result) {
                 LOGGER.info("End of process");
                 notificationAdapter.triggerNotification("");
-                savePage(driver, "date_selection_success");
+                IoUtils.savePage(driver, "date_selection_success");
                 executor.shutdown();
             }
 
@@ -90,7 +88,7 @@ public class TerminFinder {
             LOGGER.error("Interrupted: ", e);
         } catch (Exception e) {
             LOGGER.error("General Exception: ", e);
-            savePage(driver, "exception_section2");
+            IoUtils.savePage(driver, "exception_section2");
         }
 
     }

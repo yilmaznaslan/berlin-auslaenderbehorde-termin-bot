@@ -1,4 +1,4 @@
-package org.example.notification;
+package com.yilmaznaslan.notification;
 
 public interface NotificationAdapter {
 

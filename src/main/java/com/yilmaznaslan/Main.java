@@ -1,19 +1,17 @@
-package org.example;
+package com.yilmaznaslan;
 
 
-import org.example.errorhandling.FormValidationFailedException;
-import org.example.errorhandling.FormValidator;
-import org.example.forms.PersonalInfoFormTO;
-import org.example.forms.VisaFormTO;
-import org.example.notification.NotificationAdapter;
-import org.example.notification.SoundNotifier;
-import org.example.utils.DriverUtils;
+import com.yilmaznaslan.notification.NotificationAdapter;
+import com.yilmaznaslan.notification.SoundNotifier;
+import com.yilmaznaslan.utils.DriverUtils;
+import com.yilmaznaslan.utils.IoUtils;
+import com.yilmaznaslan.errorhandling.FormValidationFailedException;
+import com.yilmaznaslan.errorhandling.FormValidator;
+import com.yilmaznaslan.forms.PersonalInfoFormTO;
+import com.yilmaznaslan.forms.VisaFormTO;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.concurrent.CompletableFuture;
-
-import static org.example.utils.IoUtils.readPersonalInfoFromFile;
-import static org.example.utils.IoUtils.readVisaInfoFromFile;
 
 public class Main {
 
@@ -21,8 +19,8 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         FormValidator formValidator = new FormValidator();
-        PersonalInfoFormTO personalInfoFormTO = readPersonalInfoFromFile();
-        VisaFormTO visaFormTO = readVisaInfoFromFile();
+        PersonalInfoFormTO personalInfoFormTO = IoUtils.readPersonalInfoFromFile();
+        VisaFormTO visaFormTO = IoUtils.readVisaInfoFromFile();
 
         if (formValidator.isResidenceTitleInfoVerified(visaFormTO)) {
             logger.info("Successfully validated form: {}", visaFormTO);
