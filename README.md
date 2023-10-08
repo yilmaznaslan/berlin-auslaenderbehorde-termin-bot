@@ -1,11 +1,7 @@
-# ATTENTION
-
-AFTER THE IMPLEMENTATION OF THE CAPTCHA, THIS BOT IS NO MORE WORKING !
-
 # Berlin Auslaenderbehorde Termin Bot
 
-This application uses Selenium library to automate the process of getting an appointment in Berlin Ausländerbehörde.
-Instead of notifying the person like other solutions, this application automatically **books** for you the requested *Termin*. For more info please visit [github pages](https://yilmaznaslan.github.io/berlin-auslaenderbehorde-termin-bot/ )
+This application uses Selenium library to automatically detect when an appointment is available at
+Ausländerbehörde Berlin for the selected visa service. Whenever an available day is found, it beeps.
 
 <img src="/doc/form.gif"  width="60%" height="30%">
 

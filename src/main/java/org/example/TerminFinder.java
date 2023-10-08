@@ -1,184 +1,101 @@
 package org.example;
 
-import com.google.common.annotations.VisibleForTesting;
-import org.example.enums.MdcVariableEnum;
-import org.example.exceptions.FormValidationFailed;
-import org.example.formhandlers.*;
-import org.example.model.PersonalInfoFormTO;
-import org.example.model.VisaFormTO;
+import org.example.formhandlers.Section1MainPageHandler;
+import org.example.formhandlers.Section2ServiceSelectionHandler;
+import org.example.forms.PersonalInfoFormTO;
+import org.example.forms.VisaFormTO;
+import org.example.notification.NotificationAdapter;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
-import java.time.Duration;
-import java.util.Timer;
-import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static org.example.Config.FORM_REFRESH_PERIOD_IN_SECONDS;
-import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
-import static org.example.formhandlers.Section3DateSelectionHandler.handledDateCount;
-import static org.example.utils.DriverUtils.initDriver;
-import static org.example.utils.IoUtils.*;
+import static org.example.utils.IoUtils.savePage;
+import static org.example.utils.IoUtils.setAWSCredentials;
 
 public class TerminFinder {
 
-    public static int searchCount = 0;
-    private final UUID id;
-    private final Logger logger = LoggerFactory.getLogger(TerminFinder.class);
+    public static final long FORM_REFRESH_PERIOD_IN_SECONDS = 5;
+    public static final long TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS = 60;
+    private static final Logger LOGGER = LoggerFactory.getLogger(TerminFinder.class);
+    private final NotificationAdapter notificationAdapter;
     private final VisaFormTO visaFormTO;
     private final PersonalInfoFormTO personalInfoFormTO;
-    private final Timer timer = new Timer(true);
-    private RemoteWebDriver driver;
+    private final RemoteWebDriver driver;
+    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private String sessionUrl;
 
-    public TerminFinder(UUID id, PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO) {
-        this.id = id;
-        this.personalInfoFormTO = personalInfoFormTO;
-        this.visaFormTO = visaFormTO;
-    }
-
-    public TerminFinder(UUID id, PersonalInfoFormTO personalInfoFormTO, VisaFormTO visaFormTO, RemoteWebDriver driver) {
-        this.id = id;
+    public TerminFinder(final NotificationAdapter notificationAdapter,
+                        final PersonalInfoFormTO personalInfoFormTO,
+                        final VisaFormTO visaFormTO,
+                        final RemoteWebDriver driver) {
+        this.notificationAdapter = notificationAdapter;
         this.visaFormTO = visaFormTO;
         this.personalInfoFormTO = personalInfoFormTO;
         this.driver = driver;
     }
 
-    public void startScanning() throws FormValidationFailed {
+    public CompletableFuture<Boolean> startScanning() {
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+
         setAWSCredentials();
-        setMDCVariables();
-        Config.getPropValues();
 
-        // Section 0
-        if (isResidenceTitleInfoVerified(visaFormTO)) {
-            logger.info("Successfully validated form: {}", visaFormTO);
-        } else {
-            logger.error("Failed validate form: {}", visaFormTO);
-            throw new FormValidationFailed("");
-        }
+        executor.scheduleWithFixedDelay(() -> {
+            try {
+                run();
+                if (executor.isShutdown()) {
+                    future.complete(true);
+                }
+            } catch (Exception e) {
+                future.completeExceptionally(e);
+            }
+        }, 0, FORM_REFRESH_PERIOD_IN_SECONDS, TimeUnit.SECONDS);
 
-        if (driver == null) {
-            driver = initDriver();
-        }
-
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        executor.scheduleWithFixedDelay(this::run, 0, FORM_REFRESH_PERIOD_IN_SECONDS, TimeUnit.SECONDS);
-        logger.info("Scheduled the task at rate: {} ", FORM_REFRESH_PERIOD_IN_SECONDS);
-
+        LOGGER.info("Scheduled the task with delay: {} ", FORM_REFRESH_PERIOD_IN_SECONDS);
+        return future;
     }
 
-    protected void run() {
+    private void run() {
+        try {
+            Section1MainPageHandler section1MainPageHandler = new Section1MainPageHandler(driver);
+            sessionUrl = section1MainPageHandler.fillAndSendForm();
+            LOGGER.info("SessionUrl: {}", sessionUrl);
+            if (sessionUrl == null) {
+                LOGGER.warn("Couldn't capture sessionId, quitting.");
+                return;
+            }
+
+        } catch (Exception e) {
+            LOGGER.error("Exception occurred during getting the home page", e);
+            savePage(driver, "exception_home_page");
+            return;
+        }
 
         try {
-            setMDCVariables();
-            getHomePage();
-
-            Section1MainPageHandler section1MainPageHandler = new Section1MainPageHandler(driver);
             Section2ServiceSelectionHandler section2ServiceSelectionHandler = new Section2ServiceSelectionHandler(visaFormTO, personalInfoFormTO, driver);
-            Section3DateSelectionHandler section3DateSelectionHandler = new Section3DateSelectionHandler(driver);
-            Section4VisaFormHandler section4VisaFormHandler = new Section4VisaFormHandler(personalInfoFormTO, visaFormTO, driver);
-            Section5ReservationHandler section5ReservationHandler = new Section5ReservationHandler(driver);
+            boolean result = section2ServiceSelectionHandler.fillAndSendForm();
+            if (result) {
+                LOGGER.info("End of process");
+                notificationAdapter.triggerNotification("");
+                savePage(driver, "date_selection_success");
+                executor.shutdown();
+            }
 
-            if (!fillAndSendFormWithExceptionHandling(section1MainPageHandler)) return;
-            if (!fillAndSendFormWithExceptionHandling(section2ServiceSelectionHandler)) return;
-            if (!fillAndSendFormWithExceptionHandling(section3DateSelectionHandler)) return;
-            if (!fillAndSendFormWithExceptionHandling(section4VisaFormHandler)) return;
-            if (!fillAndSendFormWithExceptionHandling(section5ReservationHandler)) return;
-
-            logger.info("End of process");
-            driver.quit();
-            timer.cancel();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();  // Reset the interrupted status
+            LOGGER.error("Interrupted: ", e);
         } catch (Exception e) {
-            logger.error("Exception occurred during the process, quitting.", e);
-            String fileName = getClass().getSimpleName();
-            savePage(driver, fileName, "exception");
-            logger.info("page is saved");
-            try {
-                driver = initDriver();
-            } catch (Exception e2) {
-                logger.error("Exception occurred during the process, driver initializing", e2);
-            }
-        } finally {
-            MDC.remove(MdcVariableEnum.elementDescription.name());
+            LOGGER.error("General Exception: ", e);
+            savePage(driver, "exception_section2");
         }
 
     }
 
-    boolean fillAndSendFormWithExceptionHandling(IFormHandler formHandler) throws FormValidationFailed, InterruptedException {
-        Boolean isSuccessful = formHandler.fillAndSendForm();
-        logger.info(String.format("Form :%s, Form handling result: %s", formHandler.getClass().getSimpleName(), isSuccessful));
-        driver = formHandler.getDriver();
-        Class formClass = formHandler.getClass();
-        if (formClass.equals(Section2ServiceSelectionHandler.class)) {
-            logger.info("Calender page is not opened. Search count: {}. " +
-                            "SearchCountWithCalenderOpened: {}. " +
-                            "Handled date: {} ",
-                    searchCount,
-                    searchCountWithCalenderOpened,
-                    handledDateCount);
-        }
-        return isSuccessful;
+    public String getSessionUrl() {
+        return sessionUrl;
     }
-
-    @VisibleForTesting
-    protected void getHomePage() {
-        String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-        logger.info("Starting to {}", methodName);
-
-        String urlBefore = driver.getCurrentUrl();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
-        wait.until(webDriver -> {
-            try {
-                // Getting the home page
-                String url = "https://otv.verwalt-berlin.de/ams/TerminBuchen?lang=en";
-                logger.info(String.format("Getting the URL: %s", url));
-                driver.get(url);
-                String urlAfter = driver.getCurrentUrl();
-                return !urlBefore.equals(urlAfter);
-            } catch (Exception e) {
-                logger.error("Getting home page failed. Reason: ", e);
-                return false;
-            }
-        });
-
-    }
-
-
-    private void setMDCVariables() {
-        MDC.put("visaForm", visaFormTO.toString());
-        MDC.put("id", id.toString());
-    }
-
-    private boolean isResidenceTitleInfoVerified(VisaFormTO visaFormTO) {
-        logger.info("Verifying form: {}", visaFormTO);
-        String serviceType = visaFormTO.getServiceType();
-        Boolean isResidencePermitPresent = visaFormTO.getResidencePermitPresent();
-        String residencePermitId = visaFormTO.getResidencePermitId();
-
-        if (serviceType.equals("Apply for a residence title")) {
-            if (isResidencePermitPresent == null) {
-                return false;
-            }
-
-            if (isResidencePermitPresent && residencePermitId == null) {
-                return false;
-            }
-
-            if (!isResidencePermitPresent && residencePermitId != null) {
-                return false;
-            }
-        }
-
-        if (serviceType.equals("Extend a residence title")) {
-
-            return residencePermitId != null;
-        }
-
-        return true;
-    }
-
 }

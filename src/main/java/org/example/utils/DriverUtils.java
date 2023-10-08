@@ -1,73 +1,60 @@
 package org.example.utils;
 
-
-import org.openqa.selenium.UnexpectedAlertBehaviour;
+import org.openqa.selenium.JavascriptException;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
-import static org.example.Config.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
+import static org.example.TerminFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 
 public class DriverUtils {
-    public static final int TIMEOUT_FOR_GETTING_CALENDER_ELEMENT_IN_SECONDS = 5;
-    private static final Logger logger = LoggerFactory.getLogger(DriverUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DriverUtils.class);
 
     private DriverUtils() {
     }
 
-    public static RemoteWebDriver initDriver(){
+    public static RemoteWebDriver initDriver() throws MalformedURLException {
         String seleniumDriverHost = System.getenv().getOrDefault("SELENIUM_GRID_HOST", "localhost");
         String remoteUrl = "http://" + seleniumDriverHost + ":4444/wd/hub";
-        RemoteWebDriver driver = null;
-        int i = 0;
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        while (i < TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS) {
-            try {
-                logger.info("Initializing the driver. Host: {}, try: {}", seleniumDriverHost, i);
-                driver = new RemoteWebDriver(new URL(remoteUrl), getChromeOptions());
-                driver.manage().window().maximize();
-                logger.info("Driver is initialized.");
-                break;
-            } catch (Exception e) {
-                logger.error("Failed to initialize the driver. Reason: ", e);
-                try {
-                    executor.schedule(() -> {
-                    }, 1, TimeUnit.SECONDS).get();
-                } catch (InterruptedException | ExecutionException ex) {
-                    logger.error("Failed to wait for 1 second. Reason: ", ex);
-                }
-                i++;
-            }
-        }
-        executor.shutdownNow();
+        LOGGER.info("Initializing the driver. Host: {}", seleniumDriverHost);
+        RemoteWebDriver driver = new RemoteWebDriver(new URL(remoteUrl), getChromeOptions());
+        driver.manage().window().maximize();
+        LOGGER.info("Driver is initialized.");
         return driver;
+
     }
 
-    public static void resetDriverGracefully(RemoteWebDriver driver) {
-        String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-        logger.info("Starting to {}", methodName);
+    public static void waitUntilFinished(WebDriver driver) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+        wait.pollingEvery(Duration.ofSeconds(1));
+
         wait.until(webDriver -> {
             try {
-                webDriver.close();
-                webDriver.quit();
-                logger.info("Successfully reset the driver");
-                return true;
+                JavascriptExecutor javascriptExecutor = (JavascriptExecutor) webDriver;
+                boolean result = (Boolean) javascriptExecutor.executeScript("return jQuery.active == 0");
+                LOGGER.info("jQuery.active: {}", result);
+                return result;
+            } catch (JavascriptException javascriptException) {
+                LOGGER.warn("Failed to run javascript.");
+                return false;
             } catch (Exception e) {
-                logger.error("Failed to reset the driver. Reason: ", e);
+                LOGGER.warn("An exception occurred while waiting for the page to be loaded. Reason", e);
                 return false;
             }
         });
+
     }
 
     public static ChromeOptions getChromeOptions() {
@@ -85,9 +72,37 @@ public class DriverUtils {
         // Add a fake user-agent to make it look like a regular browser
         options.addArguments("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
 
-        options.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.ACCEPT);
+        options.setCapability("unexpectedAlertBehavior", "accept");
+
+        Map<String, Object> cloudOptions = new HashMap<>();
+        cloudOptions.put("unexpectedAlertBehavior", "accept");
+
+        //options.setCapability("cloud:options", cloudOptions);
+
 
         return options;
+    }
+
+    private void waitUntilPageIsLoaded(RemoteWebDriver driver) {
+        LOGGER.info("Waiting for the page to be loaded");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        AtomicBoolean isUrlCaptured = new AtomicBoolean(false);
+        AtomicReference<String> urlAfterSendForm = new AtomicReference<>();
+        wait.until(webDriver -> {
+            String currentUrl = webDriver.getCurrentUrl();
+            LOGGER.debug("Current URL: {}", currentUrl);
+
+            if (!isUrlCaptured.get()) {
+                isUrlCaptured.set(currentUrl.contains("dswid") && currentUrl.contains("dsrid") && currentUrl.contains(
+                        "wizardng"));
+            } else if (urlAfterSendForm.get() == null) {
+                urlAfterSendForm.set(currentUrl);
+                LOGGER.info("URL after send form: {}", urlAfterSendForm);
+            }
+            return isUrlCaptured.get() && currentUrl.equals("https://otv.verwalt-berlin.de/ams/TerminBuchen");
+
+        });
+        LOGGER.info("Page is loaded");
     }
 
 }

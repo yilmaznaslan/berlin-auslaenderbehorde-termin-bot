@@ -44,6 +44,8 @@ dependencies {
 
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.seleniumhq.selenium:selenium-java:4.8.1'
+    implementation 'com.github.stephenc.monte:monte-screen-recorder:0.7.7.0'
+
 
     testImplementation 'org.mockito:mockito-core:5.2.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
