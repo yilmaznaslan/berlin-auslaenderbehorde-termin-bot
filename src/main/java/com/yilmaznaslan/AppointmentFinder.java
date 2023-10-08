@@ -15,11 +15,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class TerminFinder {
+public class AppointmentFinder {
 
     public static final long FORM_REFRESH_PERIOD_IN_SECONDS = 5;
     public static final long TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS = 60;
-    private static final Logger LOGGER = LoggerFactory.getLogger(TerminFinder.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AppointmentFinder.class);
     private final NotificationAdapter notificationAdapter;
     private final VisaFormTO visaFormTO;
     private final PersonalInfoFormTO personalInfoFormTO;
@@ -27,10 +27,10 @@ public class TerminFinder {
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private String sessionUrl;
 
-    public TerminFinder(final NotificationAdapter notificationAdapter,
-                        final PersonalInfoFormTO personalInfoFormTO,
-                        final VisaFormTO visaFormTO,
-                        final RemoteWebDriver driver) {
+    public AppointmentFinder(final NotificationAdapter notificationAdapter,
+                             final PersonalInfoFormTO personalInfoFormTO,
+                             final VisaFormTO visaFormTO,
+                             final RemoteWebDriver driver) {
         this.notificationAdapter = notificationAdapter;
         this.visaFormTO = visaFormTO;
         this.personalInfoFormTO = personalInfoFormTO;

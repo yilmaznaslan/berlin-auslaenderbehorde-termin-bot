@@ -1,7 +1,7 @@
 package com.yilmaznaslan.formhandlers;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.yilmaznaslan.TerminFinder;
+import com.yilmaznaslan.AppointmentFinder;
 import com.yilmaznaslan.enums.MdcVariableEnum;
 import com.yilmaznaslan.enums.Section2FormElementsEnum;
 import com.yilmaznaslan.forms.PersonalInfoFormTO;
@@ -75,7 +75,7 @@ public class Section2ServiceSelectionHandler {
                 }
 
             }
-            Thread.sleep(TerminFinder.FORM_REFRESH_PERIOD_IN_SECONDS * 1000);
+            Thread.sleep(AppointmentFinder.FORM_REFRESH_PERIOD_IN_SECONDS * 1000);
         }
         return false;
     }
@@ -103,7 +103,7 @@ public class Section2ServiceSelectionHandler {
         LOGGER.debug(LOG_MSG, methodName);
 
         String elementName = Section2FormElementsEnum.COUNTRY.getName();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TerminFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(ddriver -> {
             try {
                 WebElement element = driver.findElement(By.cssSelector("select[name='" + elementName + "']"));
@@ -132,7 +132,7 @@ public class Section2ServiceSelectionHandler {
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
         LOGGER.debug(LOG_MSG, methodName);
         String elementName = Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.getName();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TerminFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(currentDriver -> {
             try {
                 WebElement element = currentDriver.findElement(By.cssSelector("select[name='" + elementName + "']"));
@@ -157,7 +157,7 @@ public class Section2ServiceSelectionHandler {
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
         LOGGER.debug(LOG_MSG, methodName);
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TerminFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(currentWebdriver -> {
             try {
                 WebElement element = currentWebdriver.findElement(By.cssSelector("select[name='personenAnzahl_normal']"));
@@ -177,7 +177,7 @@ public class Section2ServiceSelectionHandler {
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
         LOGGER.debug(LOG_MSG, methodName);
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TerminFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(currentDriver -> {
             try {
                 WebElement webElement = currentDriver.findElement(By.cssSelector("select[name='lebnBrMitFmly']"));
@@ -197,7 +197,7 @@ public class Section2ServiceSelectionHandler {
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
         LOGGER.debug(LOG_MSG, methodName);
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TerminFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(currentDriver -> {
             try {
                 WebElement selectElement = currentDriver.findElements(By.tagName(LABEL)).stream().filter(webElement -> webElement.getText().equals(serviceTypeLabelValue)).findFirst().orElseThrow(() -> new NoSuchElementException("Unable to locate element with text: " + serviceTypeLabelValue));
@@ -215,7 +215,7 @@ public class Section2ServiceSelectionHandler {
         String elementDescription = VISA_PURPOSE.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TerminFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(currentDriver -> {
             try {
                 currentDriver.findElements(By.tagName(LABEL)).stream().filter(webElement -> webElement.getText().equals(visaPurposeLabelValue)).findFirst().get().click();
@@ -231,7 +231,7 @@ public class Section2ServiceSelectionHandler {
         String elementDescription = VISA.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
         LOGGER.debug("Starting to: {}", methodName);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TerminFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(ddriver -> {
             try {
                 driver.findElements(By.tagName(LABEL)).stream().filter(webElement -> webElement.getText().equals(visaLabelValue)).findFirst().get().click();
@@ -247,7 +247,7 @@ public class Section2ServiceSelectionHandler {
         LOGGER.info(LOG_MSG, methodName);
 
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TerminFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(ddriver -> {
             try {
                 WebElement element = driver.findElement(By.xpath(elementXpath));
@@ -302,7 +302,7 @@ public class Section2ServiceSelectionHandler {
             String elementXPath = "//*[@id=\"main\"]/div[2]/div[4]/div[2]/div/div[1]/ul/li[2]";
 
             // Initialize WebDriverWait and set the maximum time to wait
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TerminFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
 
             // Wait for the element to become visible
             WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(elementXPath)));
