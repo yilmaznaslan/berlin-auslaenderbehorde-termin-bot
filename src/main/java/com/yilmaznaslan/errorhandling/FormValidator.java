@@ -23,7 +23,7 @@ public class FormValidator {
                 return false;
             }
 
-            if (!isResidencePermitPresent.booleanValue() && residencePermitId != null) {
+            if (!isResidencePermitPresent && residencePermitId != null) {
                 return false;
             }
         }
