@@ -48,3 +48,13 @@ docker run \
   - REMEMBER: Due to very limited number of available spots, you might need to run the script for a week !
 
 - To see what is happening inside the container, head to http://localhost:7900/?autoconnect=1&resize=scale&password=secret.
+
+## License
+
+Copyright © since 2022 Yilmaz Naci Aslan and other contributors.
+_(For the full contributors' list, run `git shortlog --summary --numbered --email` from the root directory of this project.)_
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+You should have received a copy of the GNU Affero General Public License along with this program.
+If not, see <http://www.gnu.org/licenses/>.
