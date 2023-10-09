@@ -1,11 +1,11 @@
 package com.yilmaznaslan;
 
 import com.yilmaznaslan.formhandlers.Section1MainPageHandler;
-import com.yilmaznaslan.notification.NotificationAdapter;
-import com.yilmaznaslan.utils.IoUtils;
 import com.yilmaznaslan.formhandlers.Section2ServiceSelectionHandler;
 import com.yilmaznaslan.forms.PersonalInfoFormTO;
 import com.yilmaznaslan.forms.VisaFormTO;
+import com.yilmaznaslan.notification.NotificationAdapter;
+import com.yilmaznaslan.utils.IoUtils;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +64,6 @@ public class AppointmentFinder {
             LOGGER.info("SessionUrl: {}", sessionUrl);
             if (sessionUrl == null) {
                 LOGGER.warn("Couldn't capture sessionId, quitting.");
-                return;
             }
 
         } catch (Exception e) {

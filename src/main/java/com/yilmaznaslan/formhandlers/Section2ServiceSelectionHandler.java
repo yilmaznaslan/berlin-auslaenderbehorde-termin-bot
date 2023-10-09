@@ -42,6 +42,7 @@ public class Section2ServiceSelectionHandler {
     private final String visaPurposeLabelValue;
     private final RemoteWebDriver driver;
     private int searchCount = 0;
+    private String sessionUrl = null;
 
     public Section2ServiceSelectionHandler(VisaFormTO visaFormTO, PersonalInfoFormTO personalInfoFormTO, RemoteWebDriver remoteWebDriver) {
         this.visaPurposeLabelValue = visaFormTO.getVisaPurposeValue();
@@ -242,19 +243,19 @@ public class Section2ServiceSelectionHandler {
         });
     }
 
-    protected void sendForm() {
+    private void sendForm() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         LOGGER.info(LOG_MSG, methodName);
 
         String elementXpath = "//*[@id=\"applicationForm:managedForm:proceed\"]";
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
-        wait.until(ddriver -> {
+        wait.until(currentDriver -> {
             try {
-                WebElement element = driver.findElement(By.xpath(elementXpath));
+                WebElement element = currentDriver.findElement(By.xpath(elementXpath));
                 if (element.isDisplayed() && element.isEnabled()) {
 
                     if (SHOULD_ACTION_USED) {
-                        Actions actions = new Actions(driver);
+                        Actions actions = new Actions(currentDriver);
                         actions.moveToElement(element).click().build().perform();
                     } else {
                         element.click();
@@ -337,5 +338,7 @@ public class Section2ServiceSelectionHandler {
         return searchCount;
     }
 
-
+    public String getSessionUrl() {
+        return sessionUrl;
+    }
 }

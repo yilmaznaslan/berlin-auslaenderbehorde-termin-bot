@@ -2,6 +2,7 @@ package com.yilmaznaslan.utils;
 
 import org.openqa.selenium.JavascriptException;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -81,6 +82,40 @@ public class DriverUtils {
 
 
         return options;
+    }
+
+    public static String extractSessionId(WebDriver driver) {
+        LOGGER.info("Extracting the session Url");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+        wait.pollingEvery(Duration.ofMillis(50));
+        AtomicReference<String> sessionId = new AtomicReference<>();
+        try {
+            wait.until(webDriver -> {
+                try {
+                    String currentUrl = webDriver.getCurrentUrl();
+                    LOGGER.info("Current URL: {}", currentUrl);
+                    if (currentUrl.contains("wizardng/")) {
+                        LOGGER.info("URL contains wizardng, capturing session id: {}", currentUrl);
+                        sessionId.set(currentUrl);
+                        return true;
+                    }
+                    return false;
+                } catch (TimeoutException e) {
+                    LOGGER.error("Failed to get current URL, will try again");
+                    return false;
+                } catch (Exception exception) {
+                    LOGGER.error("Failed to get current URL, unknown reason:", exception);
+                    return false;
+                }
+
+            });
+        } catch (TimeoutException e) {
+            LOGGER.error("Failed to get current URL, will try again");
+        } catch (Exception exception) {
+            LOGGER.error("Failed to get current URL, unknown reason:", exception);
+        }
+
+        return sessionId.get();
     }
 
     private void waitUntilPageIsLoaded(RemoteWebDriver driver) {
