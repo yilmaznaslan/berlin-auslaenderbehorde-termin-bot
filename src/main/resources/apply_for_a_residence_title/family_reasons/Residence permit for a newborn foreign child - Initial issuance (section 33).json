@@ -1,7 +1,7 @@
 {
-  "isResidencePermitPresent":  true,
-  "residencePermitId": "asdasd",
+  "isResidencePermitPresent":  false,
+  "residencePermitId": null,
   "serviceType": "Apply for a residence title",
   "visaPurposeValue": "Family reasons",
-  "visaLabelValue" : "Residence permit for spouses, parents and children of German citizens (sect. 28)"
+  "visaLabelValue" : "Residence permit for a newborn foreign child - Initial issuance (section 33)"
 }
