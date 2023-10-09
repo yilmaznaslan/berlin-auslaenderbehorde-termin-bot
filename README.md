@@ -38,9 +38,10 @@ docker run \
    - If it is below 11,  [install](https://docs.oracle.com/en/java/javase/11/install/installation-jdk-macos.html#GUID-2FE451B0-9572-4E38-A1A5-568B77B146DE) a newer version of java. After installation check again the version by `java --version` 
 
 ## How to run
-- Fill the [personInfoDTO.Json](src/main/resources/DEFAULT_PERSONAL_INFO_FORM.json) file with **your** personal information
-  - Write the Country value in **English** as displayed on the browser
-- Fill the [visaFormTO.Json](src/main/resources/DEFAULT_VISA_APPLICATION_FORM.json) with your visa request.
+- Fill the [personInfoDTO.json](src/main/resources/DEFAULT_PERSONAL_INFO_FORM.json) file with **your** personal information.
+  - Remember to write the Country value in **English**, as displayed on the browser.
+  - There is also an [example file](src/main/resources/example_DEFAULT_PERSONAL_INFO_FORM_with_family.json) if you have family.
+- Fill the [visaFormTO.json](src/main/resources/DEFAULT_VISA_APPLICATION_FORM.json) with your visa request.
   - You can also copy-paste from a [template](src/main/resources/) that matches your request.  
  
 - Run the application in terminal by `./gradlew run`.
