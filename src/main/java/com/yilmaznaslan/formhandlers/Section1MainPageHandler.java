@@ -28,7 +28,6 @@ public class Section1MainPageHandler {
     }
 
     public String fillAndSendForm() {
-        getHomePage();
         DriverUtils.waitUntilFinished(driver);
         LOGGER.info("Starting to fill the form");
         clickBookAppointment();
@@ -40,9 +39,9 @@ public class Section1MainPageHandler {
     private void clickBookAppointment() {
         String labelValue = "Book Appointment";
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
-        wait.until(ddriver -> {
+        wait.until(currentDriver -> {
             try {
-                driver.findElement(By.linkText(labelValue)).click();
+                currentDriver.findElement(By.linkText(labelValue)).click();
                 return true;
             } catch (Exception e) {
                 return false;
@@ -50,24 +49,7 @@ public class Section1MainPageHandler {
         });
     }
 
-    private void getHomePage() {
-        String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-        LOGGER.info("Starting to {}", methodName);
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
-        wait.until(currentWebDriver -> {
-            try {
-                String url = "https://otv.verwalt-berlin.de/ams/TerminBuchen?lang=en";
-                LOGGER.info(String.format("Getting the URL: %s", url));
-                currentWebDriver.get(url);
-                return true;
-            } catch (Exception e) {
-                LOGGER.error("Getting home page failed. Reason: ", e);
-                return false;
-            }
-        });
-
-    }
 
     private void clickToAcceptConsent() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
