@@ -5,7 +5,6 @@ import com.yilmaznaslan.AppointmentFinder;
 import com.yilmaznaslan.enums.Section3FormElements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -17,7 +16,9 @@ import java.util.List;
 
 import static com.yilmaznaslan.AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 
-
+/**
+ * DO NOT CLICK TO DATE OR TIMESLOT OTHERWISE DRIVER WON'T REFRESH
+ */
 public class Section3DateSelectionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Section3DateSelectionHandler.class);
@@ -28,9 +29,10 @@ public class Section3DateSelectionHandler {
         this.driver = webDriver;
     }
 
-    public boolean isDateAndTimeVerified() throws InterruptedException {
+    public boolean isDateAndTimeVerified() {
         List<WebElement> dates = listDatesAndClickToFirstAvailable();
-        WebElement element = dates.get(0);
+        return isDateVerified(dates);
+        /*
         if (isDateVerified(element)) {
             LOGGER.info("Date is verified");
             Actions actions = new Actions(driver);
@@ -52,6 +54,8 @@ public class Section3DateSelectionHandler {
         }
         return false;
 
+         */
+
     }
 
     private List<WebElement> listDatesAndClickToFirstAvailable() {
@@ -71,12 +75,15 @@ public class Section3DateSelectionHandler {
     }
 
     @VisibleForTesting
-    protected boolean isDateVerified(WebElement element) {
-        String dateMonth = element.getAttribute("data-month");
-        String dateYear = element.getAttribute("data-year");
-        String dateDay = element.getText();
-        LOGGER.info("Selected date: Day: {}, Month: {} Year: {}", dateDay, dateMonth, dateYear);
-        return dateDay != null && dateMonth != null && dateYear != null;
+    protected boolean isDateVerified(List<WebElement> elements) {
+        return elements.stream().anyMatch(element -> {
+            String dateMonth = element.getAttribute("data-month");
+            String dateYear = element.getAttribute("data-year");
+            String dateDay = element.getText();
+            LOGGER.info("Available date: Day: {}, Month: {} Year: {}", dateDay, dateMonth, dateYear);
+            return dateDay != null && dateMonth != null && dateYear != null;
+        });
+
     }
 
     @VisibleForTesting
