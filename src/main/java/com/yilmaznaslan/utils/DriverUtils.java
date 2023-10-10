@@ -1,8 +1,6 @@
 package com.yilmaznaslan.utils;
 
-import org.openqa.selenium.JavascriptException;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -17,7 +15,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.yilmaznaslan.TerminFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
+import static com.yilmaznaslan.AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 
 public class DriverUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(DriverUtils.class);
@@ -25,11 +23,16 @@ public class DriverUtils {
     private DriverUtils() {
     }
 
-    public static RemoteWebDriver initDriver() throws MalformedURLException {
+    public static RemoteWebDriver initDriver() {
         String seleniumDriverHost = System.getenv().getOrDefault("SELENIUM_GRID_HOST", "localhost");
         String remoteUrl = "http://" + seleniumDriverHost + ":4444/wd/hub";
         LOGGER.info("Initializing the driver. Host: {}", seleniumDriverHost);
-        RemoteWebDriver driver = new RemoteWebDriver(new URL(remoteUrl), getChromeOptions());
+        RemoteWebDriver driver = null;
+        try {
+            driver = new RemoteWebDriver(new URL(remoteUrl), getChromeOptions());
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
         driver.manage().window().maximize();
         LOGGER.info("Driver is initialized.");
         return driver;
@@ -46,6 +49,11 @@ public class DriverUtils {
                 boolean result = (Boolean) javascriptExecutor.executeScript("return jQuery.active == 0");
                 LOGGER.info("jQuery.active: {}", result);
                 return result;
+            } catch (UnhandledAlertException e) {
+                LOGGER.error("UnhandledAlertException occurred during waiting until page is loaded.Clicking", e);
+                Alert alert = driver.switchTo().alert();
+                alert.accept();
+                return false;
             } catch (JavascriptException javascriptException) {
                 LOGGER.warn("Failed to run javascript.");
                 return false;
@@ -81,6 +89,40 @@ public class DriverUtils {
 
 
         return options;
+    }
+
+    public static String extractSessionId(WebDriver driver) {
+        LOGGER.info("Extracting the session Url");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+        wait.pollingEvery(Duration.ofMillis(50));
+        AtomicReference<String> sessionId = new AtomicReference<>();
+        try {
+            wait.until(webDriver -> {
+                try {
+                    String currentUrl = webDriver.getCurrentUrl();
+                    LOGGER.info("Current URL: {}", currentUrl);
+                    if (currentUrl.contains("wizardng/")) {
+                        LOGGER.info("URL contains wizardng, capturing session id: {}", currentUrl);
+                        sessionId.set(currentUrl);
+                        return true;
+                    }
+                    return false;
+                } catch (TimeoutException e) {
+                    LOGGER.error("Failed to get current URL, will try again");
+                    return false;
+                } catch (Exception exception) {
+                    LOGGER.error("Failed to get current URL, unknown reason:", exception);
+                    return false;
+                }
+
+            });
+        } catch (TimeoutException e) {
+            LOGGER.error("Failed to get current URL, will try again");
+        } catch (Exception exception) {
+            LOGGER.error("Failed to get current URL, unknown reason:", exception);
+        }
+
+        return sessionId.get();
     }
 
     private void waitUntilPageIsLoaded(RemoteWebDriver driver) {
