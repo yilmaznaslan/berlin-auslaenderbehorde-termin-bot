@@ -42,7 +42,7 @@ import java.time.format.DateTimeFormatter;
 
 public class IoUtils {
 
-    private final static Logger logger = LoggerFactory.getLogger(IoUtils.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(IoUtils.class);
     private final static String S3_BUCKET_NAME = "auslander-termin-files";
     private final static String secretName = "iam-credentials-for-termin-bot";
     private static final String AWS_REGION = "eu-central-1";
@@ -51,7 +51,7 @@ public class IoUtils {
     public static String CLOUDWATCH_METRIC_FOR_CALENDER_OPENED = "calender opened";
     public static String CLOUDWATCH_METRIC_FOR_VERIFIED_TIMESLOT = "verified timeslot";
     public static String CLOUDWATCH_METRIC_FOR_RESERVATION_COMPLETED = "reservation completed";
-    public static boolean isS3Enabled = true;
+    public static boolean isS3Enabled = false;
     public static String CLOUDWATCH_METRIC_NAMESPACE = "termin-bot";
     public static boolean isLocalSaveEnabled = true;
     public static boolean isCloudwatchEnabled = true;
@@ -97,15 +97,15 @@ public class IoUtils {
                 .forEach(resultEntry -> {
                             String eventId = resultEntry.eventId();
                             if (eventId != null) {
-                                logger.info("EventId: {}", eventId);
+                                LOGGER.info("EventId: {}", eventId);
                             } else {
-                                logger.warn("Failed sending event. ErrorCode: {}", resultEntry.errorMessage());
+                                LOGGER.warn("Failed sending event. ErrorCode: {}", resultEntry.errorMessage());
                             }
                         }
                 );
         }
         catch (Exception e){
-            logger.info("Error occurred during sending event to AWS.Reason ", e);
+            LOGGER.info("Error occurred during sending event to AWS.Reason ", e);
         }
     }
 
@@ -127,9 +127,9 @@ public class IoUtils {
                 AWS_SECRET_ACCESS_KEY = actualObj.findValue("AWS_SECRET_ACCESS_KEY").textValue();
                 awsCredentials = AwsBasicCredentials.create(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
 
-                logger.info("Successfully retrieved the secrets");
+                LOGGER.info("Successfully retrieved the secrets");
             } catch (Exception e) {
-                logger.info("error occurred during getting the secret");
+                LOGGER.info("error occurred during getting the secret");
             }
         }
     }
@@ -137,11 +137,6 @@ public class IoUtils {
     public static void increaseCalenderOpenedMetric() {
         searchCountWithCalenderOpened++;
         EventDetail eventDetail = new EventDetail("calender", "completed");
-        sendEventToAWS(eventDetail);
-    }
-
-    public static void increaseVerifiedTimeslotMetric() {
-        EventDetail eventDetail = new EventDetail("timeslot", "completed");
         sendEventToAWS(eventDetail);
     }
 
@@ -161,7 +156,7 @@ public class IoUtils {
         try {
             setAWSCredentials();
             if (!isLocalSaveEnabled) {
-                logger.info("Saving is disabled");
+                LOGGER.info("Saving is disabled");
                 return;
             }
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
@@ -170,15 +165,15 @@ public class IoUtils {
             String fileName = pageDescriber + "_" + dateAsStr;
             String pagesourceFileName = fileName + ".html";
             String screenshotFileName = fileName + ".png";
-            logger.info("File name :{}, {}", pagesourceFileName, screenshotFileName);
+            LOGGER.info("File name :{}, {}", pagesourceFileName, screenshotFileName);
 
             String content;
             try {
-                logger.info("Getting the page content");
+                LOGGER.info("Getting the page content");
                 content = driver.getPageSource();
 
             } catch (Exception exception) {
-                logger.error("Error occurred during getting the page source. Reason: ", exception);
+                LOGGER.error("Error occurred during getting the page source. Reason: ", exception);
                 return;
             }
 
@@ -187,19 +182,19 @@ public class IoUtils {
             try {
                 sourceFile = saveSourceCodeToFile(content, pagesourceFileName);
             } catch (IOException e) {
-                logger.error("Error occurred during IO operation. Exception: ", e);
+                LOGGER.error("Error occurred during IO operation. Exception: ", e);
                 return;
             }
             File screenShotFile;
             try {
                 screenShotFile = saveScreenshot(driver, screenshotFileName);
             } catch (IOException e) {
-                logger.error("Error occurred during IO operation. Exception: ", e);
+                LOGGER.error("Error occurred during IO operation. Exception: ", e);
                 return;
             }
 
             if (isS3Enabled) {
-                logger.info("Storing files to s3");
+                LOGGER.info("Storing files to s3");
                 s3Client = S3Client.builder()
                         .region(Region.of(AWS_REGION))
                         .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
@@ -209,19 +204,19 @@ public class IoUtils {
                     s3Client.putObject(PutObjectRequest.builder().bucket(S3_BUCKET_NAME).key(pagesourceFileName).build(), RequestBody.fromFile(sourceFile));
                     s3Client.putObject(PutObjectRequest.builder().bucket(S3_BUCKET_NAME).key(screenshotFileName).build(), RequestBody.fromFile(screenShotFile));
                 } catch (Exception e) {
-                    logger.error("Error occurred during s3 operation. Exception: ", e);
+                    LOGGER.error("Error occurred during s3 operation. Exception: ", e);
                 }
             } else {
-                logger.info("S3 is not  enabled");
+                LOGGER.info("S3 is not  enabled");
             }
 
         } catch (Exception e) {
-            logger.info("Saving has failed. Reason: ", e);
+            LOGGER.error("Saving has failed. Reason: ", e);
         }
     }
 
     private static File saveSourceCodeToFile(String content, String fileName) throws IOException {
-        logger.info("Saving source code to file");
+        LOGGER.info("Saving source code to file");
         File file = new File(fileName);
         FileWriter fw;
         fw = new FileWriter(file);
@@ -231,7 +226,7 @@ public class IoUtils {
     }
 
     private static File saveScreenshot(WebDriver driver, String fileName) throws Exception {
-        logger.info("Saving screenshot");
+        LOGGER.info("Saving screenshot");
         File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         //capture(driver, fileName);
         File file = new File(fileName);

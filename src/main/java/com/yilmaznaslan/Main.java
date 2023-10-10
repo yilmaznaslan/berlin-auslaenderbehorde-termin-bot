@@ -31,8 +31,8 @@ public class Main {
 
         NotificationAdapter notificationAdapter = new SoundNotifier();
         RemoteWebDriver webDriver = DriverUtils.initDriver();
-        TerminFinder terminFinder = new TerminFinder(notificationAdapter, personalInfoFormTO, visaFormTO, webDriver);
-        CompletableFuture<Boolean> scanResult = terminFinder.startScanning();
+        AppointmentFinder appointmentFinder = new AppointmentFinder(notificationAdapter, personalInfoFormTO, visaFormTO, webDriver);
+        CompletableFuture<Boolean> scanResult = appointmentFinder.startScanning();
 
         scanResult.thenAccept(result -> logger.info("Appointments found")).exceptionally(e -> {
             logger.error("Scan failed", e);
