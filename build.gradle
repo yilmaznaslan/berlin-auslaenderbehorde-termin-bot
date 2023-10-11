@@ -36,16 +36,9 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:2.0.6'
     implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.20.0'
 
-    // AWS SDK's
-    implementation 'com.amazonaws:aws-java-sdk-cloudwatch:1.12.455'
-    implementation 'software.amazon.awssdk:s3:2.20.61'
-    implementation 'software.amazon.awssdk:secretsmanager:2.20.52'
-    implementation 'software.amazon.awssdk:eventbridge:2.20.59'
-
-    implementation 'commons-io:commons-io:2.11.0'
+    // Selenium
     implementation 'org.seleniumhq.selenium:selenium-java:4.8.1'
-    implementation 'com.github.stephenc.monte:monte-screen-recorder:0.7.7.0'
-
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
 
     testImplementation 'org.mockito:mockito-core:5.2.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
