@@ -50,8 +50,6 @@ public class AppointmentFinder {
     public CompletableFuture<Boolean> startScanning() {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
 
-        IoUtils.setAWSCredentials();
-
         executor.scheduleWithFixedDelay(() -> {
             try {
                 run();
