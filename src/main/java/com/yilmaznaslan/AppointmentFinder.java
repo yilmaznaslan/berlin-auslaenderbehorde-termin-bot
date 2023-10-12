@@ -69,6 +69,7 @@ public class AppointmentFinder {
 
         try {
             getHomePage();
+            DriverUtils.waitUntilFinished(driver);
         } catch (TimeoutException e) {
             LOGGER.error("TimeoutException occurred during getting the home page. Will try again");
             return;

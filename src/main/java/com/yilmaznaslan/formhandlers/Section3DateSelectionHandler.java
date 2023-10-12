@@ -67,9 +67,10 @@ public class Section3DateSelectionHandler {
                 currentDriver -> currentDriver.findElements(By.cssSelector(cssSelector)));
         elements.forEach(element -> {
             String dateMonth = element.getAttribute("data-month");
+            int month = Integer.parseInt(dateMonth) + 1;
             String dateYear = element.getAttribute("data-year");
             String dateDay = element.getText();
-            LOGGER.info("Available date: Day: {}, Month: {} Year: {}", dateDay, dateMonth, dateYear);
+            LOGGER.info("Available date: Day: {}, Month: {} Year: {}", dateDay, month, dateYear);
         });
         return elements;
     }
