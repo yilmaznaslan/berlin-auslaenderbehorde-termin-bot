@@ -1,6 +1,5 @@
 package com.yilmaznaslan.formhandlers;
 
-import com.yilmaznaslan.utils.DriverUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -9,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static com.yilmaznaslan.AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
 import static com.yilmaznaslan.utils.DriverUtils.extractSessionId;
@@ -28,7 +26,6 @@ public class Section1MainPageHandler {
     }
 
     public String fillAndSendForm() {
-        DriverUtils.waitUntilFinished(driver);
         LOGGER.info("Starting to fill the form");
         clickBookAppointment();
         clickToAcceptConsent();
