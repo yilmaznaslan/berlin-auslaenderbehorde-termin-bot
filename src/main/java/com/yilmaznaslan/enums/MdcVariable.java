@@ -1,6 +1,6 @@
 package com.yilmaznaslan.enums;
 
-public enum MdcVariableEnum {
+public enum MdcVariable {
     elementDescription,
     visaForm
 }

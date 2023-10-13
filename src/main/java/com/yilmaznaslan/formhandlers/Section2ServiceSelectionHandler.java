@@ -23,7 +23,7 @@ import org.slf4j.MDC;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.yilmaznaslan.AppointmentFinder;
-import com.yilmaznaslan.enums.MdcVariableEnum;
+import com.yilmaznaslan.enums.MdcVariable;
 import com.yilmaznaslan.enums.Section2FormElements;
 import com.yilmaznaslan.forms.PersonalInfoFormTO;
 import com.yilmaznaslan.forms.VisaFormTO;
@@ -106,7 +106,7 @@ public class Section2ServiceSelectionHandler {
     private void selectCitizenshipValue() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         String elementDescription = Section2FormElements.COUNTRY.name();
-        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+        MDC.put(MdcVariable.elementDescription.name(), elementDescription);
         LOGGER.debug(LOG_MSG, methodName);
 
         String elementName = Section2FormElements.COUNTRY.getName();
@@ -136,7 +136,7 @@ public class Section2ServiceSelectionHandler {
     private void selectCitizenshipValueOfFamilyMember() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         String elementDescription = Section2FormElements.COUNTRY_OF_FAMILY_MEMBER.name();
-        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+        MDC.put(MdcVariable.elementDescription.name(), elementDescription);
         LOGGER.debug(LOG_MSG, methodName);
         String elementName = Section2FormElements.COUNTRY_OF_FAMILY_MEMBER.getName();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
@@ -161,7 +161,7 @@ public class Section2ServiceSelectionHandler {
     private void selectNumberOfApplicants() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         String elementDescription = Section2FormElements.APPLICANT_COUNT.name();
-        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+        MDC.put(MdcVariable.elementDescription.name(), elementDescription);
         LOGGER.debug(LOG_MSG, methodName);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
@@ -181,7 +181,7 @@ public class Section2ServiceSelectionHandler {
     private void selectFamilyStatus() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         String elementDescription = FAMILY_STATUS.name();
-        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+        MDC.put(MdcVariable.elementDescription.name(), elementDescription);
         LOGGER.debug(LOG_MSG, methodName);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
@@ -201,7 +201,7 @@ public class Section2ServiceSelectionHandler {
     protected void clickServiceType() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         String elementDescription = SERVICE_TYPE.name();
-        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+        MDC.put(MdcVariable.elementDescription.name(), elementDescription);
         LOGGER.debug(LOG_MSG, methodName);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
@@ -220,7 +220,7 @@ public class Section2ServiceSelectionHandler {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         LOGGER.debug("Starting to: {}", methodName);
         String elementDescription = VISA_PURPOSE.name();
-        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+        MDC.put(MdcVariable.elementDescription.name(), elementDescription);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(currentDriver -> {
@@ -236,7 +236,7 @@ public class Section2ServiceSelectionHandler {
     private void clickToVisa() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         String elementDescription = VISA.name();
-        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+        MDC.put(MdcVariable.elementDescription.name(), elementDescription);
         LOGGER.debug("Starting to: {}", methodName);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(ddriver -> {
@@ -281,7 +281,7 @@ public class Section2ServiceSelectionHandler {
     @VisibleForTesting
     protected boolean isErrorMessageShow() {
         String elementDescription = ERROR_MESSAGE.getName();
-        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+        MDC.put(MdcVariable.elementDescription.name(), elementDescription);
         String elementXPath = "//*[@id=\"messagesBox\"]/ul/li";
 
         try {
@@ -302,7 +302,7 @@ public class Section2ServiceSelectionHandler {
     protected boolean isDateSelectionOpened() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         String elementDescription = ACTIVE_STEP.name();
-        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
+        MDC.put(MdcVariable.elementDescription.name(), elementDescription);
         LOGGER.info(LOG_MSG, methodName);
 
         try {
