@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 public class AppointmentFinder {
 
+    public static final String FOREIGNERS_OFFICE_WEBSITE_HOMEPAGE = "https://otv.verwalt-berlin.de/ams/TerminBuchen?lang=en";
     public static final long FORM_REFRESH_PERIOD_IN_SECONDS = 5;
     public static final long TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS = 60;
     public static final long TIMEOUT_FOR_GETTING_HOME_PAGE_IN_SECONDS = 60;
@@ -68,7 +69,7 @@ public class AppointmentFinder {
     private void run(RemoteWebDriver driver, Logger LOGGER) {
 
         try {
-            getHomePage();
+            loadHomePage(driver, FOREIGNERS_OFFICE_WEBSITE_HOMEPAGE, LOGGER);
             DriverUtils.waitUntilFinished(driver);
         } catch (TimeoutException e) {
             LOGGER.error("TimeoutException occurred during getting the home page. Will try again");
@@ -114,19 +115,18 @@ public class AppointmentFinder {
 
     }
 
-    private void getHomePage() {
+    private void loadHomePage(RemoteWebDriver driver, String url, Logger LOGGER) {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         LOGGER.info("Starting to {}", methodName);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_HOME_PAGE_IN_SECONDS));
         wait.until(currentWebDriver -> {
             try {
-                String url = "https://otv.verwalt-berlin.de/ams/TerminBuchen?lang=en";
-                LOGGER.info(String.format("Getting the URL: %s", url));
+                LOGGER.info(String.format("Loading the URL: %s", url));
                 currentWebDriver.get(url);
                 return true;
             } catch (Exception e) {
-                LOGGER.error("Getting home page failed. Reason: ", e);
+                LOGGER.error("Loading the home page failed. Reason: ", e);
                 return false;
             }
         });
