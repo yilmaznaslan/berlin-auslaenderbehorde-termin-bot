@@ -58,6 +58,7 @@ public class Section2ServiceSelectionHandler {
     public boolean fillAndSendForm() throws InterruptedException {
         fillForm();
         while (isSessionActive()) {
+            LOGGER.info("Session is active");
             sendForm();
             try {
                 DriverUtils.waitUntilFinished(driver);
@@ -78,6 +79,7 @@ public class Section2ServiceSelectionHandler {
             }
             Thread.sleep(AppointmentFinder.FORM_REFRESH_PERIOD_IN_SECONDS * 1000);
         }
+        LOGGER.info("Session is not active anymore");
         return false;
     }
 
@@ -105,14 +107,14 @@ public class Section2ServiceSelectionHandler {
 
         String elementName = Section2FormElementsEnum.COUNTRY.getName();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
-        wait.until(ddriver -> {
+        wait.until(currentDriver -> {
             try {
-                WebElement element = driver.findElement(By.cssSelector("select[name='" + elementName + "']"));
+                WebElement element = currentDriver.findElement(By.cssSelector("select[name='" + elementName + "']"));
                 Select select = new Select(element);
                 select.selectByVisibleText(citizenshipValue);
 
                 // Double check if it is selected
-                element = driver.findElement(By.cssSelector("select[name='" + elementName + "']"));
+                element = currentDriver.findElement(By.cssSelector("select[name='" + elementName + "']"));
                 select = new Select(element);
                 WebElement option = select.getFirstSelectedOption();
                 String selectValue = option.getText();
