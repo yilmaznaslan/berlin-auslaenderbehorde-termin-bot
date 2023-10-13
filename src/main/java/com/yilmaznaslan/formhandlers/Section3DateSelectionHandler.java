@@ -117,7 +117,7 @@ public class Section3DateSelectionHandler {
         List<WebElement> availableHours = select.getOptions();
         for (int i = 0; i < availableHours.size(); i++) {
             String timeSlot = availableHours.get(i).getText();
-            if (timeSlot != null || !timeSlot.equals("")) {
+            if (timeSlot != null && !timeSlot.isBlank()) {
                 LOGGER.info("Available timeslot: Timeslot: {}, Value: {}", i, timeSlot);
                 String selectValue = availableHours.get(0).getText();
                 select.selectByIndex(i);
