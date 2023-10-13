@@ -52,7 +52,7 @@ public class AppointmentFinder {
 
         executor.scheduleWithFixedDelay(() -> {
             try {
-                run();
+                run(driver, LOGGER);
                 if (executor.isShutdown()) {
                     future.complete(true);
                 }
@@ -65,7 +65,7 @@ public class AppointmentFinder {
         return future;
     }
 
-    private void run() {
+    private void run(RemoteWebDriver driver, Logger LOGGER) {
 
         try {
             getHomePage();
