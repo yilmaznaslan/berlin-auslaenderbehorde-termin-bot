@@ -30,7 +30,7 @@ public class AppointmentFinder {
     public static final long TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS = 60;
     public static final long TIMEOUT_FOR_GETTING_HOME_PAGE_IN_SECONDS = 60;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AppointmentFinder.class);
+    private static final Logger MyLogger = LoggerFactory.getLogger(AppointmentFinder.class);
     private final NotificationAdapter notificationAdapter;
     private final VisaFormTO visaFormTO;
     private final PersonalInfoFormTO personalInfoFormTO;
@@ -53,7 +53,7 @@ public class AppointmentFinder {
 
         executor.scheduleWithFixedDelay(() -> {
             try {
-                run(driver, LOGGER);
+                run(driver, MyLogger);
                 if (executor.isShutdown()) {
                     future.complete(true);
                 }
@@ -62,26 +62,26 @@ public class AppointmentFinder {
             }
         }, 0, FORM_REFRESH_PERIOD_IN_SECONDS, TimeUnit.SECONDS);
 
-        LOGGER.info("Scheduled the task with delay: {} ", FORM_REFRESH_PERIOD_IN_SECONDS);
+        MyLogger.info("Scheduled the task with delay: {} ", FORM_REFRESH_PERIOD_IN_SECONDS);
         return future;
     }
 
-    private void run(RemoteWebDriver driver, Logger LOGGER) {
+    private void run(RemoteWebDriver driver, Logger logger) {
 
         try {
-            loadHomePage(driver, FOREIGNERS_OFFICE_WEBSITE_HOMEPAGE, LOGGER);
+            loadHomePage(driver, FOREIGNERS_OFFICE_WEBSITE_HOMEPAGE, logger);
             DriverUtils.waitUntilFinished(driver);
         } catch (TimeoutException e) {
-            LOGGER.error("TimeoutException occurred during getting the home page. Will try again");
+            logger.error("TimeoutException occurred during getting the home page. Will try again");
             return;
         }
 
         try {
             Section1MainPageHandler section1MainPageHandler = new Section1MainPageHandler(driver);
             sessionUrl = section1MainPageHandler.fillAndSendForm();
-            LOGGER.info("SessionUrl: {}", sessionUrl);
+            logger.info("SessionUrl: {}", sessionUrl);
             if (sessionUrl == null) {
-                LOGGER.warn("Couldn't capture sessionId, quitting.");
+                logger.warn("Couldn't capture sessionId, quitting.");
             }
 
 
@@ -90,7 +90,7 @@ public class AppointmentFinder {
             if (result) {
                 Section3DateSelectionHandler section3DateSelectionHandler = new Section3DateSelectionHandler(driver);
                 if (section3DateSelectionHandler.isDateAndTimeVerified()) {
-                    LOGGER.info("End of process");
+                    logger.info("End of process");
                     notificationAdapter.triggerNotification("");
                     IoUtils.savePage(driver, "date_selection_success");
                     executor.shutdown();
@@ -99,34 +99,34 @@ public class AppointmentFinder {
 
 
         } catch (UnhandledAlertException e) {
-            LOGGER.error("UnhandledAlertException occurred during getting the home page.Clicking", e);
+            logger.error("UnhandledAlertException occurred during getting the home page.Clicking", e);
             Alert alert = driver.switchTo().alert();
             alert.accept();
         } catch (NoSuchSessionException e) {
-            LOGGER.error("NoSuchSessionException occurred during getting the home page. Creating a new Driver instance", e);
+            logger.error("NoSuchSessionException occurred during getting the home page. Creating a new Driver instance", e);
             driver = DriverUtils.initDriver();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            LOGGER.error("Interrupted: ", e);
+            logger.error("Interrupted: ", e);
         } catch (Exception e) {
-            LOGGER.error("General Exception: ", e);
+            logger.error("General Exception: ", e);
             IoUtils.savePage(driver, "exception_section2");
         }
 
     }
 
-    private void loadHomePage(RemoteWebDriver driver, String url, Logger LOGGER) {
+    private void loadHomePage(RemoteWebDriver driver, String url, Logger logger) {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-        LOGGER.info("Starting to {}", methodName);
+        logger.info("Starting to {}", methodName);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_GETTING_HOME_PAGE_IN_SECONDS));
         wait.until(currentWebDriver -> {
             try {
-                LOGGER.info(String.format("Loading the URL: %s", url));
+                logger.info(String.format("Loading the URL: %s", url));
                 currentWebDriver.get(url);
                 return true;
             } catch (Exception e) {
-                LOGGER.error("Loading the home page failed. Reason: ", e);
+                logger.error("Loading the home page failed. Reason: ", e);
                 return false;
             }
         });
