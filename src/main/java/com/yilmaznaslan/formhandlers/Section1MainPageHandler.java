@@ -1,16 +1,17 @@
 package com.yilmaznaslan.formhandlers;
 
-import org.openqa.selenium.*;
+import static com.yilmaznaslan.AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
+import static com.yilmaznaslan.utils.DriverUtils.extractSessionId;
+
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.time.Duration;
-
-import static com.yilmaznaslan.AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
-import static com.yilmaznaslan.utils.DriverUtils.extractSessionId;
 
 /**
  * Business Access Layer for getting english landing page

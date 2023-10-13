@@ -1,8 +1,10 @@
 package com.yilmaznaslan.formhandlers;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.yilmaznaslan.AppointmentFinder;
-import com.yilmaznaslan.enums.Section3FormElements;
+import static com.yilmaznaslan.AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
+
+import java.time.Duration;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -11,10 +13,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Duration;
-import java.util.List;
-
-import static com.yilmaznaslan.AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
+import com.google.common.annotations.VisibleForTesting;
+import com.yilmaznaslan.AppointmentFinder;
+import com.yilmaznaslan.enums.Section3FormElements;
 
 /**
  * DO NOT CLICK TO DATE OR TIMESLOT OTHERWISE DRIVER WON'T REFRESH

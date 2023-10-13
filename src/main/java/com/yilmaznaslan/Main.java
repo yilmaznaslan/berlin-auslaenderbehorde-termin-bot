@@ -1,17 +1,18 @@
 package com.yilmaznaslan;
 
 
-import com.yilmaznaslan.notification.NotificationAdapter;
-import com.yilmaznaslan.notification.SoundNotifier;
-import com.yilmaznaslan.utils.DriverUtils;
-import com.yilmaznaslan.utils.IoUtils;
+import java.util.concurrent.CompletableFuture;
+
+import org.openqa.selenium.remote.RemoteWebDriver;
+
 import com.yilmaznaslan.errorhandling.FormValidationFailedException;
 import com.yilmaznaslan.errorhandling.FormValidator;
 import com.yilmaznaslan.forms.PersonalInfoFormTO;
 import com.yilmaznaslan.forms.VisaFormTO;
-import org.openqa.selenium.remote.RemoteWebDriver;
-
-import java.util.concurrent.CompletableFuture;
+import com.yilmaznaslan.notification.NotificationAdapter;
+import com.yilmaznaslan.notification.SoundNotifier;
+import com.yilmaznaslan.utils.DriverUtils;
+import com.yilmaznaslan.utils.IoUtils;
 
 public class Main {
 

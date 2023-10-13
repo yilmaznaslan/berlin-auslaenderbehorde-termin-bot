@@ -1,8 +1,9 @@
 package com.yilmaznaslan.errorhandling;
 
-import com.yilmaznaslan.forms.VisaFormTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.yilmaznaslan.forms.VisaFormTO;
 
 public class FormValidator {
 

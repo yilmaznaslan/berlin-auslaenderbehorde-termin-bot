@@ -1,9 +1,9 @@
 package com.yilmaznaslan.notification;
 
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 public class SoundNotifier implements NotificationAdapter {
     private static final Logger logger = LoggerFactory.getLogger(SoundNotifier.class);
