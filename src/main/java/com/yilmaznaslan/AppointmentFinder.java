@@ -1,13 +1,11 @@
 package com.yilmaznaslan;
 
-import com.yilmaznaslan.formhandlers.Section1MainPageHandler;
-import com.yilmaznaslan.formhandlers.Section2ServiceSelectionHandler;
-import com.yilmaznaslan.formhandlers.Section3DateSelectionHandler;
-import com.yilmaznaslan.forms.PersonalInfoFormTO;
-import com.yilmaznaslan.forms.VisaFormTO;
-import com.yilmaznaslan.notification.NotificationAdapter;
-import com.yilmaznaslan.utils.DriverUtils;
-import com.yilmaznaslan.utils.IoUtils;
+import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoSuchSessionException;
 import org.openqa.selenium.TimeoutException;
@@ -17,11 +15,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Duration;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import com.yilmaznaslan.formhandlers.Section1MainPageHandler;
+import com.yilmaznaslan.formhandlers.Section2ServiceSelectionHandler;
+import com.yilmaznaslan.formhandlers.Section3DateSelectionHandler;
+import com.yilmaznaslan.forms.PersonalInfoFormTO;
+import com.yilmaznaslan.forms.VisaFormTO;
+import com.yilmaznaslan.notification.NotificationAdapter;
+import com.yilmaznaslan.utils.DriverUtils;
+import com.yilmaznaslan.utils.IoUtils;
 
 public class AppointmentFinder {
 
