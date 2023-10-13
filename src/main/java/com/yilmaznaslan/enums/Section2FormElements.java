@@ -1,6 +1,6 @@
 package com.yilmaznaslan.enums;
 
-public enum Section2FormElementsEnum {
+public enum Section2FormElements {
 
     COUNTRY("xi-sel-400", "sel_staat"),
     COUNTRY_OF_FAMILY_MEMBER("xi-sel-428", "fmlyMemNationality"),
@@ -16,7 +16,7 @@ public enum Section2FormElementsEnum {
     private final String id;
     private final String name;
 
-    Section2FormElementsEnum(String id, String name) {
+    Section2FormElements(String id, String name) {
         this.id = id;
         this.name = name;
     }

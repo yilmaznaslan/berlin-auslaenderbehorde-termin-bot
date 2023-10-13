@@ -1,12 +1,14 @@
 package com.yilmaznaslan.formhandlers;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.yilmaznaslan.AppointmentFinder;
-import com.yilmaznaslan.enums.MdcVariableEnum;
-import com.yilmaznaslan.enums.Section2FormElementsEnum;
-import com.yilmaznaslan.forms.PersonalInfoFormTO;
-import com.yilmaznaslan.forms.VisaFormTO;
-import com.yilmaznaslan.utils.DriverUtils;
+import static com.yilmaznaslan.enums.Section2FormElements.ACTIVE_STEP;
+import static com.yilmaznaslan.enums.Section2FormElements.ERROR_MESSAGE;
+import static com.yilmaznaslan.enums.Section2FormElements.FAMILY_STATUS;
+import static com.yilmaznaslan.enums.Section2FormElements.SERVICE_TYPE;
+import static com.yilmaznaslan.enums.Section2FormElements.VISA;
+import static com.yilmaznaslan.enums.Section2FormElements.VISA_PURPOSE;
+
+import java.time.Duration;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -19,9 +21,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import java.time.Duration;
-
-import static com.yilmaznaslan.enums.Section2FormElementsEnum.*;
+import com.google.common.annotations.VisibleForTesting;
+import com.yilmaznaslan.AppointmentFinder;
+import com.yilmaznaslan.enums.MdcVariableEnum;
+import com.yilmaznaslan.enums.Section2FormElements;
+import com.yilmaznaslan.forms.PersonalInfoFormTO;
+import com.yilmaznaslan.forms.VisaFormTO;
+import com.yilmaznaslan.utils.DriverUtils;
 
 /**
  * This class is responsible for filling the form in section 2
@@ -99,11 +105,11 @@ public class Section2ServiceSelectionHandler {
 
     private void selectCitizenshipValue() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-        String elementDescription = Section2FormElementsEnum.COUNTRY.name();
+        String elementDescription = Section2FormElements.COUNTRY.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
         LOGGER.debug(LOG_MSG, methodName);
 
-        String elementName = Section2FormElementsEnum.COUNTRY.getName();
+        String elementName = Section2FormElements.COUNTRY.getName();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(ddriver -> {
             try {
@@ -129,10 +135,10 @@ public class Section2ServiceSelectionHandler {
 
     private void selectCitizenshipValueOfFamilyMember() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-        String elementDescription = Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.name();
+        String elementDescription = Section2FormElements.COUNTRY_OF_FAMILY_MEMBER.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
         LOGGER.debug(LOG_MSG, methodName);
-        String elementName = Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.getName();
+        String elementName = Section2FormElements.COUNTRY_OF_FAMILY_MEMBER.getName();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(currentDriver -> {
             try {
@@ -154,7 +160,7 @@ public class Section2ServiceSelectionHandler {
 
     private void selectNumberOfApplicants() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-        String elementDescription = Section2FormElementsEnum.APPLICANT_COUNT.name();
+        String elementDescription = Section2FormElements.APPLICANT_COUNT.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
         LOGGER.debug(LOG_MSG, methodName);
 
