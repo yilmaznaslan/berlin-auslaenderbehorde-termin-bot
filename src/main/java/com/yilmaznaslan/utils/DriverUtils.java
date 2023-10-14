@@ -125,26 +125,4 @@ public class DriverUtils {
         return sessionId.get();
     }
 
-    private void waitUntilPageIsLoaded(RemoteWebDriver driver) {
-        LOGGER.info("Waiting for the page to be loaded");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        AtomicBoolean isUrlCaptured = new AtomicBoolean(false);
-        AtomicReference<String> urlAfterSendForm = new AtomicReference<>();
-        wait.until(webDriver -> {
-            String currentUrl = webDriver.getCurrentUrl();
-            LOGGER.debug("Current URL: {}", currentUrl);
-
-            if (!isUrlCaptured.get()) {
-                isUrlCaptured.set(currentUrl.contains("dswid") && currentUrl.contains("dsrid") && currentUrl.contains(
-                        "wizardng"));
-            } else if (urlAfterSendForm.get() == null) {
-                urlAfterSendForm.set(currentUrl);
-                LOGGER.info("URL after send form: {}", urlAfterSendForm);
-            }
-            return isUrlCaptured.get() && currentUrl.equals("https://otv.verwalt-berlin.de/ams/TerminBuchen");
-
-        });
-        LOGGER.info("Page is loaded");
-    }
-
 }
