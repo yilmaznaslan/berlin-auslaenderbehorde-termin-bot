@@ -3,20 +3,24 @@ package com.yilmaznaslan.utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yilmaznaslan.forms.PersonalInfoFormTO;
 import com.yilmaznaslan.forms.VisaFormTO;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.yandex.qatools.ashot.AShot;
+import ru.yandex.qatools.ashot.Screenshot;
+import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
 
-import java.io.*;
-import java.nio.channels.FileChannel;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class IoUtils {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(IoUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IoUtils.class);
 
     private IoUtils() {
     }
@@ -43,15 +47,8 @@ public class IoUtils {
             String screenshotFileName = fileName + ".png";
             LOGGER.info("File name :{}, {}", pageSourceFileName, screenshotFileName);
 
-            String content;
-            try {
-                LOGGER.info("Getting the page content");
-                content = driver.getPageSource();
-
-            } catch (Exception exception) {
-                LOGGER.error("Error occurred during getting the page source. Reason: ", exception);
-                return;
-            }
+            LOGGER.info("Getting the page content");
+            String content = driver.getPageSource();
 
             saveSourceCodeToFile(content, pageSourceFileName);
             saveScreenshot(driver, screenshotFileName);
@@ -62,27 +59,22 @@ public class IoUtils {
         }
     }
 
-    private static void saveSourceCodeToFile(String content, String fileName) throws IOException {
+    private static void saveSourceCodeToFile(String content, String fileName) {
         LOGGER.info("Saving source code to file");
         File file = new File(fileName);
-        FileWriter fw;
-        fw = new FileWriter(file);
-        fw.write(content);
-        fw.close();
+
+        try (FileWriter fw = new FileWriter(file)) {
+            fw.write(content);
+        } catch (IOException e) {
+            LOGGER.error("Failed to save source code to file", e);
+        }
+
     }
 
-    private static void saveScreenshot(WebDriver driver, String fileName) throws IOException {
+    protected static void saveScreenshot(WebDriver driver, String fileName) throws IOException {
         LOGGER.info("Saving screenshot");
-        File scrFile1 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-        File destFile = new File(fileName);
-
-        try (FileInputStream srcStream = new FileInputStream(scrFile1);
-             FileOutputStream destStream = new FileOutputStream(destFile);
-             FileChannel srcChannel = srcStream.getChannel();
-             FileChannel destChannel = destStream.getChannel()) {
-
-            destChannel.transferFrom(srcChannel, 0, srcChannel.size());
-        }
+        Screenshot screenshot = new AShot().shootingStrategy(ShootingStrategies.viewportPasting(1000)).takeScreenshot(driver);
+        ImageIO.write(screenshot.getImage(), "PNG", new File(fileName));
     }
 
 }
