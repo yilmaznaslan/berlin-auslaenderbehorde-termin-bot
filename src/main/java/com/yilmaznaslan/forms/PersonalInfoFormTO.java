@@ -93,8 +93,8 @@ public class PersonalInfoFormTO {
         return "PersonalInfoFormTO{" +
                 "citizenshipValue='" + citizenshipValue + '\'' +
                 ", citizenshipValueOfFamilyMember='" + citizenshipValueOfFamilyMember + '\'' +
-                ", applicationsNumber='" + numberOfApplicants + '\'' +
-                ", familyStatus='" + isThereFamilyMember + '\'' +
+                ", numberOfApplicants='" + numberOfApplicants + '\'' +
+                ", isThereFamilyMember='" + isThereFamilyMember + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", emailAddress='" + emailAddress + '\'' +

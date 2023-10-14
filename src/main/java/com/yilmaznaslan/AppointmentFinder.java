@@ -69,7 +69,7 @@ public class AppointmentFinder {
         try {
             getHomePage();
             DriverUtils.waitUntilFinished(driver);
-
+          
             Section1MainPageHandler section1MainPageHandler = new Section1MainPageHandler(driver);
             sessionUrl = section1MainPageHandler.fillAndSendForm();
             LOGGER.info("SessionUrl: {}", sessionUrl);
