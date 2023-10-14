@@ -1,5 +1,6 @@
 package com.yilmaznaslan;
 
+import com.yilmaznaslan.enums.MdcVariableEnum;
 import com.yilmaznaslan.formhandlers.Section1MainPageHandler;
 import com.yilmaznaslan.formhandlers.Section2ServiceSelectionHandler;
 import com.yilmaznaslan.formhandlers.Section3DateSelectionHandler;
@@ -8,14 +9,12 @@ import com.yilmaznaslan.forms.VisaFormTO;
 import com.yilmaznaslan.notification.NotificationAdapter;
 import com.yilmaznaslan.utils.DriverUtils;
 import com.yilmaznaslan.utils.IoUtils;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.NoSuchSessionException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.UnhandledAlertException;
+import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
@@ -70,18 +69,15 @@ public class AppointmentFinder {
         try {
             getHomePage();
             DriverUtils.waitUntilFinished(driver);
-        } catch (TimeoutException e) {
-            LOGGER.error("TimeoutException occurred during getting the home page. Will try again");
-            return;
-        }
-
-        try {
+          
             Section1MainPageHandler section1MainPageHandler = new Section1MainPageHandler(driver);
             sessionUrl = section1MainPageHandler.fillAndSendForm();
             LOGGER.info("SessionUrl: {}", sessionUrl);
             if (sessionUrl == null) {
                 LOGGER.warn("Couldn't capture sessionId, quitting.");
+                return;
             }
+            MDC.put(MdcVariableEnum.sessionUrl.name(), sessionUrl);
 
 
             Section2ServiceSelectionHandler section2ServiceSelectionHandler = new Section2ServiceSelectionHandler(visaFormTO, personalInfoFormTO, driver);
@@ -92,13 +88,20 @@ public class AppointmentFinder {
                     LOGGER.info("End of process");
                     notificationAdapter.triggerNotification("");
                     IoUtils.savePage(driver, "date_selection_success");
-                    executor.shutdown();
+                    //executor.shutdown();
                 }
             }
 
 
         } catch (UnhandledAlertException e) {
-            LOGGER.error("UnhandledAlertException occurred during getting the home page.Clicking", e);
+            LOGGER.error("UnhandledAlertException occurred. Clicking", e);
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException ex) {
+                LOGGER.error("Failed to sleep", ex);
+                throw new RuntimeException(ex);
+            }
+            IoUtils.savePage(driver, "unhandled_alert_exception");
             Alert alert = driver.switchTo().alert();
             alert.accept();
         } catch (NoSuchSessionException e) {
@@ -107,6 +110,12 @@ public class AppointmentFinder {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             LOGGER.error("Interrupted: ", e);
+        } catch (TimeoutException e) {
+            LOGGER.error("TimeoutException occurred during getting the home page. Checking the internet connection");
+            if (!checkInternetWithSelenium(driver)) {
+                LOGGER.error("Internet connection is not available");
+            }
+            LOGGER.info("Internet connection is available");
         } catch (Exception e) {
             LOGGER.error("General Exception: ", e);
             IoUtils.savePage(driver, "exception_section2");
@@ -124,13 +133,38 @@ public class AppointmentFinder {
                 String url = "https://otv.verwalt-berlin.de/ams/TerminBuchen?lang=en";
                 LOGGER.info(String.format("Getting the URL: %s", url));
                 currentWebDriver.get(url);
+                if (currentWebDriver.getTitle().contains("500 - Internal Server Error")) {
+                    LOGGER.warn("500 error detected");
+                    return false;
+                }
                 return true;
+            } catch (NoSuchSessionException noSuchSessionException) {
+                LOGGER.error("NoSuchSessionException occurred during getting the home page. Creating a new Driver instance", noSuchSessionException);
+                driver = DriverUtils.initDriver();
+                return false;
             } catch (Exception e) {
                 LOGGER.error("Getting home page failed. Reason: ", e);
                 return false;
             }
         });
 
+    }
+
+    private boolean checkInternetWithSelenium(WebDriver driver) {
+        try {
+            // Navigate to a well-known website
+            driver.get("https://www.google.com");
+
+            // Check for the Google logo or another known element
+            WebElement logo = driver.findElement(By.id("hplogo"));
+
+            // If logo is found, return true
+            return logo != null;
+
+        } catch (Exception e) {
+            // Any exception likely means there's no internet connection
+            return false;
+        }
     }
 
     public String getSessionUrl() {

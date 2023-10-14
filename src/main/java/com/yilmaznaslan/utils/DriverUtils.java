@@ -27,7 +27,7 @@ public class DriverUtils {
         String seleniumDriverHost = System.getenv().getOrDefault("SELENIUM_GRID_HOST", "localhost");
         String remoteUrl = "http://" + seleniumDriverHost + ":4444/wd/hub";
         LOGGER.info("Initializing the driver. Host: {}", seleniumDriverHost);
-        RemoteWebDriver driver = null;
+        RemoteWebDriver driver;
         try {
             driver = new RemoteWebDriver(new URL(remoteUrl), getChromeOptions());
         } catch (MalformedURLException e) {
@@ -40,6 +40,7 @@ public class DriverUtils {
     }
 
     public static void waitUntilFinished(WebDriver driver) {
+        LOGGER.info("Waiting for the page to be loaded");
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.pollingEvery(Duration.ofSeconds(1));
 
@@ -47,15 +48,26 @@ public class DriverUtils {
             try {
                 JavascriptExecutor javascriptExecutor = (JavascriptExecutor) webDriver;
                 boolean result = (Boolean) javascriptExecutor.executeScript("return jQuery.active == 0");
-                LOGGER.info("jQuery.active: {}", result);
+                if (result) {
+                    LOGGER.info("Page is loaded");
+                } else {
+                    LOGGER.info("Page is not loaded yet");
+                }
                 return result;
             } catch (UnhandledAlertException e) {
                 LOGGER.error("UnhandledAlertException occurred during waiting until page is loaded.Clicking", e);
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException ex) {
+                    LOGGER.error("Failed to sleep", ex);
+                    throw new RuntimeException(ex);
+                }
+                IoUtils.savePage(driver, "unhandled_alert_exception");
                 Alert alert = driver.switchTo().alert();
                 alert.accept();
                 return false;
             } catch (JavascriptException javascriptException) {
-                LOGGER.warn("Failed to run javascript.");
+                LOGGER.info("Page is not loaded yet");
                 return false;
             } catch (Exception e) {
                 LOGGER.warn("An exception occurred while waiting for the page to be loaded. Reason", e);
@@ -100,7 +112,7 @@ public class DriverUtils {
             wait.until(webDriver -> {
                 try {
                     String currentUrl = webDriver.getCurrentUrl();
-                    LOGGER.info("Current URL: {}", currentUrl);
+                    LOGGER.debug("Current URL: {}", currentUrl);
                     if (currentUrl.contains("wizardng/")) {
                         LOGGER.info("URL contains wizardng, capturing session id: {}", currentUrl);
                         sessionId.set(currentUrl);
