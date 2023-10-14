@@ -88,7 +88,7 @@ public class AppointmentFinder {
                     LOGGER.info("End of process");
                     notificationAdapter.triggerNotification("");
                     IoUtils.savePage(driver, "date_selection_success");
-                    //executor.shutdown();
+                    executor.shutdown();
                 }
             }
 
