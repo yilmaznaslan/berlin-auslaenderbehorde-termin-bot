@@ -50,6 +50,11 @@ docker run \
 
 - To see what is happening inside the container, head to http://localhost:7900/?autoconnect=1&resize=scale&password=secret.
 
+## Contributing
+
+This project uses IntelliJ IDEA's default formatting. If you want to use a different IDE (such as Eclipse), you have to use the project-specific formatting from the corresponding file in [/dev-resources](/dev-resources).
+Feel free to open a PR to add your own IDE-specific version of IntelliJ IDEA's default formatting config file.
+
 ## License
 
 Copyright © since 2022 Yilmaz Naci Aslan and other contributors.
