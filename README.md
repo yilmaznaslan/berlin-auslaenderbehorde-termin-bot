@@ -53,7 +53,7 @@ docker run \
 ## License
 
 Copyright © since 2022 Yilmaz Naci Aslan and other contributors.
-_(For the full contributors' list, run `git shortlog --summary --numbered --email` from the root directory of this project.)_
+_(For the full contributors' list, run_ `git shortlog --summary --numbered --email` _from the root directory of this project.)_
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
