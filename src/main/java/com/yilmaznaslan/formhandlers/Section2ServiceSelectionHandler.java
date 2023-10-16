@@ -55,7 +55,7 @@ public class Section2ServiceSelectionHandler {
         this.visaLabelValue = visaFormTO.getVisaLabelValue();
     }
 
-    public boolean fillAndSendForm() throws InterruptedException {
+    public boolean fillAndSendForm() {
         fillForm();
         while (isSessionActive()) {
             LOGGER.info("Session is active");
@@ -77,7 +77,11 @@ public class Section2ServiceSelectionHandler {
                 }
 
             }
-            Thread.sleep(AppointmentFinder.FORM_REFRESH_PERIOD_IN_SECONDS * 1000);
+            try {
+                Thread.sleep(AppointmentFinder.FORM_REFRESH_PERIOD_IN_SECONDS * 1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         LOGGER.info("Session is not active anymore");
         return false;
