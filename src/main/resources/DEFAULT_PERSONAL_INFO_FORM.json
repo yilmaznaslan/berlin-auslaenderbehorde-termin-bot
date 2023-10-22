@@ -1,10 +1,10 @@
 {
-  "citizenshipValue": "Algeria",
+  "citizenshipValue": "Israel",
   "citizenshipValueOfFamilyMember": null,
   "numberOfApplicants": "one person",
   "isThereFamilyMember": "no",
-  "firstName": "firstname",
-  "lastName": "lastname",
-  "emailAddress": "mytermin101@gmail.com",
+  "firstName": "Saed",
+  "lastName": "Ali",
+  "emailAddress": "info@gmail.com",
   "birthdate": "12.10.1995"
 }
