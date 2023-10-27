@@ -1,14 +1,16 @@
 package com.yilmaznaslan;
 
 
-import com.yilmaznaslan.notification.NotificationAdapter;
-import com.yilmaznaslan.notification.SoundNotifier;
-import com.yilmaznaslan.utils.DriverUtils;
-import com.yilmaznaslan.utils.IoUtils;
 import com.yilmaznaslan.errorhandling.FormValidationFailedException;
 import com.yilmaznaslan.errorhandling.FormValidator;
 import com.yilmaznaslan.forms.PersonalInfoFormTO;
 import com.yilmaznaslan.forms.VisaFormTO;
+import com.yilmaznaslan.notification.AllAdapters;
+import com.yilmaznaslan.notification.SlackNotifier;
+import com.yilmaznaslan.notification.SoundNotifier;
+import com.yilmaznaslan.notification.TwilioNotifier;
+import com.yilmaznaslan.utils.DriverUtils;
+import com.yilmaznaslan.utils.IoUtils;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.concurrent.CompletableFuture;
@@ -29,7 +31,7 @@ public class Main {
             throw new FormValidationFailedException("");
         }
 
-        NotificationAdapter notificationAdapter = new SoundNotifier();
+        AllAdapters notificationAdapter = new AllAdapters(new SoundNotifier(), new TwilioNotifier(), new SlackNotifier());
         RemoteWebDriver webDriver = DriverUtils.initDriver();
         AppointmentFinder appointmentFinder = new AppointmentFinder(notificationAdapter, personalInfoFormTO, visaFormTO, webDriver);
         CompletableFuture<Boolean> scanResult = appointmentFinder.startScanning();

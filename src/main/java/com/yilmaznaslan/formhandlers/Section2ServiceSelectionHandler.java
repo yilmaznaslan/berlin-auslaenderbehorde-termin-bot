@@ -60,13 +60,8 @@ public class Section2ServiceSelectionHandler {
         while (isSessionActive()) {
             LOGGER.info("Session is active");
             sendForm();
-            try {
-                DriverUtils.waitUntilFinished(driver);
-                LOGGER.info("Page is loaded");
-            } catch (Exception e) {
-                LOGGER.info("Page is not loaded due to some error. Will try again.Reason", e);
-                return false;
-            }
+            DriverUtils.waitUntilFinished(driver);
+
             if (isDateSelectionOpened()) {
                 if (isErrorMessageShow()) {
                     LOGGER.info("Calender page is opened but there is alert or error");
@@ -169,7 +164,7 @@ public class Section2ServiceSelectionHandler {
             try {
                 WebElement element = currentWebdriver.findElement(By.cssSelector("select[name='personenAnzahl_normal']"));
                 Select select = new Select(element);
-                select.selectByVisibleText(applicantNumber);
+                select.selectByValue(applicantNumber);
                 return true;
             } catch (Exception exception) {
                 return false;
@@ -189,7 +184,7 @@ public class Section2ServiceSelectionHandler {
             try {
                 WebElement webElement = currentDriver.findElement(By.cssSelector("select[name='lebnBrMitFmly']"));
                 Select select = new Select(webElement);
-                select.selectByVisibleText(familyStatus);
+                select.selectByValue(familyStatus);
                 return true;
             } catch (Exception e) {
                 return false;
@@ -235,13 +230,12 @@ public class Section2ServiceSelectionHandler {
 
     private void clickToVisa() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-        String elementDescription = VISA.name();
-        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
         LOGGER.debug("Starting to: {}", methodName);
+
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
-        wait.until(ddriver -> {
+        wait.until(currentDriver -> {
             try {
-                driver.findElements(By.tagName(LABEL)).stream().filter(webElement -> webElement.getText().equals(visaLabelValue)).findFirst().get().click();
+                currentDriver.findElements(By.tagName(LABEL)).stream().filter(webElement -> webElement.getText().equals(visaLabelValue)).findFirst().get().click();
                 return true;
             } catch (Exception e) {
                 return false;

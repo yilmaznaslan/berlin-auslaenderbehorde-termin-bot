@@ -5,6 +5,7 @@ import com.yilmaznaslan.AppointmentFinder;
 import com.yilmaznaslan.enums.Section3FormElements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -30,17 +31,14 @@ public class Section3DateSelectionHandler {
     }
 
     public boolean isDateAndTimeVerified() {
-        List<WebElement> dates = listDatesAndClickToFirstAvailable();
-        return isDateVerified(dates);
-        /*
-        if (isDateVerified(element)) {
-            LOGGER.info("Date is verified");
+        List<WebElement> availableDates = getAvailableDates();
+        List<WebElement> verifiedDates = availableDates.stream().filter(this::isDateVerified).toList();
+
+
+
             Actions actions = new Actions(driver);
             actions.moveToElement(element).click().build().perform();
             LOGGER.info("Date selection is clicked successfully");
-        } else {
-            return false;
-        }
 
         // Get timeslot element && timeslot options
         Select webElement = getAvailableTimeslotOptions();
@@ -54,25 +52,31 @@ public class Section3DateSelectionHandler {
         }
         return false;
 
-         */
 
     }
 
-    private List<WebElement> listDatesAndClickToFirstAvailable() {
+    private List<WebElement> getAvailableDates() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         LOGGER.info("Starting to: {}", methodName);
         String cssSelector = "[data-handler=selectDay]";
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
-        List<WebElement> elements = wait.until(
+        return wait.until(
                 currentDriver -> currentDriver.findElements(By.cssSelector(cssSelector)));
-        elements.forEach(element -> {
-            String dateMonth = element.getAttribute("data-month");
-            int month = Integer.parseInt(dateMonth) + 1;
-            String dateYear = element.getAttribute("data-year");
-            String dateDay = element.getText();
-            LOGGER.info("Available date: Day: {}, Month: {} Year: {}", dateDay, month, dateYear);
-        });
-        return elements;
+    }
+
+    private boolean isDateVerified(WebElement element) {
+        String dateMonth = element.getAttribute("data-month");
+        String dateYear = element.getAttribute("data-year");
+        String dateDay = element.getText();
+        String date = String.format("Date: %s %s %s", dateDay, dateMonth, dateYear);
+        LOGGER.info("Verifying date: Day: {}, Month: {} Year: {}", dateDay, dateMonth, dateYear);
+        boolean result = dateDay != null && dateMonth != null && dateYear != null;
+        if (result) {
+            LOGGER.info("Date:{}  is verified", date);
+        } else {
+            LOGGER.warn("Date:{}  is not verified", date);
+        }
+        return result;
     }
 
     @VisibleForTesting
@@ -81,8 +85,14 @@ public class Section3DateSelectionHandler {
             String dateMonth = element.getAttribute("data-month");
             String dateYear = element.getAttribute("data-year");
             String dateDay = element.getText();
-            LOGGER.info("Available date: Day: {}, Month: {} Year: {}", dateDay, dateMonth, dateYear);
-            return dateDay != null && dateMonth != null && dateYear != null;
+            LOGGER.info("Verifying date: Day: {}, Month: {} Year: {}", dateDay, dateMonth, dateYear);
+            boolean result = dateDay != null && dateMonth != null && dateYear != null;
+            if (result) {
+                LOGGER.info("Date:{}  is verified", dateDay + " " + dateMonth + " " + dateYear);
+            } else {
+                LOGGER.warn("Date:{}  is not verified", dateDay + " " + dateMonth + " " + dateYear);
+            }
+            return result;
         });
 
     }
@@ -121,7 +131,7 @@ public class Section3DateSelectionHandler {
                 LOGGER.info("Available timeslot: Timeslot: {}, Value: {}", i, timeSlot);
                 String selectValue = availableHours.get(0).getText();
                 select.selectByIndex(i);
-                LOGGER.info("TimeSlot selected succesfully: {}", selectValue);
+                LOGGER.info("TimeSlot selected successfully: {}", selectValue);
                 break;
             }
         }
