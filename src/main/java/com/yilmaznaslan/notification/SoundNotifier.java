@@ -10,16 +10,19 @@ public class SoundNotifier implements NotificationAdapter {
 
     @Override
     public void triggerNotification(String message) {
-        String os = System.getProperty("os.name").toLowerCase();
+        String osName = System.getProperty("os.name").toLowerCase();
+        String osVersion = System.getProperty("os.version").toLowerCase();
         try {
-            if (os.contains("win")) {
+            if (osName.contains("win")) {
                 String[] cmd = {
                         "powershell",
                         "Add-Type -AssemblyName System.Speech; $speak = New-Object System.Speech.Synthesis.SpeechSynthesizer; $speak.Speak('Alert! Attention required!');"
                 };
                 Runtime.getRuntime().exec(cmd);
-            } else if (os.contains("mac")) {
+            } else if (osName.contains("mac")) {
                 Runtime.getRuntime().exec(new String[]{"say", "Alert! Attention required!"});
+            } else if (osVersion.contains("wsl")) {
+                Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", "powershell.exe -c \"(New-Object -ComObject SAPI.SpVoice).Speak('Alert! Attention required!')\"\n"});
             } else {
                 // Handle other operating systems
             }
