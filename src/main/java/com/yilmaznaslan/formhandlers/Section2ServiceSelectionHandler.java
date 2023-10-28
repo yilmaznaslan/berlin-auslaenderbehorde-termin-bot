@@ -4,7 +4,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.yilmaznaslan.AppointmentFinder;
 import com.yilmaznaslan.enums.MdcVariableEnum;
 import com.yilmaznaslan.enums.Section2FormElementsEnum;
-import com.yilmaznaslan.forms.PersonalInfoFormTO;
 import com.yilmaznaslan.forms.VisaFormTO;
 import com.yilmaznaslan.utils.DriverUtils;
 import org.openqa.selenium.By;
@@ -44,15 +43,15 @@ public class Section2ServiceSelectionHandler {
     private int searchCount = 0;
     private String sessionUrl = null;
 
-    public Section2ServiceSelectionHandler(VisaFormTO visaFormTO, PersonalInfoFormTO personalInfoFormTO, RemoteWebDriver remoteWebDriver) {
-        this.visaPurposeLabelValue = visaFormTO.getVisaPurposeValue();
+    public Section2ServiceSelectionHandler(VisaFormTO visaFormTO, RemoteWebDriver remoteWebDriver) {
+        this.visaPurposeLabelValue = visaFormTO.getVisaPurpose();
         this.driver = remoteWebDriver;
-        this.citizenshipValue = personalInfoFormTO.getCitizenshipValue();
-        this.citizenshipValueOfFamilyMember = personalInfoFormTO.getCitizenshipValueOfFamilyMember();
-        this.applicantNumber = personalInfoFormTO.getNumberOfApplicants();
-        this.familyStatus = personalInfoFormTO.getIsThereFamilyMember();
+        this.citizenshipValue = visaFormTO.getCitizenshipValue();
+        this.citizenshipValueOfFamilyMember = visaFormTO.getCitizenshipValueOfFamilyMember();
+        this.applicantNumber = visaFormTO.getNumberOfApplicants();
+        this.familyStatus = visaFormTO.getIsThereFamilyMember();
         this.serviceTypeLabelValue = visaFormTO.getServiceType();
-        this.visaLabelValue = visaFormTO.getVisaLabelValue();
+        this.visaLabelValue = visaFormTO.getVisaType();
     }
 
     public boolean fillAndSendForm() {

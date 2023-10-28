@@ -4,7 +4,6 @@ import com.yilmaznaslan.enums.MdcVariableEnum;
 import com.yilmaznaslan.formhandlers.Section1MainPageHandler;
 import com.yilmaznaslan.formhandlers.Section2ServiceSelectionHandler;
 import com.yilmaznaslan.formhandlers.Section3DateSelectionHandler;
-import com.yilmaznaslan.forms.PersonalInfoFormTO;
 import com.yilmaznaslan.forms.VisaFormTO;
 import com.yilmaznaslan.notification.NotificationAdapter;
 import com.yilmaznaslan.utils.DriverUtils;
@@ -32,24 +31,21 @@ public class AppointmentFinder {
     private static final Logger LOGGER = LoggerFactory.getLogger(AppointmentFinder.class);
     private final NotificationAdapter notificationAdapter;
     private final VisaFormTO visaFormTO;
-    private final PersonalInfoFormTO personalInfoFormTO;
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private RemoteWebDriver driver;
     private String sessionUrl;
     private int retryCount = 0;
 
     public AppointmentFinder(final NotificationAdapter notificationAdapter,
-                             final PersonalInfoFormTO personalInfoFormTO,
                              final VisaFormTO visaFormTO,
                              final RemoteWebDriver driver) {
         this.notificationAdapter = notificationAdapter;
         this.visaFormTO = visaFormTO;
-        this.personalInfoFormTO = personalInfoFormTO;
         this.driver = driver;
     }
 
     public CompletableFuture<Boolean> startScanning() {
-        LOGGER.info(String.valueOf(personalInfoFormTO), visaFormTO);
+        LOGGER.info(String.valueOf(visaFormTO));
         CompletableFuture<Boolean> future = new CompletableFuture<>();
 
         executor.scheduleWithFixedDelay(() -> {
@@ -89,7 +85,7 @@ public class AppointmentFinder {
         MDC.put(MdcVariableEnum.sessionUrl.name(), sessionUrl);
 
 
-        Section2ServiceSelectionHandler section2ServiceSelectionHandler = new Section2ServiceSelectionHandler(visaFormTO, personalInfoFormTO, driver);
+        Section2ServiceSelectionHandler section2ServiceSelectionHandler = new Section2ServiceSelectionHandler(visaFormTO, driver);
         boolean result = section2ServiceSelectionHandler.fillAndSendForm();
         if (result) {
             Section3DateSelectionHandler section3DateSelectionHandler = new Section3DateSelectionHandler(driver);

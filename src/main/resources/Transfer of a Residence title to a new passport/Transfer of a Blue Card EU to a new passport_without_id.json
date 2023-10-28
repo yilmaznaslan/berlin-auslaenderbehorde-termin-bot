@@ -2,6 +2,6 @@
   "isResidencePermitPresent": false,
   "residencePermitId": null,
   "serviceType": "Transfer of a Residence title to a new passport",
-  "visaPurposeValue": null,
-  "visaLabelValue": "Transfer of a Blue Card EU to a new passport"
+  "visaPurpose": null,
+  "visaType": "Transfer of a Blue Card EU to a new passport"
 }

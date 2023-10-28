@@ -1,7 +1,6 @@
 package com.yilmaznaslan.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yilmaznaslan.forms.PersonalInfoFormTO;
 import com.yilmaznaslan.forms.VisaFormTO;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
@@ -25,11 +24,14 @@ public class IoUtils {
     private IoUtils() {
     }
 
+    /*
     public static PersonalInfoFormTO readPersonalInfoFromFile() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         InputStream is = PersonalInfoFormTO.class.getResourceAsStream("/DEFAULT_PERSONAL_INFO_FORM.json");
         return mapper.readValue(is, PersonalInfoFormTO.class);
     }
+
+     */
 
     public static VisaFormTO readVisaInfoFromFile() throws IOException {
         ObjectMapper mapper = new ObjectMapper();

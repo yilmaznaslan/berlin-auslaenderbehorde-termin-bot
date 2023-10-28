@@ -2,6 +2,6 @@
   "isResidencePermitPresent":  true,
   "residencePermitId": "asdasd",
   "serviceType": "Apply for a permanent settlement permit",
-  "visaPurposeValue": null,
-  "visaLabelValue" : "Permanent residence card for family members of EU (except Germany) and EEA citizens"
+  "visaPurpose": null,
+  "visaType" : "Permanent residence card for family members of EU (except Germany) and EEA citizens"
 }

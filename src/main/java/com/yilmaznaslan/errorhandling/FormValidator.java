@@ -9,10 +9,11 @@ public class FormValidator {
     private static final Logger logger = LoggerFactory.getLogger(FormValidator.class);
 
     public boolean isResidenceTitleInfoVerified(VisaFormTO visaFormTO) {
+        /*
         logger.info("Verifying form: {}", visaFormTO);
         String serviceType = visaFormTO.getServiceType();
-        Boolean isResidencePermitPresent = visaFormTO.getResidencePermitPresent();
-        String residencePermitId = visaFormTO.getResidencePermitId();
+        //Boolean isResidencePermitPresent = visaFormTO.getResidencePermitPresent();
+        //String residencePermitId = visaFormTO.getResidencePermitId();
 
         if (serviceType.equals("Apply for a residence title")) {
             if (isResidencePermitPresent == null) {
@@ -33,6 +34,8 @@ public class FormValidator {
             return residencePermitId != null;
         }
 
+
+         */
         return true;
     }
 

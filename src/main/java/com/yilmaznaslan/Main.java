@@ -3,7 +3,6 @@ package com.yilmaznaslan;
 
 import com.yilmaznaslan.errorhandling.FormValidationFailedException;
 import com.yilmaznaslan.errorhandling.FormValidator;
-import com.yilmaznaslan.forms.PersonalInfoFormTO;
 import com.yilmaznaslan.forms.VisaFormTO;
 import com.yilmaznaslan.notification.AllAdapters;
 import com.yilmaznaslan.notification.SlackNotifier;
@@ -21,7 +20,6 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         FormValidator formValidator = new FormValidator();
-        PersonalInfoFormTO personalInfoFormTO = IoUtils.readPersonalInfoFromFile();
         VisaFormTO visaFormTO = IoUtils.readVisaInfoFromFile();
 
         if (formValidator.isResidenceTitleInfoVerified(visaFormTO)) {
@@ -33,7 +31,7 @@ public class Main {
 
         AllAdapters notificationAdapter = new AllAdapters(new SoundNotifier(), new TwilioNotifier(), new SlackNotifier());
         RemoteWebDriver webDriver = DriverUtils.initDriver();
-        AppointmentFinder appointmentFinder = new AppointmentFinder(notificationAdapter, personalInfoFormTO, visaFormTO, webDriver);
+        AppointmentFinder appointmentFinder = new AppointmentFinder(notificationAdapter,visaFormTO, webDriver);
         CompletableFuture<Boolean> scanResult = appointmentFinder.startScanning();
 
         scanResult.thenAccept(result -> logger.info("Appointments found")).exceptionally(e -> {

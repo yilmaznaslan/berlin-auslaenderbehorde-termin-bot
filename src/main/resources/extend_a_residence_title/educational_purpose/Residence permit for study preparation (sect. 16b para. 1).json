@@ -2,6 +2,6 @@
   "isResidencePermitPresent": true,
   "residencePermitId": "D12123123",
   "serviceType": "Extend a residence title",
-  "visaPurposeValue": "Educational purposes",
-  "visaLabelValue": "Residence permit for study preparation (sect. 16b para. 1)"
+  "visaPurpose": "Educational purposes",
+  "visaType": "Residence permit for study preparation (sect. 16b para. 1)"
 }

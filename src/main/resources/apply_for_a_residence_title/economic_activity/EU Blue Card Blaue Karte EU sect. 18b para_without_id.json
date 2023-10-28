@@ -2,6 +2,6 @@
   "isResidencePermitPresent": false,
   "residencePermitId": null,
   "serviceType": "Apply for a residence title",
-  "visaPurposeValue": "Economic activity",
-  "visaLabelValue": "EU Blue Card / Blaue Karte EU (sect. 18b para. 2)"
+  "visaPurpose": "Economic activity",
+  "visaType": "EU Blue Card / Blaue Karte EU (sect. 18b para. 2)"
 }
