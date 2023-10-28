@@ -4,7 +4,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.yilmaznaslan.AppointmentFinder;
 import com.yilmaznaslan.enums.MdcVariableEnum;
 import com.yilmaznaslan.enums.Section2FormElementsEnum;
-import com.yilmaznaslan.forms.PersonalInfoFormTO;
 import com.yilmaznaslan.forms.VisaFormTO;
 import com.yilmaznaslan.utils.DriverUtils;
 import org.openqa.selenium.By;
@@ -44,29 +43,24 @@ public class Section2ServiceSelectionHandler {
     private int searchCount = 0;
     private String sessionUrl = null;
 
-    public Section2ServiceSelectionHandler(VisaFormTO visaFormTO, PersonalInfoFormTO personalInfoFormTO, RemoteWebDriver remoteWebDriver) {
-        this.visaPurposeLabelValue = visaFormTO.getVisaPurposeValue();
+    public Section2ServiceSelectionHandler(VisaFormTO visaFormTO, RemoteWebDriver remoteWebDriver) {
+        this.visaPurposeLabelValue = visaFormTO.getVisaPurpose();
         this.driver = remoteWebDriver;
-        this.citizenshipValue = personalInfoFormTO.getCitizenshipValue();
-        this.citizenshipValueOfFamilyMember = personalInfoFormTO.getCitizenshipValueOfFamilyMember();
-        this.applicantNumber = personalInfoFormTO.getNumberOfApplicants();
-        this.familyStatus = personalInfoFormTO.getIsThereFamilyMember();
+        this.citizenshipValue = visaFormTO.getCitizenshipValue();
+        this.citizenshipValueOfFamilyMember = visaFormTO.getCitizenshipValueOfFamilyMember();
+        this.applicantNumber = visaFormTO.getNumberOfApplicants();
+        this.familyStatus = visaFormTO.getIsThereFamilyMember();
         this.serviceTypeLabelValue = visaFormTO.getServiceType();
-        this.visaLabelValue = visaFormTO.getVisaLabelValue();
+        this.visaLabelValue = visaFormTO.getVisaType();
     }
 
-    public boolean fillAndSendForm() throws InterruptedException {
+    public boolean fillAndSendForm() {
         fillForm();
         while (isSessionActive()) {
             LOGGER.info("Session is active");
             sendForm();
-            try {
-                DriverUtils.waitUntilFinished(driver);
-                LOGGER.info("Page is loaded");
-            } catch (Exception e) {
-                LOGGER.info("Page is not loaded due to some error. Will try again.Reason", e);
-                return false;
-            }
+            DriverUtils.waitUntilFinished(driver);
+
             if (isDateSelectionOpened()) {
                 if (isErrorMessageShow()) {
                     LOGGER.info("Calender page is opened but there is alert or error");
@@ -77,7 +71,11 @@ public class Section2ServiceSelectionHandler {
                 }
 
             }
-            Thread.sleep(AppointmentFinder.FORM_REFRESH_PERIOD_IN_SECONDS * 1000);
+            try {
+                Thread.sleep(AppointmentFinder.FORM_REFRESH_PERIOD_IN_SECONDS * 1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         LOGGER.info("Session is not active anymore");
         return false;
@@ -111,18 +109,22 @@ public class Section2ServiceSelectionHandler {
             try {
                 WebElement element = currentDriver.findElement(By.cssSelector("select[name='" + elementName + "']"));
                 Select select = new Select(element);
-                select.selectByVisibleText(citizenshipValue);
+                select.selectByValue(citizenshipValue);
+                return true;
 
                 // Double check if it is selected
+                /*
                 element = currentDriver.findElement(By.cssSelector("select[name='" + elementName + "']"));
                 select = new Select(element);
                 WebElement option = select.getFirstSelectedOption();
-                String selectValue = option.getText();
+                String selectValue = option.getCssValue("value");
                 if (selectValue.equals(citizenshipValue)) {
                     LOGGER.debug("Successfully selected the citizenship value");
                     return true;
                 }
-                return false;
+                                return false;
+
+                 */
             } catch (Exception e) {
                 return false;
             }
@@ -140,7 +142,8 @@ public class Section2ServiceSelectionHandler {
             try {
                 WebElement element = currentDriver.findElement(By.cssSelector("select[name='" + elementName + "']"));
                 Select select = new Select(element);
-                select.selectByVisibleText(citizenshipValueOfFamilyMember);
+                select.selectByValue(citizenshipValueOfFamilyMember);
+                /*
                 WebElement option = select.getFirstSelectedOption();
                 String selectValue = option.getText();
                 if (selectValue.equals(citizenshipValueOfFamilyMember)) {
@@ -148,6 +151,8 @@ public class Section2ServiceSelectionHandler {
                     return true;
                 }
                 return false;
+                 */
+                return true;
             } catch (Exception e) {
                 return false;
             }
@@ -162,10 +167,10 @@ public class Section2ServiceSelectionHandler {
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(currentWebdriver -> {
-            try {
+            try     {
                 WebElement element = currentWebdriver.findElement(By.cssSelector("select[name='personenAnzahl_normal']"));
                 Select select = new Select(element);
-                select.selectByVisibleText(applicantNumber);
+                select.selectByValue(applicantNumber);
                 return true;
             } catch (Exception exception) {
                 return false;
@@ -185,7 +190,7 @@ public class Section2ServiceSelectionHandler {
             try {
                 WebElement webElement = currentDriver.findElement(By.cssSelector("select[name='lebnBrMitFmly']"));
                 Select select = new Select(webElement);
-                select.selectByVisibleText(familyStatus);
+                select.selectByValue(familyStatus);
                 return true;
             } catch (Exception e) {
                 return false;
@@ -231,13 +236,12 @@ public class Section2ServiceSelectionHandler {
 
     private void clickToVisa() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
-        String elementDescription = VISA.name();
-        MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
         LOGGER.debug("Starting to: {}", methodName);
+
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
-        wait.until(ddriver -> {
+        wait.until(currentDriver -> {
             try {
-                driver.findElements(By.tagName(LABEL)).stream().filter(webElement -> webElement.getText().equals(visaLabelValue)).findFirst().get().click();
+                currentDriver.findElements(By.tagName(LABEL)).stream().filter(webElement -> webElement.getText().equals(visaLabelValue)).findFirst().get().click();
                 return true;
             } catch (Exception e) {
                 return false;

@@ -2,6 +2,6 @@
   "isResidencePermitPresent": true,
   "residencePermitId": 12345678,
   "serviceType": "Apply for a residence title",
-  "visaPurposeValue": "Economic activity",
-  "visaLabelValue": "Residence permit for scientific staff and research workers (sect. 18d)"
+  "visaPurpose": "Economic activity",
+  "visaType": "Residence permit for scientific staff and research workers (sect. 18d)"
 }

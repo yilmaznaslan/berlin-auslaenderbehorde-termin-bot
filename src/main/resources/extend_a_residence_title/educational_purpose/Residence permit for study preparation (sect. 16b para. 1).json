@@ -1,7 +1,7 @@
 {
-  "isResidencePermitPresent":  true,
+  "isResidencePermitPresent": true,
   "residencePermitId": "D12123123",
   "serviceType": "Extend a residence title",
   "visaPurpose": "Educational purposes",
-  "visaType" : "Residence permit for vocational training (sect. 16a)"
+  "visaType": "Residence permit for study preparation (sect. 16b para. 1)"
 }

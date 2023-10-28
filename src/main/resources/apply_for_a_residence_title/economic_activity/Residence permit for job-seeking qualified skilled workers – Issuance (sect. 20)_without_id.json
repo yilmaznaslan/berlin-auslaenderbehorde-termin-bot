@@ -2,6 +2,6 @@
   "isResidencePermitPresent": false,
   "residencePermitId": null,
   "serviceType": "Apply for a residence title",
-  "visaPurposeValue": "Economic activity",
-  "visaLabelValue": "Residence permit for job-seeking qualified skilled workers – Issuance (sect. 20)"
+  "visaPurpose": "Economic activity",
+  "visaType": "Residence permit for job-seeking qualified skilled workers – Issuance (sect. 20)"
 }

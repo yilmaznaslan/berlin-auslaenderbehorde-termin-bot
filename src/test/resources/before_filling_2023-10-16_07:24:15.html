@@ -1,0 +1,238 @@
+<html lang="en" style="" class=" history svg audio video cssgradients multiplebgs opacity rgba inlinesvg hashchange supports svgclippaths fontface generatedcontent textshadow cssanimations backgroundsize borderimage borderradius boxshadow csscolumns csscolumns-width csscolumns-span csscolumns-fill csscolumns-gap csscolumns-rule csscolumns-rulecolor csscolumns-rulestyle csscolumns-rulewidth csscolumns-breakbefore csscolumns-breakafter csscolumns-breakinside flexbox cssreflections csstransforms csstransforms3d csstransitions"><head id="j_idt2"><link type="text/css" rel="stylesheet" href="/javax.faces.resource/theme.css.xhtml?ln=primefaces-aristo"><script type="text/javascript" src="/javax.faces.resource/js/vendors/modernizr.custom.13618.js.xhtml?ln=anton&amp;v=3.2.4"></script><script type="text/javascript" src="/javax.faces.resource/js/vendors/mdetect.js.xhtml?ln=anton&amp;v=3.2.4"></script><script type="text/javascript" src="/javax.faces.resource/jquery/jquery.js.xhtml?ln=primefaces&amp;v=6.1"></script><link type="text/css" rel="stylesheet" href="/javax.faces.resource/theme/project.min.css.xhtml?ln=berlin&amp;v=3.2.4"><link type="text/css" rel="stylesheet" href="/javax.faces.resource/theme/popup.css.xhtml?ln=anton&amp;v=3.2.4"><link type="text/css" rel="stylesheet" href="/javax.faces.resource/theme/jquery.dynatable.css.xhtml?ln=anton&amp;v=3.2.4"><script type="text/javascript" src="/javax.faces.resource/windowhandler.js.xhtml?ln=deltaspike&amp;v=1.7.2"></script><script type="text/javascript" src="/javax.faces.resource/jsf.js.xhtml?ln=javax.faces"></script><link type="text/css" rel="stylesheet" href="/javax.faces.resource/components.css.xhtml?ln=primefaces&amp;v=6.1"><script type="text/javascript" src="/javax.faces.resource/core.js.xhtml?ln=primefaces&amp;v=6.1"></script><script type="text/javascript" src="/javax.faces.resource/components.js.xhtml?ln=primefaces&amp;v=6.1"></script><script type="text/javascript" src="/javax.faces.resource/jquery/jquery-plugins.js.xhtml?ln=primefaces&amp;v=6.1"></script><link type="text/css" rel="stylesheet" href="/javax.faces.resource/fileupload/fileupload.css.xhtml?ln=primefaces&amp;v=6.1"><script type="text/javascript" src="/javax.faces.resource/fileupload/fileupload.js.xhtml?ln=primefaces&amp;v=6.1"></script><script type="text/javascript" src="/javax.faces.resource/js/vendors/jquery-ui.min.js.xhtml?ln=anton&amp;v=3.2.4"></script><script type="text/javascript" src="/javax.faces.resource/js/vendors/jquery.popup.js.xhtml?ln=anton&amp;v=3.2.4"></script><script type="text/javascript" src="/javax.faces.resource/js/vendors/jquery.dynatable.js.xhtml?ln=anton&amp;v=3.2.4"></script><script type="text/javascript">
+            // variables for preventNavigation.js
+            var secondsBeforeExpire = "600";
+            var wizardStepNo = "4";
+            var reloadWarning = "Möchten Sie forfahren?\nDie von Ihnen vorgenommenen Änderungen werden nicht gespeichert.";
+
+            var ANTON = window.ANTON || {};
+            /************************************************************************************************************************
+            * ANTON Core Configuration:
+            * processId: used for update method in ANTON.Remote
+            * windowId: used for submit method in ANTON.Remote
+            * baseUrl: used for reloadUrl
+            * remoteUrl: used for submit method in ANTON.Remote
+            * errorCallback: used as customizable callback on ajax fails in invoke method of ANTON.Remote
+            * reloadUrl: use for reload method in ANTON.Remote
+            * */
+
+            ANTON.CORE = ANTON.CORE || {};
+            ANTON.CORE.client = "TerminBuchen";
+            ANTON.CORE.fcClientId = '1';
+            ANTON.CORE.windowId = "dswid=9804";
+            ANTON.CORE.baseUrl = "/ams/TerminBuchen/wizardng/";
+            ANTON.CORE.processId = "ec452c14-2c40-4fa8-bdf0-4f5378b72aba";
+            ANTON.CORE.remoteUrl = "/api/remote2/TerminBuchen/ec452c14-2c40-4fa8-bdf0-4f5378b72aba/";
+            ANTON.CORE.sessionId = "gS9OYyi3vdFK6ThwJXcrL5ks9YQFwZGTJwkw6yDE";
+            ANTON.CORE.backButtonEnabled = false;
+
+            /************************************************************************************************************************
+            * ANTON WIZARD Configuration:
+            * hasOverview: defines if this form has an overview step cofigured
+            * unvalidatedProceed: defines if unvalidatedProceed is active
+            * currentStep: Current Wizard Step
+            * maxSteps: Maximum steps in form
+            * overviewStep: id of the overview step (-1 if not configured)
+            * */
+            ANTON.WIZARD = ANTON.WIZARD || {};
+
+            ANTON.WIZARD.hasOverview = false;
+            ANTON.WIZARD.unvalidatedProceed = ANTON.hasOverview ? 1 : false;
+            ANTON.WIZARD.currentStep = 4;
+            ANTON.WIZARD.maxSteps = 5;
+            ANTON.WIZARD.overviewStep = -1;
+
+            /***********Text Block Related Labels ***********/
+            ANTON.selectedFileNameLabel = 'File Name' + ':';
+            ANTON.userAssetLoginLinkText = 'Log in to save the document for later use';
+            ANTON.userAssetSelectFromStore = 'Saved document from document store';
+            ANTON.userAssetAddToStore = "In 'Meine Dokumente' speichern";
+            ANTON.isUserLoggedInForUserAsset = 'false';
+            ANTON.userAssetsFeatureEnabled = 'false';
+        </script><link type="text/css" rel="stylesheet" href="/javax.faces.resource/theme/_xima-overwrites.css.xhtml?ln=berlin&amp;v=3.2.4"><script type="text/javascript">if(window.PrimeFaces){PrimeFaces.settings.locale='en';}</script>
+        <title>book appointment 
+        </title>
+        <meta name="title" content="book appointment ">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="client" content="TerminBuchen (TerminBuchen)">
+        <meta name="version" content="b${build.number}_v3.2.4_20190902T144554_f">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, user-scalable=yes">
+            <meta name="description" content="Application Management Online">
+            <meta name="keywords" content="AntOn">
+            <meta name="author" content="]init[ AG">
+            <meta name="copyright" content="]init[ AG"><script type="text/javascript" src="/javax.faces.resource/js/primefaces-locale_en.js.xhtml?ln=anton&amp;v=3.2.4"></script><script type="text/javascript" src="/javax.faces.resource/js/vendors/slick.min.js.xhtml?ln=anton&amp;v=3.2.4"></script><script type="text/javascript" src="/javax.faces.resource/js/vendors/jquery.qtip.min.js.xhtml?ln=anton&amp;v=3.2.4"></script>
+
+        <link rel="shortcut icon" href="/resources/berlin/images/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" type="text/css" href="/ams/TerminBuchen/styles.css"><script type="text/javascript">
+            function supports_html5_storage() {
+                try {
+                    return 'localStorage' in window && window['localStorage'] !== null;
+                } catch (e) {
+                    return false;
+                }
+            }
+            if (typeof String.prototype.startsWith != 'function') {
+                String.prototype.startsWith = function (str){
+                    return this.slice(0, str.length) == str;
+                };
+            }
+
+            if (typeof String.prototype.endsWith != 'function') {
+                String.prototype.endsWith = function (str){
+                    return this.slice(-str.length) == str;
+                };
+            }
+        </script></head><body class="colModel-1 piWizard anton-all-content layout-2_column_top">
+
+            <div class="loading" style="display:block;position:fixed;z-index:10000;top:0;left:0;height:100%;width:100%"></div><script type="text/javascript">(function(){dswh.init('9804','CLIENTWINDOW',10,{'tokenizedRedirect':false,'storeWindowTreeOnLinkClick':false,'storeWindowTreeOnButtonClick':false});})();</script>
+
+            <h1 class="accessibility">book appointment
+            </h1>
+
+            <div id="main" class="clearfix" style="display:none">
+    <div id="header" class="clearfix">
+        <div class="logo"><a href="https://otv.verwalt-berlin.de/ams/TerminBuchen" title="Startseite" target="_blank"><img src="/binary?id=12&amp;1695892686173" alt=""></a>
+        </div>
+        <div id="subnavi">
+            <h1 class="hidden">
+                Topnavigation
+            </h1>
+            <ul id="topnavi">
+                    <li class="languageSwitch">
+                        <form action="" method="get" id="languageSwitchTop">
+                            <ul>
+                                <li class="langChoice">
+                                        <input type="hidden" name="dswid" value="9804">
+                                        <input type="hidden" name="dsrid" value="994">
+                                    <select size="1" name="lang" id="subnavi:topnavi:lang" onchange="$('#languageSwitchTop').submit()">
+                                                <option value="de">DE</option>
+                                                <option value="en" selected="selected">EN</option>
+                                    </select>
+                                </li>
+                            </ul>
+                        </form>
+                    </li>
+            </ul>
+        </div>
+        <div class="logo-2"><a href="/ams/TerminBuchen" id="j_idt64" title="Logo . Link zur Startseite"></a>
+        </div><div id="servicenavi">
+    <ul class="sm ">
+    </ul></div><div id="loginPanel" class="formContainer">
+        <script type="text/javascript">
+            function trimUsername() {
+                $('#j_username').val($.trim($('#j_username').val()));
+            }
+        </script>
+
+        <form id="loginMain" class=" " method="post" action="https://otv.verwalt-berlin.de/j_security_check?cctxr=TerminBuchen">
+            <div class="module login cf">
+                <p class="row">
+                    <label for="j_username">Username</label>
+                    <input type="text" id="j_username" name="j_username" tabindex="1" onblur="trimUsername()">
+                </p>
+                <p class="row">
+                    <label for="j_password">Password
+                    </label><a href="/ams/TerminBuchen/reset" id="j_idt179:j_idt198" class="linkForgotPassword">Password forgotten?</a>
+                    <input type="password" id="j_password" name="j_password" tabindex="2">
+                </p>
+                <div class="row buttons">
+                    <button id="login" class="button arrow-right" value="Login" name="Login" type="submit" tabindex="3">Login</button>
+                </div>
+
+                <fieldset class="separationLine">
+                    <legend>Noch kein Konto?</legend>
+                    <div class="antcl_element formItemsBlock">
+                        <div class="formItemsRow">
+                            <div class="formHelpWrapper"><a href="/ams/TerminBuchen/registrierung" id="j_idt179:j_idt225" class="button secondary">Register</a>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <a href="#" class="close" title="schließen"></a>
+            </div>
+        </form></div>
+    </div>
+
+                
+                <div class="clearfix antcl_content">
+                    <h1 class="accessibility">Inhalt</h1>
+                    <div id="cookieWarning" class="notificationBox cf" style="display: none">
+                        <ul class="notificationBox">
+                            <li class="warnMessage closableNotification">
+                                <a class="close" href="#" onclick="return ackCookieWarning();"></a>
+                                <p>Please activate cookies in your browser in order to use the website.</p>
+                            </li>
+                        </ul>
+                        <script type="text/javascript">
+                            var cookieWarnProp = 'anton.ckchk';
+                            function isCookiecheckDisplay() {
+                                var surpress = '';
+                                if (supports_html5_storage()) {
+                                    surpress = localStorage.getItem(cookieWarnProp);
+                                    surpress = surpress == null || surpress == undefined ? '' : surpress.trim();
+                                    surpress = surpress != 'gS9OYyi3vdFK6ThwJXcrL5ks9YQFwZGTJwkw6yDE' ? '' : surpress;
+                                    if (surpress == '') {
+                                        localStorage.removeItem(cookieWarnProp);
+                                    }
+                                }
+                                var cookiesEnabled = $.cookie('check', 'valid', {expires: 1}) && $.cookie('check') == 'valid';
+                                return surpress == '' && !cookiesEnabled;
+                            }
+                            function ackCookieWarning() {
+                                $('#cookieWarning').hide();
+                                localStorage.setItem(cookieWarnProp, 'gS9OYyi3vdFK6ThwJXcrL5ks9YQFwZGTJwkw6yDE');
+                                return false;
+                            }
+                            if (isCookiecheckDisplay()) {
+                                $('#cookieWarning').show();
+                            }
+                        </script>
+                    </div>
+                    <div id="browserWarning" class="notificationBox cf" style="display: none">
+                        <ul class="notificationBox">
+                            <li class="warnMessage closableNotification">
+                                <a class="close" href="#" onclick="return ackBrowserWarning();"></a>
+                                <p>The browser you are using is unfortunately not supported by this website. Please update your browser version to use the website or use a different browser. The following browsers are supported:</p>
+                                <ul>
+                                    <li style="padding:5px 0 5px 10px">Desktop / PC: Internet Explorer 11, Firefox from version 39, Chrome from version 43, Safari from version 8</li>
+                                    <li style="padding:5px 0 5px 10px">Mobile devices: Safari from iOS 8, Chrome / Android from version 4.1</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <script type="text/javascript">
+                            (function () {
+                                window.XINIT = window.XINIT || {};
+
+                                XINIT.Browser = {
+                                    isMobile: function () {
+                                        return $.browser.mobile != undefined && $.browser.mobile == true;
+                                    },
+                                    name: function () {
+                                        return this.isMobile() ? this.os().name + "_" + $.browser.name : $.browser.name;
+                                    },
+                                    version: function () {
+                                        return this.isMobile() ? this.os().version : $.browser.versionNumber;
+                                    },
+                                    os: function () {
+                                        var userOS;
+                                        var userOSver;
+                                        var ua = navigator.userAgent;
+                                        var uaindex;
+
+                                        // determine OS
+                                        if (ua.match(/iPad/i) || ua.match(/iPhone/i)) {
+                                            userOS = 'ios';
+                                            uaindex = ua.indexOf('OS ');
+                                        } else if (ua.match(/Android/i)) {
+                                            userOS = 'android';
+                                            uaindex = ua.indexOf('Android ');
+                                        } else {
+                                            userOS = 'unknown';
+                                        }
+
+                                        // determine version
+                                        if (userOS === 'ios' && uaindex > -1) {
+                                            userOSver = ua.substr(uaindex + 3, 3).replace('_', '.');
+                                        } else if (userOS === 'android' && uaindex > -1) {
+                                            userOSver = ua.substr(uaindex + 8, 3);
+      </script></div></div></div></body></html>

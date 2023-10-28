@@ -1,7 +1,9 @@
 {
-  "isResidencePermitPresent": true,
-  "residencePermitId": "ABASCASD",
-  "serviceType": "Extend a residence title",
-  "visaPurposeValue": "Educational purposes",
-  "visaLabelValue": "Residence permit for the purpose of studying (sect. 16b)"
+  "citizenshipValue": "221",
+  "citizenshipValueOfFamilyMember": null,
+  "numberOfApplicants": "1",
+  "isThereFamilyMember": "2",
+  "serviceType": "Apply for a permanent settlement permit",
+  "visaPurpose": null,
+  "visaType" : "Permanent residence card for family members of EU (except Germany) and EEA citizens"
 }

@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.yilmaznaslan.AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
@@ -39,6 +39,37 @@ public class DriverUtils {
 
     }
 
+    public static void switchToNewTab(WebDriver driver) {
+        String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+        LOGGER.info("Starting to {}", methodName);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.pollingEvery(Duration.ofSeconds(2));
+
+        wait.until(webDriver -> {
+            try {
+                LOGGER.info("Creating a new tab");
+                // create a new tab
+                webDriver.switchTo().newWindow(WindowType.TAB);
+                ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
+
+                // Closing the first tab
+                webDriver.switchTo().window(tabs.get(0)).close();
+                Thread.sleep(1000);
+
+                // Switching to the second tab
+                LOGGER.info("Switching to the new tab");
+                webDriver.switchTo().window(tabs.get(1));
+
+                return true;
+            } catch (Exception e) {
+                LOGGER.error("Failed to switch to a new tab", e);
+                return false;
+            }
+        });
+
+
+    }
+
     public static void waitUntilFinished(WebDriver driver) {
         LOGGER.info("Waiting for the page to be loaded");
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
@@ -54,18 +85,6 @@ public class DriverUtils {
                     LOGGER.info("Page is not loaded yet");
                 }
                 return result;
-            } catch (UnhandledAlertException e) {
-                LOGGER.error("UnhandledAlertException occurred during waiting until page is loaded.Clicking", e);
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException ex) {
-                    LOGGER.error("Failed to sleep", ex);
-                    throw new RuntimeException(ex);
-                }
-                IoUtils.savePage(driver, "unhandled_alert_exception");
-                Alert alert = driver.switchTo().alert();
-                alert.accept();
-                return false;
             } catch (JavascriptException javascriptException) {
                 LOGGER.info("Page is not loaded yet");
                 return false;
