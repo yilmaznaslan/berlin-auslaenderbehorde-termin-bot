@@ -1,7 +1,7 @@
 {
-  "isResidencePermitPresent": true,
-  "residencePermitId": "YYZ1YT4Y9",
-  "serviceType": "Apply for a residence title",
-  "visaPurposeValue": "Economic activity",
-  "visaLabelValue": "Residence permit for job-seeking qualified skilled workers – Issuance (sect. 20)"
+  "isResidencePermitPresent":  true,
+  "residencePermitId": "asdasd",
+  "serviceType": "Apply for a permanent settlement permit",
+  "visaPurposeValue": null,
+  "visaLabelValue" : "Permanent residence card for family members of EU (except Germany) and EEA citizens"
 }

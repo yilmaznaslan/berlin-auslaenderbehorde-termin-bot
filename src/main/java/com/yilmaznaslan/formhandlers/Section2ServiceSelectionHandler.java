@@ -110,18 +110,22 @@ public class Section2ServiceSelectionHandler {
             try {
                 WebElement element = currentDriver.findElement(By.cssSelector("select[name='" + elementName + "']"));
                 Select select = new Select(element);
-                select.selectByVisibleText(citizenshipValue);
+                select.selectByValue(citizenshipValue);
+                return true;
 
                 // Double check if it is selected
+                /*
                 element = currentDriver.findElement(By.cssSelector("select[name='" + elementName + "']"));
                 select = new Select(element);
                 WebElement option = select.getFirstSelectedOption();
-                String selectValue = option.getText();
+                String selectValue = option.getCssValue("value");
                 if (selectValue.equals(citizenshipValue)) {
                     LOGGER.debug("Successfully selected the citizenship value");
                     return true;
                 }
-                return false;
+                                return false;
+
+                 */
             } catch (Exception e) {
                 return false;
             }
@@ -139,7 +143,8 @@ public class Section2ServiceSelectionHandler {
             try {
                 WebElement element = currentDriver.findElement(By.cssSelector("select[name='" + elementName + "']"));
                 Select select = new Select(element);
-                select.selectByVisibleText(citizenshipValueOfFamilyMember);
+                select.selectByValue(citizenshipValueOfFamilyMember);
+                /*
                 WebElement option = select.getFirstSelectedOption();
                 String selectValue = option.getText();
                 if (selectValue.equals(citizenshipValueOfFamilyMember)) {
@@ -147,6 +152,8 @@ public class Section2ServiceSelectionHandler {
                     return true;
                 }
                 return false;
+                 */
+                return true;
             } catch (Exception e) {
                 return false;
             }
@@ -161,7 +168,7 @@ public class Section2ServiceSelectionHandler {
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(currentWebdriver -> {
-            try {
+            try     {
                 WebElement element = currentWebdriver.findElement(By.cssSelector("select[name='personenAnzahl_normal']"));
                 Select select = new Select(element);
                 select.selectByValue(applicantNumber);

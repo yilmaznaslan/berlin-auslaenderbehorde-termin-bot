@@ -49,6 +49,7 @@ public class AppointmentFinder {
     }
 
     public CompletableFuture<Boolean> startScanning() {
+        LOGGER.info(String.valueOf(personalInfoFormTO), visaFormTO);
         CompletableFuture<Boolean> future = new CompletableFuture<>();
 
         executor.scheduleWithFixedDelay(() -> {
@@ -92,7 +93,7 @@ public class AppointmentFinder {
         boolean result = section2ServiceSelectionHandler.fillAndSendForm();
         if (result) {
             Section3DateSelectionHandler section3DateSelectionHandler = new Section3DateSelectionHandler(driver);
-            if (section3DateSelectionHandler.isDateAndTimeVerified()) {
+            if (section3DateSelectionHandler.isDateAndTimeVerified().isPresent()) {
                 LOGGER.info("End of process");
                 notificationAdapter.triggerNotification("");
                 IoUtils.savePage(driver, "date_selection_success");

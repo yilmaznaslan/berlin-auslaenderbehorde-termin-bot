@@ -1,10 +1,10 @@
 {
-  "citizenshipValue": "Turkey",
+  "citizenshipValue": "221",
   "citizenshipValueOfFamilyMember": null,
-  "numberOfApplicants": "one person",
-  "isThereFamilyMember": "no",
-  "firstName": "Alara",
-  "lastName": "Uker",
+  "numberOfApplicants": "1",
+  "isThereFamilyMember": "2",
+  "firstName": "firstname",
+  "lastName": "lastname",
   "emailAddress": "mytermin101@gmail.com",
-  "birthdate": "15.09.1995"
+  "birthdate": "12.10.1995"
 }

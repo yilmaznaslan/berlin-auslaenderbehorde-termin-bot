@@ -40,7 +40,9 @@ docker run \
 
 ## How to run
 - Fill the [personInfoDTO.json](src/main/resources/DEFAULT_PERSONAL_INFO_FORM.json) file with **your** personal information.
-  - Remember to write the Country value in **English**, as displayed on the browser.
+    - Set the value of the `"Country"` matching the value of your country in the [](src/main/resources/countries.json)
+    - If you are single, set the value of `"isThereFamilyMember"`: to `"2"`.
+    - If you are married,  set the value of `"isThereFamilyMember"`: to `"1"`
   - There is also an [example file](src/main/resources/example_DEFAULT_PERSONAL_INFO_FORM_with_family.json) if you have family.
 - Fill the [visaFormTO.json](src/main/resources/DEFAULT_VISA_APPLICATION_FORM.json) with your visa request.
   - You can also copy-paste from a [template](src/main/resources/) that matches your request.  

@@ -1,8 +1,6 @@
 package com.yilmaznaslan.formhandlers;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.yilmaznaslan.AppointmentFinder;
-import com.yilmaznaslan.enums.Section3FormElements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -13,13 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static com.yilmaznaslan.AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS;
+import static com.yilmaznaslan.enums.Section3FormElements.TIME_SLOT;
 
-/**
- * DO NOT CLICK TO DATE OR TIMESLOT OTHERWISE DRIVER WON'T REFRESH
- */
 public class Section3DateSelectionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Section3DateSelectionHandler.class);
@@ -30,29 +28,33 @@ public class Section3DateSelectionHandler {
         this.driver = webDriver;
     }
 
-    public boolean isDateAndTimeVerified() {
+    public Optional<WebElement> isDateAndTimeVerified() {
         List<WebElement> availableDates = getAvailableDates();
-        List<WebElement> verifiedDates = availableDates.stream().filter(this::isDateVerified).toList();
+        Collections.reverse(availableDates); // To start from the latest date
+        return availableDates.stream()
+                .filter(availableDate -> {
+                    String date = parseDate(availableDate);
+                    Actions actions = new Actions(driver);
+                    actions.moveToElement(availableDate).click().build().perform();
+                    LOGGER.info("Clicked on date: {}", date);
 
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    // Get timeslot element && timeslot options
+                    Select webElement = getTimeslotSelect();
+                    List<WebElement> availableTimeslots = webElement.getOptions();
+                    availableTimeslots
+                            .forEach(availableTimeslot -> LOGGER.info("Timeslot: {}", availableTimeslot.getText()));
 
+                    Optional<WebElement> firstAvailableTimeslot = availableTimeslots.stream()
+                            .filter(this::isTimeslotVerified)
+                            .findFirst();
 
-            Actions actions = new Actions(driver);
-            actions.moveToElement(element).click().build().perform();
-            LOGGER.info("Date selection is clicked successfully");
-
-        // Get timeslot element && timeslot options
-        Select webElement = getAvailableTimeslotOptions();
-
-        // Verify timeslot options
-        if (isTimeslotOptionVerified(webElement)) {
-            selectTimeslot(webElement);
-            return true;
-        } else {
-            LOGGER.error("Validating the time slots has failed");
-        }
-        return false;
-
-
+                    return firstAvailableTimeslot.isPresent();
+                }).findFirst();
     }
 
     private List<WebElement> getAvailableDates() {
@@ -60,82 +62,50 @@ public class Section3DateSelectionHandler {
         LOGGER.info("Starting to: {}", methodName);
         String cssSelector = "[data-handler=selectDay]";
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
-        return wait.until(
+        List<WebElement> availableDates = wait.until(
                 currentDriver -> currentDriver.findElements(By.cssSelector(cssSelector)));
+
+        LOGGER.info("There are {} available dates", availableDates.size());
+        availableDates.forEach(element -> {
+            String date = parseDate(element);
+            LOGGER.info("Date: {}", date);
+        });
+        return availableDates;
     }
 
-    private boolean isDateVerified(WebElement element) {
+    private String parseDate(WebElement element) {
         String dateMonth = element.getAttribute("data-month");
+        int dateMonthInt = Integer.parseInt(dateMonth) + 1;
         String dateYear = element.getAttribute("data-year");
         String dateDay = element.getText();
-        String date = String.format("Date: %s %s %s", dateDay, dateMonth, dateYear);
-        LOGGER.info("Verifying date: Day: {}, Month: {} Year: {}", dateDay, dateMonth, dateYear);
-        boolean result = dateDay != null && dateMonth != null && dateYear != null;
-        if (result) {
-            LOGGER.info("Date:{}  is verified", date);
-        } else {
-            LOGGER.warn("Date:{}  is not verified", date);
-        }
-        return result;
+        return String.format("%s.%s.%s", dateDay, dateMonthInt, dateYear);
     }
 
-    @VisibleForTesting
-    protected boolean isDateVerified(List<WebElement> elements) {
-        return elements.stream().anyMatch(element -> {
-            String dateMonth = element.getAttribute("data-month");
-            String dateYear = element.getAttribute("data-year");
-            String dateDay = element.getText();
-            LOGGER.info("Verifying date: Day: {}, Month: {} Year: {}", dateDay, dateMonth, dateYear);
-            boolean result = dateDay != null && dateMonth != null && dateYear != null;
-            if (result) {
-                LOGGER.info("Date:{}  is verified", dateDay + " " + dateMonth + " " + dateYear);
-            } else {
-                LOGGER.warn("Date:{}  is not verified", dateDay + " " + dateMonth + " " + dateYear);
-            }
-            return result;
+    private boolean isTimeslotVerified(WebElement availableTimeslot) {
+        String timeSlot = availableTimeslot.getText();
+        return timeSlot != null && timeSlot.contains(":");
+    }
+
+    private Select getTimeslotSelect() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+        return wait.until(currentDriver -> {
+            WebElement selectElement = currentDriver.findElement(By.id(TIME_SLOT.getId()));
+            return new Select(selectElement);
         });
-
     }
 
-    @VisibleForTesting
-    protected boolean isTimeslotOptionVerified(Select select) {
-        List<WebElement> availableHours = select.getOptions();
-        int availableHoursCount = availableHours.size();
-        LOGGER.info("There are %{} available timeslots", availableHoursCount);
-        availableHours.forEach(availableHour -> LOGGER.info("Timeslot: {}, Value: {}", availableHours.indexOf(availableHour),
-                availableHour.getText()));
-        return availableHours.stream()
-                .map(WebElement::getText)
-                .anyMatch(timeSlot -> timeSlot != null && timeSlot.contains(":"));
-    }
 
-    @VisibleForTesting
-    protected Select getAvailableTimeslotOptions() {
-        String elementName = Section3FormElements.TIME_SLOT.getName();
-        WebElement element = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS))
-                .until(currentDriver -> {
-                    WebElement selectElement = currentDriver.findElements(By.tagName("select")).stream()
-                            .filter(element1 -> element1.getAttribute("name").equals(elementName))
-                            .toList().get(0);
-                    return selectElement;
-                });
-        return new Select(element);
-    }
-
-    @VisibleForTesting
-    protected void selectTimeslot(Select select) throws InterruptedException {
-        List<WebElement> availableHours = select.getOptions();
-        for (int i = 0; i < availableHours.size(); i++) {
-            String timeSlot = availableHours.get(i).getText();
-            if (timeSlot != null || !timeSlot.equals("")) {
-                LOGGER.info("Available timeslot: Timeslot: {}, Value: {}", i, timeSlot);
-                String selectValue = availableHours.get(0).getText();
-                select.selectByIndex(i);
-                LOGGER.info("TimeSlot selected successfully: {}", selectValue);
-                break;
-            }
-        }
-        Thread.sleep(1000);
-    }
+    /**
+     *
+     *                         String timeslot = firstAvailableTimeSlot.getText();
+     *                         webElement.selectByValue(firstAvailableTimeslot.get().getAttribute("value"));
+     *                         String dateMonth = availableDate.getAttribute("data-month");
+     *                         int dateMonthInt = Integer.parseInt(dateMonth) + 1;
+     *                         String dateYear = availableDate.getAttribute("data-year");
+     *                         String dateDay = availableDate.getText();
+     *                         String date = String.format("%s.%s.%s", dateDay, dateMonthInt, dateYear);
+     *                         LOGGER.info("Date :{}, Time: {} selection is clicked successfully", date, timeslot);
+     *                         return true;
+     */
 
 }
