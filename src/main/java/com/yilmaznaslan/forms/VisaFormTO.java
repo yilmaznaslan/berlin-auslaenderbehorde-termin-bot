@@ -67,5 +67,17 @@ public class VisaFormTO {
         return Objects.hash(citizenshipValue, numberOfApplicants, isThereFamilyMember, citizenshipValueOfFamilyMember, serviceType, visaType, visaPurpose);
     }
 
+    @Override
+    public String toString() {
+        return "VisaFormTO{" +
+                "citizenshipValue='" + citizenshipValue + '\'' +
+                ", numberOfApplicants='" + numberOfApplicants + '\'' +
+                ", isThereFamilyMember='" + isThereFamilyMember + '\'' +
+                ", citizenshipValueOfFamilyMember='" + citizenshipValueOfFamilyMember + '\'' +
+                ", serviceType='" + serviceType + '\'' +
+                ", visaType='" + visaType + '\'' +
+                ", visaPurpose='" + visaPurpose + '\'' +
+                '}';
+    }
 }
 
