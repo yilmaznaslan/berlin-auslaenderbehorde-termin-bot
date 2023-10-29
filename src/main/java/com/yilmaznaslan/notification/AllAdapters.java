@@ -15,7 +15,7 @@ public class AllAdapters implements NotificationAdapter {
     @Override
     public void triggerNotification(String message) {
         soundNotifier.triggerNotification(message);
-        twilioNotifier.triggerNotification(message);
         slackNotifier.triggerNotification(message);
+        twilioNotifier.triggerNotification(message);
     }
 }

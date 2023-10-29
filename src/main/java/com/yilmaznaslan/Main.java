@@ -29,7 +29,13 @@ public class Main {
             throw new FormValidationFailedException("");
         }
 
-        AllAdapters notificationAdapter = new AllAdapters(new SoundNotifier(), new TwilioNotifier(), new SlackNotifier());
+
+        String numberToCallFrom = System.getenv("TWILIO_PHONE_FROM");
+        String numberToCall = System.getenv("TWILIO_PHONE_TO");
+
+        TwilioNotifier twilioNotifier = new TwilioNotifier(numberToCall, numberToCallFrom);
+
+        AllAdapters notificationAdapter = new AllAdapters(new SoundNotifier(), twilioNotifier, new SlackNotifier());
         RemoteWebDriver webDriver = DriverUtils.initDriver();
         AppointmentFinder appointmentFinder = new AppointmentFinder(notificationAdapter,visaFormTO, webDriver);
         CompletableFuture<Boolean> scanResult = appointmentFinder.startScanning();

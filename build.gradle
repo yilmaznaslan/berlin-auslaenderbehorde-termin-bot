@@ -44,8 +44,9 @@ dependencies {
     implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '5.0.3'
     implementation group: 'ru.yandex.qatools.ashot', name: 'ashot', version: '1.5.4'
 
-    // https://mvnrepository.com/artifact/com.twilio.sdk/twilio
+    // Notifications
     implementation 'com.twilio.sdk:twilio:9.13.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 
 
     testImplementation 'org.mockito:mockito-core:5.2.0'
