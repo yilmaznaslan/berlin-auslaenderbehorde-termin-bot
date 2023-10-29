@@ -13,6 +13,16 @@ public class TwilioNotifier implements NotificationAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(TwilioNotifier.class);
 
+    private final String numberToCall;
+    private final String numberToCallFrom;
+    private static final String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
+    private static final String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN");
+
+    public TwilioNotifier(String numberToCall, String numberToCallFrom) {
+        this.numberToCall = numberToCall;
+        this.numberToCallFrom = numberToCallFrom;
+    }
+
     @Override
     public void triggerNotification(String message) {
         try {
@@ -26,19 +36,17 @@ public class TwilioNotifier implements NotificationAdapter {
 
     protected void makeCall() throws URISyntaxException {
 
-        String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
-        String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN");
-
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 
         Call call = Call
                 .creator(
-                        new PhoneNumber("+4917680332369"),
-                        new PhoneNumber("+13344544376"),
+                        new PhoneNumber(numberToCall),
+                        new PhoneNumber(numberToCallFrom),
                         new URI("http://demo.twilio.com/docs/voice.xml")
                 )
                 .create();
 
         logger.info("Call status :{}", call.getStatus());
     }
+
 }
