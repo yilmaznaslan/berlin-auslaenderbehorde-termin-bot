@@ -33,9 +33,9 @@ docker run \
   -t seleniarm/standalone-chromium:latest
 ```
 
-2. Make sure that JDK version in your machine is 11 or higher.
+2. Make sure that JDK version in your machine is **17** or higher.
    - Check the java version: `java --version`.
-   - If it is below 11,  [install](https://docs.oracle.com/en/java/javase/11/install/installation-jdk-macos.html#GUID-2FE451B0-9572-4E38-A1A5-568B77B146DE) a newer version of java.
+   - If it is below 17,  [install](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) a newer version of java.
    - After installation, check again the version with `java --version`
 
 ## How to run
