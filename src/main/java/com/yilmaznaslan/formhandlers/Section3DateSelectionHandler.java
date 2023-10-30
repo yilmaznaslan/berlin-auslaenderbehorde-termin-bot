@@ -1,6 +1,7 @@
 package com.yilmaznaslan.formhandlers;
 
 import com.yilmaznaslan.AppointmentFinder;
+import com.yilmaznaslan.utils.DriverUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -31,11 +32,14 @@ public class Section3DateSelectionHandler {
     public Optional<WebElement> isDateAndTimeVerified() {
         List<WebElement> availableDates = getAvailableDates();
         Collections.reverse(availableDates); // To start from the latest date
+        List<String> datesAsString = availableDates.stream().map(this::parseDate).toList();
         return availableDates.stream()
                 .filter(availableDate -> {
-                    String date = parseDate(availableDate);
                     Actions actions = new Actions(driver);
                     actions.moveToElement(availableDate).click().build().perform();
+                    DriverUtils.waitUntilFinished(driver);
+                    int dateIndex = availableDates.indexOf(availableDate);
+                    String date = datesAsString.get(dateIndex);
                     LOGGER.info("Clicked on date: {}", date);
 
                     try {
@@ -47,7 +51,8 @@ public class Section3DateSelectionHandler {
                     Select webElement = getTimeslotSelect();
                     List<WebElement> availableTimeslots = webElement.getOptions();
                     availableTimeslots
-                            .forEach(availableTimeslot -> LOGGER.info("Timeslot: {}", availableTimeslot.getText()));
+                            .forEach(availableTimeslot -> LOGGER.info("Date: {}, Timeslot: {}", date,
+                                    availableTimeslot.getText()));
 
                     Optional<WebElement> firstAvailableTimeslot = availableTimeslots.stream()
                             .filter(this::isTimeslotVerified)

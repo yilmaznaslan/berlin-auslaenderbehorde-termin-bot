@@ -91,7 +91,7 @@ public class AppointmentFinder {
             Section3DateSelectionHandler section3DateSelectionHandler = new Section3DateSelectionHandler(driver);
             if (section3DateSelectionHandler.isDateAndTimeVerified().isPresent()) {
                 LOGGER.info("End of process");
-                notificationAdapter.triggerNotification("");
+                notificationAdapter.triggerNotification(sessionUrl);
                 IoUtils.savePage(driver, "date_selection_success");
                 executor.shutdown();
             }

@@ -10,7 +10,11 @@ class TwilioNotifierTest {
     @Test
     void triggerNotification() {
         // GIVEN
-        TwilioNotifier twilioNotifier = new TwilioNotifier();
+
+        String numberToCallFrom = System.getenv("TWILIO_PHONE_FROM");
+        String numberToCall = System.getenv("TWILIO_PHONE_TO");
+
+        TwilioNotifier twilioNotifier = new TwilioNotifier(numberToCall, numberToCallFrom);
 
         // WHEN
         Assertions.assertDoesNotThrow(() -> twilioNotifier.triggerNotification("test"));
