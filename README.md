@@ -5,38 +5,15 @@ Ausländerbehörde Berlin for the selected visa service. Whenever an available d
 
 <img src="/doc/form.gif"  width="60%" height="30%">
 
+## Notes
+- If you are not developer or having difficulties to setup the infrastructure, submit a query through [termin101.de](http://termin101.de.s3-website.eu-central-1.amazonaws.com/)
+- You will be placed in the waiting list and get notified as soon as your booking is done.
+
 ## Prerequisites
-1. In order to run selenium server you will need to install docker first. See [Get Docker](https://docs.docker.com/get-docker/) for more info. After installing the docker run the selenium server as below
-
-```shell
-docker run \
-  -d \
-  --name selenium \
-  -p 4444:4444 -p 7900:7900\
-  --shm-size="2g" \
-  -e SE_NODE_MAX_SESSIONS=5 \
-  -e SE_NODE_OVERRIDE_MAX_SESSIONS=true \
-  -e SE_NODE_SESSION_TIMEOUT=120 \
-  -t selenium/standalone-chrome:latest
-```
-
-**For MacOS with M1 chip**
-```
-docker run \
-  -d \
-  --name selenium \
-  -p 4444:4444 -p 7900:7900\
-  --shm-size="2g" \
-  -e SE_NODE_MAX_SESSIONS=5 \
-  -e SE_NODE_OVERRIDE_MAX_SESSIONS=true \
-  -e SE_NODE_SESSION_TIMEOUT=120 \
-  -t seleniarm/standalone-chromium:latest
-```
-
+1. In order to run the application you need a running Selenium server.
+   - Visit [https://www.selenium.dev](https://www.selenium.dev/documentation/webdriver/getting_started/) to install.
 2. Make sure that JDK version in your machine is **17** or higher.
-   - Check the java version: `java --version`.
    - If it is below 17,  [install](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) a newer version of java.
-   - After installation, check again the version with `java --version`
 
 ## How to run
 - Fill the [personInfoDTO.json](src/main/resources/DEFAULT_PERSONAL_INFO_FORM.json) file with **your** personal information.
@@ -54,8 +31,7 @@ docker run \
 
 ## License
 
-Copyright © since 2022 Yilmaz Naci Aslan and other contributors.
-_(For the full contributors' list, run `git shortlog --summary --numbered --email` from the root directory of this project.)_
+Copyright © since 2022 Yilmaz Naci Aslan
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
