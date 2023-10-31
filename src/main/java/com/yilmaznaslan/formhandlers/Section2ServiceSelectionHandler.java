@@ -134,7 +134,7 @@ public class Section2ServiceSelectionHandler {
         });
     }
 
-    private void saveCountries(Select select) {
+    private void saveCountries(Select select, String fileName) {
         ObjectMapper objectMapper = new ObjectMapper();
         List<WebElement> options = select.getOptions();
         List<CountryOption> countryOptions = new ArrayList<>();
@@ -145,7 +145,7 @@ public class Section2ServiceSelectionHandler {
         }
         try {
             // Write the list of persons to a JSON file
-            objectMapper.writeValue(new File("countries.json"), countryOptions);
+            objectMapper.writeValue(new File(fileName), countryOptions);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -163,12 +163,13 @@ public class Section2ServiceSelectionHandler {
                         currentDriver.findElement(By.id(Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.getId()));
                 Select select = new Select(element);
                 select.selectByVisibleText(citizenshipValueOfFamilyMember);
+                //saveCountries(select,"familyMemberCountries.json");
 
                 element = currentDriver.findElement(By.id(Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.getId()));
                 select = new Select(element);
                 WebElement option = select.getFirstSelectedOption();
                 String selectValue = option.getText();
-                if (selectValue.equals(citizenshipValue)) {
+                if (selectValue.equals(citizenshipValueOfFamilyMember)) {
                     LOGGER.debug("Successfully selected the citizenship value");
                     return true;
                 }
