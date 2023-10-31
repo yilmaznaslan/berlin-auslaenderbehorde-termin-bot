@@ -1,738 +1,738 @@
 [
   {
-    "value": "",
+    "value": "Please Select",
     "text": "Please Select"
   },
   {
-    "value": "998",
+    "value": "*unresolved nationality (Palestinians and Kurds from Lebanon)",
     "text": "*unresolved nationality (Palestinians and Kurds from Lebanon)"
   },
   {
-    "value": "999",
+    "value": "*unresolved nationality / Palestinians from Syria (Family name A – E)",
     "text": "*unresolved nationality / Palestinians from Syria (Family name A – E)"
   },
   {
-    "value": "996",
+    "value": "*unresolved nationality / Palestinians from Syria (Family name F – Z)",
     "text": "*unresolved nationality / Palestinians from Syria (Family name F – Z)"
   },
   {
-    "value": "423",
+    "value": "Afghanistan",
     "text": "Afghanistan"
   },
   {
-    "value": "299",
+    "value": "African States, Other",
     "text": "African States, Other"
   },
   {
-    "value": "121",
+    "value": "Albania",
     "text": "Albania"
   },
   {
-    "value": "221",
+    "value": "Algeria",
     "text": "Algeria"
   },
   {
-    "value": "399",
+    "value": "American States, other",
     "text": "American States, other"
   },
   {
-    "value": "123",
+    "value": "Andorra",
     "text": "Andorra"
   },
   {
-    "value": "223",
+    "value": "Angola",
     "text": "Angola"
   },
   {
-    "value": "320",
+    "value": "Antigua and Barbuda",
     "text": "Antigua and Barbuda"
   },
   {
-    "value": "323",
+    "value": "Argentina",
     "text": "Argentina"
   },
   {
-    "value": "422",
+    "value": "Armenia",
     "text": "Armenia"
   },
   {
-    "value": "499",
+    "value": "Asian States, other",
     "text": "Asian States, other"
   },
   {
-    "value": "523",
+    "value": "Australia",
     "text": "Australia"
   },
   {
-    "value": "599",
+    "value": "Australian States, other",
     "text": "Australian States, other"
   },
   {
-    "value": "425",
+    "value": "Azerbaijan",
     "text": "Azerbaijan"
   },
   {
-    "value": "324",
+    "value": "Bahamas",
     "text": "Bahamas"
   },
   {
-    "value": "424",
+    "value": "Bahrain",
     "text": "Bahrain"
   },
   {
-    "value": "460",
+    "value": "Bangladesh",
     "text": "Bangladesh"
   },
   {
-    "value": "322",
+    "value": "Barbados",
     "text": "Barbados"
   },
   {
-    "value": "169",
+    "value": "Belarus",
     "text": "Belarus"
   },
   {
-    "value": "330",
+    "value": "Belize",
     "text": "Belize"
   },
   {
-    "value": "229",
+    "value": "Benin",
     "text": "Benin"
   },
   {
-    "value": "426",
+    "value": "Bhutan",
     "text": "Bhutan"
   },
   {
-    "value": "326",
+    "value": "Bolivia",
     "text": "Bolivia"
   },
   {
-    "value": "122",
+    "value": "Bosnia and Herzegovina",
     "text": "Bosnia and Herzegovina"
   },
   {
-    "value": "227",
+    "value": "Botswana",
     "text": "Botswana"
   },
   {
-    "value": "327",
+    "value": "Brazil",
     "text": "Brazil"
   },
   {
-    "value": "295",
+    "value": "British Overseas Territory in Africa",
     "text": "British Overseas Territory in Africa"
   },
   {
-    "value": "395",
+    "value": "British Overseas Territory in America",
     "text": "British Overseas Territory in America"
   },
   {
-    "value": "495",
+    "value": "British Overseas Territory in Asia",
     "text": "British Overseas Territory in Asia"
   },
   {
-    "value": "595",
+    "value": "British Overseas Territory in Australia",
     "text": "British Overseas Territory in Australia"
   },
   {
-    "value": "195",
+    "value": "British Overseas Territory in Europe",
     "text": "British Overseas Territory in Europe"
   },
   {
-    "value": "429",
+    "value": "Brunei Darussalam",
     "text": "Brunei Darussalam"
   },
   {
-    "value": "258",
+    "value": "Burkina Faso",
     "text": "Burkina Faso"
   },
   {
-    "value": "291",
+    "value": "Burundi",
     "text": "Burundi"
   },
   {
-    "value": "446",
+    "value": "Cambodia",
     "text": "Cambodia"
   },
   {
-    "value": "262",
+    "value": "Cameroons",
     "text": "Cameroons"
   },
   {
-    "value": "348",
+    "value": "Canada",
     "text": "Canada"
   },
   {
-    "value": "242",
+    "value": "Cape Verde",
     "text": "Cape Verde"
   },
   {
-    "value": "289",
+    "value": "Central African Republic",
     "text": "Central African Republic"
   },
   {
-    "value": "284",
+    "value": "Chad",
     "text": "Chad"
   },
   {
-    "value": "332",
+    "value": "Chile",
     "text": "Chile"
   },
   {
-    "value": "479",
+    "value": "China",
     "text": "China"
   },
   {
-    "value": "349",
+    "value": "Colombia",
     "text": "Colombia"
   },
   {
-    "value": "244",
+    "value": "Comoros",
     "text": "Comoros"
   },
   {
-    "value": "246",
+    "value": "Congo, Democratic Republic of",
     "text": "Congo, Democratic Republic of"
   },
   {
-    "value": "245",
+    "value": "Congo, Republic",
     "text": "Congo, Republic"
   },
   {
-    "value": "527",
+    "value": "Cook Islands",
     "text": "Cook Islands"
   },
   {
-    "value": "334",
+    "value": "Costa Rica",
     "text": "Costa Rica"
   },
   {
-    "value": "231",
+    "value": "Côte d´Ivoire",
     "text": "Côte d´Ivoire"
   },
   {
-    "value": "351",
+    "value": "Cuba",
     "text": "Cuba"
   },
   {
-    "value": "230",
+    "value": "Djibouti",
     "text": "Djibouti"
   },
   {
-    "value": "333",
+    "value": "Dominica",
     "text": "Dominica"
   },
   {
-    "value": "335",
+    "value": "Dominican Republic",
     "text": "Dominican Republic"
   },
   {
-    "value": "336",
+    "value": "Ecuador",
     "text": "Ecuador"
   },
   {
-    "value": "287",
+    "value": "Egypt",
     "text": "Egypt"
   },
   {
-    "value": "337",
+    "value": "El Salvador",
     "text": "El Salvador"
   },
   {
-    "value": "274",
+    "value": "Equatorial Guinea",
     "text": "Equatorial Guinea"
   },
   {
-    "value": "224",
+    "value": "Eritrea",
     "text": "Eritrea"
   },
   {
-    "value": "281",
+    "value": "Eswatini",
     "text": "Eswatini"
   },
   {
-    "value": "225",
+    "value": "Ethiopia",
     "text": "Ethiopia"
   },
   {
-    "value": "199",
+    "value": "European States, other",
     "text": "European States, other"
   },
   {
-    "value": "526",
+    "value": "Fiji",
     "text": "Fiji"
   },
   {
-    "value": "236",
+    "value": "Gabon",
     "text": "Gabon"
   },
   {
-    "value": "237",
+    "value": "Gambia",
     "text": "Gambia"
   },
   {
-    "value": "430",
+    "value": "Georgia",
     "text": "Georgia"
   },
   {
-    "value": "238",
+    "value": "Ghana",
     "text": "Ghana"
   },
   {
-    "value": "168",
+    "value": "Great Britain and Northern Ireland",
     "text": "Great Britain and Northern Ireland"
   },
   {
-    "value": "340",
+    "value": "Grenada",
     "text": "Grenada"
   },
   {
-    "value": "345",
+    "value": "Guatemala",
     "text": "Guatemala"
   },
   {
-    "value": "261",
+    "value": "Guinea",
     "text": "Guinea"
   },
   {
-    "value": "259",
+    "value": "Guinea-Bissau",
     "text": "Guinea-Bissau"
   },
   {
-    "value": "328",
+    "value": "Guyana",
     "text": "Guyana"
   },
   {
-    "value": "346",
+    "value": "Haiti",
     "text": "Haiti"
   },
   {
-    "value": "347",
+    "value": "Honduras",
     "text": "Honduras"
   },
   {
-    "value": "436",
+    "value": "India",
     "text": "India"
   },
   {
-    "value": "437",
+    "value": "Indonesia",
     "text": "Indonesia"
   },
   {
-    "value": "439",
+    "value": "Iran, Islamic Republic",
     "text": "Iran, Islamic Republic"
   },
   {
-    "value": "438",
+    "value": "Iraq",
     "text": "Iraq"
   },
   {
-    "value": "441",
+    "value": "Israel",
     "text": "Israel"
   },
   {
-    "value": "355",
+    "value": "Jamaica",
     "text": "Jamaica"
   },
   {
-    "value": "442",
+    "value": "Japan",
     "text": "Japan"
   },
   {
-    "value": "445",
+    "value": "Jordan",
     "text": "Jordan"
   },
   {
-    "value": "444",
+    "value": "Kazakhstan",
     "text": "Kazakhstan"
   },
   {
-    "value": "243",
+    "value": "Kenya",
     "text": "Kenya"
   },
   {
-    "value": "530",
+    "value": "Kiribati",
     "text": "Kiribati"
   },
   {
-    "value": "434",
+    "value": "Korea, Democratic People`s Republic",
     "text": "Korea, Democratic People`s Republic"
   },
   {
-    "value": "467",
+    "value": "Korean Republic",
     "text": "Korean Republic"
   },
   {
-    "value": "150",
+    "value": "Kosovo",
     "text": "Kosovo"
   },
   {
-    "value": "450",
+    "value": "Krygyzstan",
     "text": "Krygyzstan"
   },
   {
-    "value": "448",
+    "value": "Kuwait",
     "text": "Kuwait"
   },
   {
-    "value": "449",
+    "value": "Laos, Democratic People`s Republic",
     "text": "Laos, Democratic People`s Republic"
   },
   {
-    "value": "451",
+    "value": "Lebanon",
     "text": "Lebanon"
   },
   {
-    "value": "226",
+    "value": "Lesotho",
     "text": "Lesotho"
   },
   {
-    "value": "247",
+    "value": "Liberia",
     "text": "Liberia"
   },
   {
-    "value": "248",
+    "value": "Libya",
     "text": "Libya"
   },
   {
-    "value": "249",
+    "value": "Madagascar",
     "text": "Madagascar"
   },
   {
-    "value": "256",
+    "value": "Malawi",
     "text": "Malawi"
   },
   {
-    "value": "482",
+    "value": "Malaysia",
     "text": "Malaysia"
   },
   {
-    "value": "454",
+    "value": "Maldives",
     "text": "Maldives"
   },
   {
-    "value": "251",
+    "value": "Mali",
     "text": "Mali"
   },
   {
-    "value": "544",
+    "value": "Marshall Islands",
     "text": "Marshall Islands"
   },
   {
-    "value": "239",
+    "value": "Mauritania",
     "text": "Mauritania"
   },
   {
-    "value": "253",
+    "value": "Mauritius",
     "text": "Mauritius"
   },
   {
-    "value": "353",
+    "value": "Mexico",
     "text": "Mexico"
   },
   {
-    "value": "545",
+    "value": "Micronesia, Federal States",
     "text": "Micronesia, Federal States"
   },
   {
-    "value": "146",
+    "value": "Moldavia, Republic of",
     "text": "Moldavia, Republic of"
   },
   {
-    "value": "147",
+    "value": "Monaco",
     "text": "Monaco"
   },
   {
-    "value": "457",
+    "value": "Mongolia",
     "text": "Mongolia"
   },
   {
-    "value": "140",
+    "value": "Montenegro",
     "text": "Montenegro"
   },
   {
-    "value": "252",
+    "value": "Morocco",
     "text": "Morocco"
   },
   {
-    "value": "254",
+    "value": "Mozambique",
     "text": "Mozambique"
   },
   {
-    "value": "427",
+    "value": "Myanmar",
     "text": "Myanmar"
   },
   {
-    "value": "267",
+    "value": "Namibia",
     "text": "Namibia"
   },
   {
-    "value": "531",
+    "value": "Nauru",
     "text": "Nauru"
   },
   {
-    "value": "458",
+    "value": "Nepal",
     "text": "Nepal"
   },
   {
-    "value": "536",
+    "value": "New Zealand",
     "text": "New Zealand"
   },
   {
-    "value": "354",
+    "value": "Nicaragua",
     "text": "Nicaragua"
   },
   {
-    "value": "255",
+    "value": "Niger",
     "text": "Niger"
   },
   {
-    "value": "232",
+    "value": "Nigeria",
     "text": "Nigeria"
   },
   {
-    "value": "533",
+    "value": "Niue",
     "text": "Niue"
   },
   {
-    "value": "525",
+    "value": "Nortern Mariana Islands",
     "text": "Nortern Mariana Islands"
   },
   {
-    "value": "144",
+    "value": "North Macedonia",
     "text": "North Macedonia"
   },
   {
-    "value": "456",
+    "value": "Oman",
     "text": "Oman"
   },
   {
-    "value": "461",
+    "value": "Pakistan",
     "text": "Pakistan"
   },
   {
-    "value": "537",
+    "value": "Palau",
     "text": "Palau"
   },
   {
-    "value": "357",
+    "value": "Panama",
     "text": "Panama"
   },
   {
-    "value": "538",
+    "value": "Papua New Guinea",
     "text": "Papua New Guinea"
   },
   {
-    "value": "359",
+    "value": "Paraguay",
     "text": "Paraguay"
   },
   {
-    "value": "361",
+    "value": "Peru",
     "text": "Peru"
   },
   {
-    "value": "462",
+    "value": "Philippines",
     "text": "Philippines"
   },
   {
-    "value": "447",
+    "value": "Qatar",
     "text": "Qatar"
   },
   {
-    "value": "160",
+    "value": "Russian Federation",
     "text": "Russian Federation"
   },
   {
-    "value": "265",
+    "value": "Rwanda",
     "text": "Rwanda"
   },
   {
-    "value": "543",
+    "value": "Samoa",
     "text": "Samoa"
   },
   {
-    "value": "156",
+    "value": "San Marino",
     "text": "San Marino"
   },
   {
-    "value": "268",
+    "value": "Sao Tome and Principe",
     "text": "Sao Tome and Principe"
   },
   {
-    "value": "472",
+    "value": "Saudi Arabia",
     "text": "Saudi Arabia"
   },
   {
-    "value": "269",
+    "value": "Senegal",
     "text": "Senegal"
   },
   {
-    "value": "170",
+    "value": "Serbia",
     "text": "Serbia"
   },
   {
-    "value": "271",
+    "value": "Seychelles",
     "text": "Seychelles"
   },
   {
-    "value": "272",
+    "value": "Sierra Leone",
     "text": "Sierra Leone"
   },
   {
-    "value": "474",
+    "value": "Singapore",
     "text": "Singapore"
   },
   {
-    "value": "524",
+    "value": "Solomon Islands",
     "text": "Solomon Islands"
   },
   {
-    "value": "273",
+    "value": "Somalia",
     "text": "Somalia"
   },
   {
-    "value": "263",
+    "value": "South Africa",
     "text": "South Africa"
   },
   {
-    "value": "278",
+    "value": "Southern Sudan",
     "text": "Southern Sudan"
   },
   {
-    "value": "431",
+    "value": "Sri Lanka",
     "text": "Sri Lanka"
   },
   {
-    "value": "370",
+    "value": "St. Kitts and Nevis",
     "text": "St. Kitts and Nevis"
   },
   {
-    "value": "366",
+    "value": "St. Lucia",
     "text": "St. Lucia"
   },
   {
-    "value": "369",
+    "value": "St. Vincent and the Grenadines",
     "text": "St. Vincent and the Grenadines"
   },
   {
-    "value": "276",
+    "value": "Sudan",
     "text": "Sudan"
   },
   {
-    "value": "364",
+    "value": "Suriname",
     "text": "Suriname"
   },
   {
-    "value": "158",
+    "value": "Switzerland",
     "text": "Switzerland"
   },
   {
-    "value": "475",
+    "value": "Syria (family name A - E)",
     "text": "Syria (family name A - E)"
   },
   {
-    "value": "473",
+    "value": "Syria (family name F - Z)",
     "text": "Syria (family name F - Z)"
   },
   {
-    "value": "465",
+    "value": "Taiwan",
     "text": "Taiwan"
   },
   {
-    "value": "470",
+    "value": "Tajikistan",
     "text": "Tajikistan"
   },
   {
-    "value": "282",
+    "value": "Tanzania, United Republic of",
     "text": "Tanzania, United Republic of"
   },
   {
-    "value": "476",
+    "value": "Thailand",
     "text": "Thailand"
   },
   {
-    "value": "483",
+    "value": "Timor-Leste",
     "text": "Timor-Leste"
   },
   {
-    "value": "283",
+    "value": "Togo",
     "text": "Togo"
   },
   {
-    "value": "541",
+    "value": "Tonga",
     "text": "Tonga"
   },
   {
-    "value": "371",
+    "value": "Trinidad and Tobago",
     "text": "Trinidad and Tobago"
   },
   {
-    "value": "285",
+    "value": "Tunisia",
     "text": "Tunisia"
   },
   {
-    "value": "163",
+    "value": "Turkey",
     "text": "Turkey"
   },
   {
-    "value": "471",
+    "value": "Turkmenistan",
     "text": "Turkmenistan"
   },
   {
-    "value": "540",
+    "value": "Tuvalu",
     "text": "Tuvalu"
   },
   {
-    "value": "286",
+    "value": "Uganda",
     "text": "Uganda"
   },
   {
-    "value": "166",
+    "value": "Ukraine",
     "text": "Ukraine"
   },
   {
-    "value": "469",
+    "value": "United Arab Emirates",
     "text": "United Arab Emirates"
   },
   {
-    "value": "368",
+    "value": "United States of America",
     "text": "United States of America"
   },
   {
-    "value": "365",
+    "value": "Uruguay",
     "text": "Uruguay"
   },
   {
-    "value": "477",
+    "value": "Uzbekistan",
     "text": "Uzbekistan"
   },
   {
-    "value": "532",
+    "value": "Vanuatu",
     "text": "Vanuatu"
   },
   {
-    "value": "167",
+    "value": "Vatican City",
     "text": "Vatican City"
   },
   {
-    "value": "367",
+    "value": "Venezuela",
     "text": "Venezuela"
   },
   {
-    "value": "432",
+    "value": "Vietnam",
     "text": "Vietnam"
   },
   {
-    "value": "421",
+    "value": "Yemen",
     "text": "Yemen"
   },
   {
-    "value": "257",
+    "value": "Zambia",
     "text": "Zambia"
   },
   {
-    "value": "233",
+    "value": "Zimbabwe",
     "text": "Zimbabwe"
   }
 ]
