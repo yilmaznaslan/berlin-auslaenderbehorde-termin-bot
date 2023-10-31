@@ -91,7 +91,7 @@ public class Section2ServiceSelectionHandler {
         selectCitizenshipValue();
         selectNumberOfApplicants();
         selectFamilyStatus();
-        if (familyStatus.equals("yes")) {
+        if (familyStatus.equals("1")) {
             selectCitizenshipValueOfFamilyMember();
         }
         clickServiceType();
@@ -117,7 +117,17 @@ public class Section2ServiceSelectionHandler {
                 //saveCountries(select);
                 select.selectByVisibleText(citizenshipValue);
 
-                return true;
+                // Double check if it is selected
+                element = currentDriver.findElement(By.cssSelector("select[name='" + elementName + "']"));
+                select = new Select(element);
+                WebElement option = select.getFirstSelectedOption();
+                String selectValue = option.getText();
+                if (selectValue.equals(citizenshipValue)) {
+                    LOGGER.debug("Successfully selected the citizenship value");
+                    return true;
+                }
+                return false;
+
             } catch (Exception e) {
                 return false;
             }
@@ -146,14 +156,23 @@ public class Section2ServiceSelectionHandler {
         String elementDescription = Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.name();
         MDC.put(MdcVariableEnum.elementDescription.name(), elementDescription);
         LOGGER.debug(LOG_MSG, methodName);
-        String elementName = Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.getName();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(currentDriver -> {
             try {
-                WebElement element = currentDriver.findElement(By.cssSelector("select[name='" + elementName + "']"));
+                WebElement element =
+                        currentDriver.findElement(By.id(Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.getId()));
                 Select select = new Select(element);
                 select.selectByVisibleText(citizenshipValueOfFamilyMember);
-                return true;
+
+                element = currentDriver.findElement(By.id(Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.getId()));
+                select = new Select(element);
+                WebElement option = select.getFirstSelectedOption();
+                String selectValue = option.getText();
+                if (selectValue.equals(citizenshipValue)) {
+                    LOGGER.debug("Successfully selected the citizenship value");
+                    return true;
+                }
+                return false;
             } catch (Exception e) {
                 return false;
             }

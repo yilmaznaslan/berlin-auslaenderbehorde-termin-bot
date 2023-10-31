@@ -1,9 +1,9 @@
 {
-  "citizenshipValue": "Greece",
-  "citizenshipValueOfFamilyMember": null,
+  "citizenshipValue": "Pakistan",
   "numberOfApplicants": "1",
-  "isThereFamilyMember": "2",
-  "serviceType": "Apply for a permanent settlement permit",
-  "visaPurpose": null,
-  "visaType" : "Permanent residence card for family members of EU (except Germany) and EEA citizens"
+  "isThereFamilyMember": "1",
+  "citizenshipValueOfFamilyMember": "Pakistan",
+  "serviceType": "Apply for a residence title",
+  "visaType": "Residence permit for a newborn foreign child - Initial issuance (section 33)",
+  "visaPurpose": "Family reasons"
 }
