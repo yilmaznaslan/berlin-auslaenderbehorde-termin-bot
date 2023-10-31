@@ -1,5 +1,6 @@
 package com.yilmaznaslan.formhandlers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.yilmaznaslan.AppointmentFinder;
 import com.yilmaznaslan.enums.MdcVariableEnum;
@@ -18,7 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.yilmaznaslan.enums.Section2FormElementsEnum.*;
 
@@ -109,26 +114,30 @@ public class Section2ServiceSelectionHandler {
             try {
                 WebElement element = currentDriver.findElement(By.cssSelector("select[name='" + elementName + "']"));
                 Select select = new Select(element);
+                //saveCountries(select);
                 select.selectByValue(citizenshipValue);
                 return true;
-
-                // Double check if it is selected
-                /*
-                element = currentDriver.findElement(By.cssSelector("select[name='" + elementName + "']"));
-                select = new Select(element);
-                WebElement option = select.getFirstSelectedOption();
-                String selectValue = option.getCssValue("value");
-                if (selectValue.equals(citizenshipValue)) {
-                    LOGGER.debug("Successfully selected the citizenship value");
-                    return true;
-                }
-                                return false;
-
-                 */
             } catch (Exception e) {
                 return false;
             }
         });
+    }
+
+    private void saveCountries(Select select) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<WebElement> options = select.getOptions();
+        List<CountryOption> countryOptions = new ArrayList<>();
+        for (WebElement option : options) {
+            String value = option.getAttribute("value");
+            String text = option.getText();
+            countryOptions.add(new CountryOption(value, text));
+        }
+        try {
+            // Write the list of persons to a JSON file
+            objectMapper.writeValue(new File("countries.json"), countryOptions);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void selectCitizenshipValueOfFamilyMember() {
