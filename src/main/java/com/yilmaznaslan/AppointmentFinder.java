@@ -42,6 +42,8 @@ public class AppointmentFinder {
         this.notificationAdapter = notificationAdapter;
         this.visaFormTO = visaFormTO;
         this.driver = driver;
+        MDC.put(MdcVariableEnum.visaForm.name(), visaFormTO.toString());
+
     }
 
     public CompletableFuture<Boolean> startScanning() {

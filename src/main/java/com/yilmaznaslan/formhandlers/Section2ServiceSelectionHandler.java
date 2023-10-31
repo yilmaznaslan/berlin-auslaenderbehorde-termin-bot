@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.yilmaznaslan.enums.Section2FormElementsEnum.*;
 
@@ -188,7 +189,7 @@ public class Section2ServiceSelectionHandler {
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
         wait.until(currentWebdriver -> {
-            try     {
+            try {
                 WebElement element = currentWebdriver.findElement(By.cssSelector("select[name='personenAnzahl_normal']"));
                 Select select = new Select(element);
                 select.selectByValue(applicantNumber);
@@ -349,16 +350,26 @@ public class Section2ServiceSelectionHandler {
     }
 
     private boolean isSessionActive() {
-
         String xpath = "//*[@id=\"progressBar\"]/div";
-        WebElement element = driver.findElement(By.xpath(xpath));
-        String timeText = element.getText();
-        String[] minuteSecond = timeText.split(":");
-        int minute = Integer.parseInt(minuteSecond[0]);
-        int second = Integer.parseInt(minuteSecond[1]);
 
-        LOGGER.info("Remaining time: {}. Minute: {}, Second: {}", timeText, minute, second);
-        return minute >= 5;
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppointmentFinder.TIMEOUT_FOR_INTERACTING_WITH_ELEMENT_IN_SECONDS));
+
+        AtomicBoolean isSessionActive = new AtomicBoolean(false);
+        wait.until(currentDriver -> {
+            try {
+                WebElement element = driver.findElement(By.xpath(xpath));
+                String timeText = element.getText();
+                LOGGER.info("Remaining time: {}", timeText);
+                String[] minuteSecond = timeText.split(":");
+                int minute = Integer.parseInt(minuteSecond[0]);
+                isSessionActive.set(minute >= 5);
+                return true;
+            } catch (Exception e) {
+                LOGGER.error("Exception", e);
+                return false;
+            }
+        });
+        return isSessionActive.get();
     }
 
     public int getSearchCount() {
