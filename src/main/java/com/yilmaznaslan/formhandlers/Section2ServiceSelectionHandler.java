@@ -152,16 +152,7 @@ public class Section2ServiceSelectionHandler {
             try {
                 WebElement element = currentDriver.findElement(By.cssSelector("select[name='" + elementName + "']"));
                 Select select = new Select(element);
-                select.selectByValue(citizenshipValueOfFamilyMember);
-                /*
-                WebElement option = select.getFirstSelectedOption();
-                String selectValue = option.getText();
-                if (selectValue.equals(citizenshipValueOfFamilyMember)) {
-                    LOGGER.debug("Successfully selected the citizenship value");
-                    return true;
-                }
-                return false;
-                 */
+                select.selectByVisibleText(citizenshipValueOfFamilyMember);
                 return true;
             } catch (Exception e) {
                 return false;
