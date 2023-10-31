@@ -164,7 +164,7 @@ public class Section2ServiceSelectionHandler {
                         currentDriver.findElement(By.id(Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.getId()));
                 Select select = new Select(element);
                 select.selectByVisibleText(citizenshipValueOfFamilyMember);
-                //saveCountries(select,"familyMemberCountries.json");
+                saveCountries(select,"familyMemberCountries.json");
 
                 element = currentDriver.findElement(By.id(Section2FormElementsEnum.COUNTRY_OF_FAMILY_MEMBER.getId()));
                 select = new Select(element);
@@ -365,7 +365,6 @@ public class Section2ServiceSelectionHandler {
                 isSessionActive.set(minute >= 5);
                 return true;
             } catch (Exception e) {
-                LOGGER.error("Exception", e);
                 return false;
             }
         });
