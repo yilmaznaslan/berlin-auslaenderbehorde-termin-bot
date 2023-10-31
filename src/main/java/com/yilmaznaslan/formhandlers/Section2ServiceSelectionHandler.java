@@ -115,7 +115,8 @@ public class Section2ServiceSelectionHandler {
                 WebElement element = currentDriver.findElement(By.cssSelector("select[name='" + elementName + "']"));
                 Select select = new Select(element);
                 //saveCountries(select);
-                select.selectByValue(citizenshipValue);
+                select.selectByVisibleText(citizenshipValue);
+
                 return true;
             } catch (Exception e) {
                 return false;
@@ -128,7 +129,7 @@ public class Section2ServiceSelectionHandler {
         List<WebElement> options = select.getOptions();
         List<CountryOption> countryOptions = new ArrayList<>();
         for (WebElement option : options) {
-            String value = option.getAttribute("value");
+            String value = option.getText();
             String text = option.getText();
             countryOptions.add(new CountryOption(value, text));
         }
