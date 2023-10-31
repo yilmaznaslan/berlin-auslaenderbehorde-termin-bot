@@ -42,7 +42,6 @@ dependencies {
 
     // Screenshot
     implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '5.0.3'
-    implementation group: 'ru.yandex.qatools.ashot', name: 'ashot', version: '1.5.4'
 
     // Notifications
     implementation 'com.twilio.sdk:twilio:9.13.1'

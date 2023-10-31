@@ -116,6 +116,7 @@ public class Section2ServiceSelectionHandler {
                 Select select = new Select(element);
                 //saveCountries(select);
                 select.selectByVisibleText(citizenshipValue);
+
                 return true;
             } catch (Exception e) {
                 return false;
