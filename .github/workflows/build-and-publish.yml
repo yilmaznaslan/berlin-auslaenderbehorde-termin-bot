@@ -1,0 +1,26 @@
+name: Build and Publish Artifact
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11' # Adjust this to your Java version
+
+      - name: Build and Publish
+        env:
+          CODEARTIFACT_AUTH_TOKEN: ${{ secrets.AWS_CODEARTIFACT_AUTH_TOKEN }}
+        run: |
+          ./gradlew clean build publish
+

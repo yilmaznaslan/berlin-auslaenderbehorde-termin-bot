@@ -1,9 +1,9 @@
 {
-  "citizenshipValue": "Pakistan",
+  "citizenshipValue": "Turkey",
+  "citizenshipValueOfFamilyMember": null,
   "numberOfApplicants": "1",
-  "isThereFamilyMember": "1",
-  "citizenshipValueOfFamilyMember": "Pakistan",
-  "serviceType": "Apply for a residence title",
-  "visaType": "Residence permit for a newborn foreign child - Initial issuance (section 33)",
-  "visaPurpose": "Family reasons"
+  "isThereFamilyMember": "2",
+  "serviceType": "Apply for a permanent settlement permit",
+  "visaPurpose": "Economic activity",
+  "visaType" : "Residence permit for job-seeking qualified skilled workers – Issuance (sect. 20)"
 }

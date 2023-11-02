@@ -91,12 +91,15 @@ public class AppointmentFinder {
         boolean result = section2ServiceSelectionHandler.fillAndSendForm();
         if (result) {
             Section3DateSelectionHandler section3DateSelectionHandler = new Section3DateSelectionHandler(driver);
+            notificationAdapter.triggerNotification(sessionUrl);
+            IoUtils.savePage(driver, "date_selection_success");
+            executor.shutdown();
+            /*
             if (section3DateSelectionHandler.isDateAndTimeVerified().isPresent()) {
                 LOGGER.info("End of process");
-                notificationAdapter.triggerNotification(sessionUrl);
-                IoUtils.savePage(driver, "date_selection_success");
-                executor.shutdown();
+
             }
+             */
         }
     }
 
