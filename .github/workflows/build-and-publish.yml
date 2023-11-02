@@ -16,11 +16,11 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '11' # Adjust this to your Java version
+          java-version: '17' # Adjust this to your Java version
+          distribution: 'adopt' # Specify the desired Linux distribution
 
       - name: Build and Publish
         env:
           CODEARTIFACT_AUTH_TOKEN: ${{ secrets.AWS_CODEARTIFACT_AUTH_TOKEN }}
         run: |
           ./gradlew clean build publish
-
